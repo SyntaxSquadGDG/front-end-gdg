@@ -6,10 +6,11 @@ import clsx from 'clsx';
 import { contentFont } from '@/app/_utils/fonts';
 import { useTranslations } from 'next-intl';
 import StackUsers from '../general/stack';
+import FolderItemSVG from '../svgs/folders/folder-item';
 import Link from 'next/link';
 import Modal from '../modals/modal';
 
-const SectionItem = ({ section }) => {
+const FolderItem = ({ folder, sectionName }) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
@@ -52,15 +53,24 @@ const SectionItem = ({ section }) => {
       <div className="flex justify-between items-center sm:flex-row flex-col">
         {/* Header Details */}
         <Link
-          href={`/sections/${section.id}`}
+          href={`/folders/${folder.id}`}
           className="flex gap-[16px] items-center sm:flex-row flex-col">
-          <SectionItemSVG />
+          <FolderItemSVG />
 
           <div className="flex flex-col gap-[8px]">
-            <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
-              {section.numberOfFolders} folders
-            </p>
-            <p className="text-[18px] font-medium text-blue1">{section.name}</p>
+            <div className="flex gap-[12px] items-center">
+              <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
+                {sectionName}
+              </p>
+              <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
+                |
+              </p>
+
+              <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
+                {folder.numberOfFiles} files
+              </p>
+            </div>
+            <p className="text-[18px] font-medium text-blue1">{folder.name}</p>
           </div>
         </Link>
 
@@ -87,16 +97,16 @@ const SectionItem = ({ section }) => {
           <div className="bg-storageContainer h-[4px] w-[100%] rounded-full">
             <div
               className={clsx(
-                `w-[${section.size}%] bg-blue1 h-[100%] rounded-full`,
+                `w-[${folder.size}%] bg-blue1 h-[100%] rounded-full`,
               )}></div>
           </div>
         </div>
         {/* Employees */}
         <div className="flex flex-col gap-[8px] items-center sm:text-start text-center">
-          <p>{section.numberOfEmployees} Employee</p>
+          <p>{folder.numberOfEmployees} Employee</p>
 
           {/* Stacked Images */}
-          <StackUsers employeesCount={section.numberOfEmployees} />
+          <StackUsers employeesCount={folder.numberOfEmployees} />
         </div>
       </div>
 
@@ -104,9 +114,9 @@ const SectionItem = ({ section }) => {
         isOpen={modalStack.includes('deleteModal')}
         onClose={closeModal}
         className={contentFont.className}>
-        <h2 className="text-xl font-bold mb-[16px]">{t('sections.delete')}</h2>
+        <h2 className="text-xl font-bold mb-[16px]">{t('folders.delete')}</h2>
         <p className="text-xl font-bold mb-[12px]">
-          {t('sections.deleteDescription')}
+          {t('folders.deleteDescription')}
         </p>
         <input
           type="submit"
@@ -118,5 +128,5 @@ const SectionItem = ({ section }) => {
   );
 };
 
-export default SectionItem;
+export default FolderItem;
 

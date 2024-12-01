@@ -14,6 +14,9 @@ import StackUsers from '../general/stack';
 import VerticalDotsSVG from '../svgs/general/vertical-dots';
 import './table.css';
 import Modal from '../modals/modal';
+import AddSVG from '../svgs/general/add';
+import FileAddAiSVG from '../svgs/files/file-add-ai';
+import Link from 'next/link';
 
 const sections = [
   {
@@ -34,7 +37,7 @@ const sections = [
   },
 ];
 
-const SectionsPage = () => {
+const SectionsPage = ({ sections }) => {
   const t = useTranslations();
   const [modalStack, setModalStack] = useState([]);
 
@@ -82,21 +85,32 @@ const SectionsPage = () => {
           </div>
 
           {/* CREATION */}
+
           <button
             className={clsx(
-              'flex gap-[10px] items-center h-fit px-[32px] py-[6px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
+              'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] bg-gradient-to-r from-blue1 to-blue2 w-fit text-textLight',
+              contentFont.className,
+            )}
+            onClick={() => console.log('???')}>
+            <FileAddAiSVG />
+            <p className="text-[18px] font-medium">{t('files.addAI')}</p>
+          </button>
+
+          <button
+            className={clsx(
+              'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
               contentFont.className,
             )}
             onClick={() => openModal('createSection')}>
             <p className="text-[18px] font-medium">{t('sections.create')}</p>
-            <p className="text-[28px]">+</p>
+            <AddSVG />
           </button>
         </div>
       </div>
 
       {view === 'grid' && (
-        <div>
-          <Sections />
+        <div className={'flex flex-col gap-[32px]'}>
+          <Sections sections={sections} />
           <ActivitySection />
         </div>
       )}
@@ -125,13 +139,19 @@ const SectionsPage = () => {
                   <tr
                     key={section.id}
                     className="py-[40px] font-medium text-[18px] rounded-[32px]">
-                    <td>{section.name}</td>
-                    <td>{section.foldersCount}</td>
+                    <td>
+                      <Link href={`/sections/${section.id}`}>
+                        {section.name}
+                      </Link>
+                    </td>
+                    <td>{section.numberOfFolders}</td>
                     <td>{section.lastModified}</td>
-                    <td>{section.storage}</td>
+                    <td>{section.size}</td>
                     <td>
                       <div className="flex w-[100%] h-[100%] items-center justify-center">
-                        <StackUsers employeesCount={section.employeesCount} />
+                        <StackUsers
+                          employeesCount={section.numberOfEmployees}
+                        />
                       </div>
                     </td>
                     <td>

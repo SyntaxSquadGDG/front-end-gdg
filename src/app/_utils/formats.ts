@@ -32,13 +32,6 @@ export function formatDateWithTime(date) {
   return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
 }
 
-try {
-  console.log(formatDate(new Date())); // Valid input
-  console.log(formatDate('invalid')); // Invalid input, throws error
-} catch (error) {
-  console.error(error.message);
-}
-
 export function formatDateWithTimeStamp(timestamp) {
   // Convert timestamp to Date object
   const date = new Date(timestamp);

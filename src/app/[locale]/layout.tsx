@@ -6,6 +6,8 @@ import VerticalNavbar from '../_components/navbars/vertical-navbar';
 import HorizontalNavbar from '../_components/navbars/horizontal-navbar';
 import clsx from 'clsx';
 import NextTopLoader from 'nextjs-toploader';
+import { getCookie } from 'cookies-next';
+import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,8 +20,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const messages = await getMessages();
+  const allCookies = await cookies();
 
-  const isAuth = true;
+  const isAuth = !!allCookies.get('token');
+  console.log(allCookies);
 
   return (
     <html lang="en">
@@ -27,6 +31,7 @@ export default async function RootLayout({
         className={clsx(
           isAuth &&
             'pl-[calc(100px+32px)] lg:pl-[calc(213px+32px)] pt-[calc(104px+24px)] pr-[32px]',
+          !isAuth && '',
         )}>
         <NextTopLoader />
         <NextIntlClientProvider messages={messages}>

@@ -35,3 +35,10 @@ body {
   @apply border-b-[1px] border-solid border-tableBorder;
 }
 
+.table thead tr td {
+  @apply text-blue1 font-bold;
+}
+
+input[type='submit'] {
+  @apply cursor-pointer;
+}

@@ -28,7 +28,9 @@ export default {
       borderRadius: {
         bigRounded: '40px',
       },
-
+      backgroundImage: {
+        'custom-linear': 'linear-gradient(to right, #132863, #021C63)',
+      },
       spacing: {
         iconSpacing: '16px',
       },

@@ -15,6 +15,8 @@ import ProfileSVG from '../svgs/navbars/profile';
 import LogoutSVG from '../svgs/navbars/logout';
 // import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
+import { deleteCookie } from 'cookies-next';
+import { revalidatePath } from 'next/cache';
 
 const VerticalNavbar = () => {
   const t = useTranslations();
@@ -23,6 +25,10 @@ const VerticalNavbar = () => {
   const fullPathname = usePathname();
   const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
   console.log(pathName);
+
+  function handleLogout() {
+    deleteCookie('token');
+  }
 
   return (
     <nav
@@ -95,7 +101,9 @@ const VerticalNavbar = () => {
         </div>
 
         <div>
-          <button className="logoutButton my-[48px]">
+          <button
+            className="logoutButton my-[48px]"
+            onClick={() => handleLogout()}>
             <LogoutSVG />
             <p>{t('navbar.logout')}</p>
           </button>

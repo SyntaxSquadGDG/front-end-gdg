@@ -24,9 +24,9 @@ const EmployeesSVG = ({ active }: IconInterface) => {
             x2="30.9982"
             y2="16.9969"
             gradientUnits="userSpaceOnUse">
-            <stop stop-color="#CDAD8F" />
-            <stop offset="0.504277" stop-color="#CDAD8F" />
-            <stop offset="1" stop-color="#FAE1CB" />
+            <stop stopColor="#CDAD8F" />
+            <stop offset="0.504277" stopColor="#CDAD8F" />
+            <stop offset="1" stopColor="#FAE1CB" />
           </linearGradient>
         </defs>
       </svg>

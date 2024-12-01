@@ -22,12 +22,10 @@ export default function Modal({
 
     // Disable scrolling on body when the modal is open
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
       document.addEventListener('mousedown', handleOutsideClick);
     }
 
     return () => {
-      document.body.style.overflow = ''; // Restore scrolling on unmount
       document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, [isOpen, onClose]);

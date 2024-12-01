@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import StackUsers from '../general/stack';
 import FolderItemSVG from '../svgs/folders/folder-item';
 
-const FolderItem = () => {
+const FolderItem = ({ folder }) => {
   const t = useTranslations();
   const folder = {
     name: 'Folder Name',

@@ -20,7 +20,9 @@
     "size": "Section Size",
     "permissions": "Permissions",
     "employees": "Employees",
-    "new": "Create A new section"
+    "new": "Create A new section",
+    "delete": "Delete a Section",
+    "deleteDescription": "Are you sure you want to delete this Section?"
   },
   "general": {
     "storage": "Storage",
@@ -44,10 +46,18 @@
     "size": "Folder Size",
     "permissions": "Permissions",
     "create": "Create Folder",
-    "new": "Create A new folder"
+    "new": "Create A new folder",
+    "folders": "Folders",
+    "delete": "Delete a Folder",
+    "deleteDescription": "Are you sure you want to delete this folder?"
   },
   "files": {
-    "addAI": "Add files with AI"
+    "addAI": "Add files with AI",
+    "files": "Files",
+    "viewMetaData": "View Metadata",
+    "uploadNewVersion": "Upload New Version",
+    "delete": "Delete a File",
+    "deleteDescription": "Are you sure you want to delete this file?"
   }
 }
 
