@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import '../globals.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import VerticalNavbar from '../_components/navbars/vertical-navbar';
+import HorizontalNavbar from '../_components/navbars/horizontal-navbar';
+import clsx from 'clsx';
+import NextTopLoader from 'nextjs-toploader';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,10 +19,23 @@ export default async function RootLayout({
 }>) {
   const messages = await getMessages();
 
+  const isAuth = true;
+
   return (
     <html lang="en">
-      <body>
+      <body
+        className={clsx(
+          isAuth &&
+            'pl-[calc(100px+32px)] lg:pl-[calc(213px+32px)] pt-[calc(104px+24px)] pr-[32px]',
+        )}>
+        <NextTopLoader />
         <NextIntlClientProvider messages={messages}>
+          {isAuth && (
+            <>
+              <VerticalNavbar />
+              <HorizontalNavbar />
+            </>
+          )}
           {children}
         </NextIntlClientProvider>
       </body>

@@ -5,12 +5,18 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --gold1: '#CDAD8F';
+  --gold2: '#FAE1CB';
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    --gold1: '#CDAD8F';
+    --gold2: '#FAE1CB';
   }
 }
 
@@ -19,3 +25,13 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.table tr td,
+.table tr th {
+  @apply py-[40px] text-center mx-auto text-[#5F5F5F] text-[18px] font-medium;
+}
+
+.table tr {
+  @apply border-b-[1px] border-solid border-tableBorder;
+}
+

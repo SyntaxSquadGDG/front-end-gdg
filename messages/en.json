@@ -1,3 +1,53 @@
 {
-  "home": "Home"
+  "navbar": {
+    "home": "Home",
+    "sections": "Sections",
+    "employees": "Employees",
+    "roles": "Roles",
+    "activity": "Activity Log",
+    "profile": "Profile",
+    "logout": "Logout",
+
+    "hello": "Hello",
+    "search": "Search"
+  },
+  "sections": {
+    "sections": "Sections",
+    "create": "Create Section",
+    "name": "Section Name",
+    "foldersCount": "Folders",
+    "lastModified": "Last Modified",
+    "size": "Section Size",
+    "permissions": "Permissions",
+    "employees": "Employees",
+    "new": "Create A new section"
+  },
+  "general": {
+    "storage": "Storage",
+    "viewAll": "View All"
+  },
+  "activity": {
+    "activity": "Activity Log"
+  },
+  "permissions": {
+    "id": "ID",
+    "name": "Name",
+    "roles": "Roles",
+    "email": "Email",
+    "permissions": "Permissions"
+  },
+  "folders": {
+    "name": "Folder Name",
+    "section": "Section Name",
+    "filesCount": "Files",
+    "lastModified": "Last Modified",
+    "size": "Folder Size",
+    "permissions": "Permissions",
+    "create": "Create Folder",
+    "new": "Create A new folder"
+  },
+  "files": {
+    "addAI": "Add files with AI"
+  }
 }
+
