@@ -16,7 +16,6 @@ import LogoutSVG from '../svgs/navbars/logout';
 // import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { deleteCookie } from 'cookies-next';
-import { revalidatePath } from 'next/cache';
 
 const VerticalNavbar = () => {
   const t = useTranslations();

@@ -12,6 +12,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import GridViewSVG from '../svgs/sections/grid-view';
 import Modal from '../modals/modal';
+import FileAIResults from '../files/file-ai-results';
 
 const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
   const t = useTranslations();
@@ -25,6 +26,11 @@ const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files); // Convert FileList to Array
     setFiles(selectedFiles);
+  };
+
+  const handleAIClick = (event) => {
+    console.log('OPENED');
+    openModal('AIFiles');
   };
 
   const [modalStack, setModalStack] = useState([]);
@@ -88,15 +94,15 @@ const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
           </div>
 
           {/* CREATION */}
-          <button
+          {/* <button
             className={clsx(
               'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] bg-gradient-to-r from-blue1 to-blue2 w-fit text-textLight',
               contentFont.className,
             )}
-            onClick={() => console.log('')}>
+            onClick={() => handleAIClick()}>
             <FileAddAiSVG />
             <p className="text-[18px] font-medium">{t('files.addAI')}</p>
-          </button>
+          </button> */}
 
           <button
             className={clsx(
@@ -142,6 +148,12 @@ const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
           type="submit"
           className="w-[100%] py-[20px] rounded-[8px] px-[16px] bg-blue1 outline-none text-textLight"
         />
+      </Modal>
+      <Modal
+        isOpen={modalStack.includes('AIFiles')}
+        onClose={closeModal}
+        className={''}>
+        <FileAIResults />
       </Modal>
     </div>
   );

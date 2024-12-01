@@ -20,10 +20,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const messages = await getMessages();
-  const allCookies = await cookies();
+  // const allCookies = await cookies();
 
-  const isAuth = !!allCookies.get('token');
-  console.log(allCookies);
+  // const isAuth = !!allCookies.get('token');
+  // console.log(allCookies);
+
+  const isAuth = true;
 
   return (
     <html lang="en">

@@ -17,6 +17,7 @@ import Modal from '../modals/modal';
 import AddSVG from '../svgs/general/add';
 import FileAddAiSVG from '../svgs/files/file-add-ai';
 import Link from 'next/link';
+import ToolBar from '../navbars/toolbar';
 
 const sections = [
   {
@@ -55,58 +56,13 @@ const SectionsPage = ({ sections }) => {
   return (
     <div>
       {/* TOOLBAR */}
-      <div className="flex justify-between flex-wrap mb-[32px]">
-        {/* Sections Text */}
-        <div className="flex gap-[16px] items-center">
-          <h2
-            className={clsx(contentFont.className, 'text-[26px] font-medium')}>
-            {t('sections.sections')}
-          </h2>
-          <SectionsSVG />
-        </div>
-        {/* VIEWS AND CREATION */}
-        <div className="flex gap-[16px] items-center flex-wrap">
-          {/* VIEWS */}
-          <div className="rounded-[32px] flex items-center border-[1px] border-solid border-blue1 w-fit">
-            <button
-              className={clsx(
-                view === 'grid' ? activeView : 'pr-[12px] pl-[21px]',
-              )}
-              onClick={() => setView('grid')}>
-              <GridViewSVG />
-            </button>
-            <button
-              className={clsx(
-                view === 'list' ? activeView : 'pl-[12px] pr-[21px]',
-              )}
-              onClick={() => setView('list')}>
-              <ListViewSVG />
-            </button>
-          </div>
-
-          {/* CREATION */}
-
-          <button
-            className={clsx(
-              'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] bg-gradient-to-r from-blue1 to-blue2 w-fit text-textLight',
-              contentFont.className,
-            )}
-            onClick={() => console.log('???')}>
-            <FileAddAiSVG />
-            <p className="text-[18px] font-medium">{t('files.addAI')}</p>
-          </button>
-
-          <button
-            className={clsx(
-              'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
-              contentFont.className,
-            )}
-            onClick={() => openModal('createSection')}>
-            <p className="text-[18px] font-medium">{t('sections.create')}</p>
-            <AddSVG />
-          </button>
-        </div>
-      </div>
+      <ToolBar
+        view={view}
+        setView={setView}
+        views={false}
+        path={}
+        addFiles={false}
+      />
 
       {view === 'grid' && (
         <div className={'flex flex-col gap-[32px]'}>
