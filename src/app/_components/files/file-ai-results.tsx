@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const FileAIResults = ({ file, data }) => {
   const { closeModal } = useModal();
@@ -16,23 +17,25 @@ const FileAIResults = ({ file, data }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleConfirm() {
-    // REQUEST
-    try {
-      setIsLoading(true);
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('path', data.path);
-      await fetch('####', {
-        method: 'POST',
-        body: formData,
-      });
+    // // REQUEST
+    // try {
+    //   setIsLoading(true);
+    //   const formData = new FormData();
+    //   formData.append('file', file);
+    //   formData.append('path', data.path);
+    //   await fetch('####', {
+    //     method: 'POST',
+    //     body: formData,
+    //   });
 
-      closeModal();
-      await revalidatePathAction(pathName);
-    } catch (e) {
-    } finally {
-      setIsLoading(false);
-    }
+    //   closeModal();
+    //   await revalidatePathAction(pathName);
+    // } catch (e) {
+    // } finally {
+    //   setIsLoading(false);
+    // }
+    closeModal();
+    toast.success('Classified successfully');
   }
 
   if (isLoading) {

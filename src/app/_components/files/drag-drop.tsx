@@ -68,21 +68,21 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
       // for (let pair of formData.entries()) {
       //   console.log(pair[0] + ': ' + pair[1]);
       // }
-      // pres + bmc + video + src code
-      // team teamNam
-      const response = await fetch(
-        `http://syntaxsquad.runasp.net/api/SFiles/test`,
-        {
-          method: 'POST',
-          body: 'test',
-        },
-      );
+      // const response = await fetch(
+      //   `http://syntaxsquad.runasp.net/api/SFiles/test`,
+      //   {
+      //     method: 'POST',
+      //     body: JSON.stringify({
+
+      //     })
+      //   },
+      // );
 
       console.log(response);
 
       if (response.status === 404) throw new Error('Error');
       toast.success('Files uploaded successfully!');
-      await revalidatePath();
+      await revalidatePathAction(pathName);
     } catch (error) {
       toast.error('Error while uploading the files');
     } finally {

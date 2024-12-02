@@ -142,22 +142,22 @@ const ToolBar = ({
           )}
           {path && addFiles && (
             <>
-              <input
+              {/* <input
                 type="file"
                 multiple
                 onChange={handleFileChange}
                 className="hidden"
                 ref={inputRef}
-              />
+              /> */}
 
-              <button
+              {/* <button
                 className={clsx(
                   'flex gap-[10px] items-center h-fit px-[12px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
                   contentFont.className,
                 )}
                 onClick={() => openModal('uploadFiles')}>
                 <AddFileSVG />
-              </button>
+              </button> */}
             </>
           )}
         </div>
