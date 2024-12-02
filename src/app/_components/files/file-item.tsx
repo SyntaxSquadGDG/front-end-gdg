@@ -60,10 +60,11 @@ const FileItem = ({ file }) => {
       <Link
         href={`/files/${file.id}`}
         className="mt-[8px] mb-[22px] flex items-center justify-center">
-        {file.type === 'image' && <ImageSVG />}
+        {/* {file.type === 'image' && <ImageSVG />}
         {file.type === 'word' && <WordSVG />}
         {file.type === 'pdf' && <PdfSVG />}
-        {file.type === 'excel' && <ExcelSVG />}
+        {file.type === 'excel' && <ExcelSVG />} */}
+        <ImageSVG />
       </Link>
       <div className={clsx(contentFont.className, 'flex flex-col gap-[10px]')}>
         <p className="text-[18px] font-medium">{file.name}</p>

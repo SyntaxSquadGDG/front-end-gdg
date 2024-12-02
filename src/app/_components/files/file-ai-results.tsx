@@ -2,16 +2,42 @@
 import AccuracyLevel from '@/app/_components/general/accuracy';
 import { useModal } from '@/app/_hooks/modal-provider';
 import { contentFont } from '@/app/_utils/fonts';
+import { revalidatePathAction } from '@/app/actions';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import React from 'react';
+import { usePathname } from 'next/navigation';
+import React, { useState } from 'react';
 
 const FileAIResults = ({ file, data }) => {
   const { closeModal } = useModal();
   const t = useTranslations();
+  const pathName = usePathname();
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function handleConfirm() {}
+  async function handleConfirm() {
+    // REQUEST
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('path', data.path);
+      await fetch('####', {
+        method: 'POST',
+        body: formData,
+      });
+
+      closeModal();
+      await revalidatePathAction(pathName);
+    } catch (e) {
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className={clsx(contentFont.className)}>

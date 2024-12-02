@@ -3,11 +3,16 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useModal } from '@/app/_hooks/modal-provider';
+import { revalidatePath } from 'next/cache';
+import { usePathname } from 'next/navigation';
+import { revalidatePathAction } from '@/app/actions';
 
 const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
   const [dragActive, setDragActive] = useState(false);
   const [files, setFiles] = useState(null);
   const { modalStack, setModal, openModal } = useModal();
+  const [isLoading, setIsLoading] = useState(false);
+  const pathName = usePathname();
 
   useEffect(() => {
     console.log(`Modal stack is: ${modalStack}`);
@@ -19,46 +24,57 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
   };
 
   const handleConfirmAI = async () => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
-
-    const response = await fetch(
-      'https://syntaxsquad-ai.azurewebsites.net/docs',
-      {
-        method: 'POST',
-        body: formData,
-      },
-    );
-    console.log(response);
-    setFileData({
-      accuracy: 90,
-      path: '/one/two',
-    });
-    setModal('AIResults');
-  };
-
-  const handleConfirmFiles = async () => {
     try {
-      const formData = new FormData();
-      Array.from(files).forEach((file) => {
-        formData.append('files', file);
-      });
+      setIsLoading(true);
 
-      formData.append('folderId', parentId);
+      const formData = new FormData();
+      formData.append('file', file);
 
       for (let pair of formData.entries()) {
         console.log(pair[0] + ': ' + pair[1]);
       }
+      const response = await fetch('http://localhost:8000/classify-image', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      console.log('SENT?');
+      console.log(data);
+      console.log('OP?');
+      setFileData({
+        accuracy: data.accuracy,
+        path: data.path,
+      });
+      setModal('AIResults');
+      await revalidatePathAction(pathName);
+    } catch (e) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  const handleConfirmFiles = async () => {
+    try {
+      setIsLoading(true);
+      // const formData = new FormData();
+      // Array.from(files).forEach((file) => {
+      //   formData.append('files', file);
+      // });
+
+      // formData.append('folderId', parentId);
+
+      // formData.append('file', 'file');
+
+      // for (let pair of formData.entries()) {
+      //   console.log(pair[0] + ': ' + pair[1]);
+      // }
+      // pres + bmc + video + src code
+      // team teamNam
       const response = await fetch(
-        `http://syntaxsquad.runasp.net/api/Files/filebyfid`,
+        `http://syntaxsquad.runasp.net/api/SFiles/test`,
         {
           method: 'POST',
-          body: formData,
+          body: 'test',
         },
       );
 
@@ -66,8 +82,11 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
 
       if (response.status === 404) throw new Error('Error');
       toast.success('Files uploaded successfully!');
+      await revalidatePath();
     } catch (error) {
       toast.error('Error while uploading the files');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -99,6 +118,10 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
     }
   };
 
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
   if (type === 'AI') {
     return (
       <div>
@@ -123,6 +146,7 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
               id="file-input"
               type="file"
               hidden
+              accept="image/*"
               onChange={handleFilesChange}
             />
           </div>
