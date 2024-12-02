@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PathArrowSVG from '../svgs/general/path-arrow';
 import { contentFont } from '@/app/_utils/fonts';
 import clsx from 'clsx';
@@ -13,15 +13,38 @@ import Link from 'next/link';
 import GridViewSVG from '../svgs/sections/grid-view';
 import Modal from '../modals/modal';
 import FileAIResults from '../files/file-ai-results';
+import DragAndDropInput from '../files/drag-drop';
+import { useModal } from '@/app/_hooks/modal-provider';
+import AddSVG from '../svgs/general/add';
+import CreateSectionModal from '../modals/create-section-modal';
+import CreateFolderModal from '../modals/create-folder-modal';
 
-const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
+const ToolBar = ({
+  views,
+  view,
+  setView,
+  path,
+  addFiles = true,
+  type,
+  id,
+  pathRequired = true,
+}) => {
   const t = useTranslations();
+  const { modalStack, openModal, closeModal } = useModal();
   const activeView =
     'px-[28px] py-[12px] rounded-[32px] bg-gradient-to-r from-[#CDAD8F] via-[#CDAD8F] to-[#FAE1CB]';
-  const reversedPath = [...path].reverse();
+  const reversedPath = path ? [...path].reverse() : null;
 
-  const [files, setFiles] = useState([]);
+  const [file, setFile] = useState(null);
+  const [fileData, setFileData] = useState(null);
+
+  useEffect(() => {
+    console.log(file);
+  }, [file]);
+
   const inputRef = useRef(null);
+
+  console.log(type);
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files); // Convert FileList to Array
@@ -29,18 +52,7 @@ const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
   };
 
   const handleAIClick = (event) => {
-    console.log('OPENED');
-    openModal('AIFiles');
-  };
-
-  const [modalStack, setModalStack] = useState([]);
-
-  const openModal = (modalId) => {
-    setModalStack((prevStack) => [...prevStack, modalId]); // Push new modal to the stack
-  };
-
-  const closeModal = () => {
-    setModalStack((prevStack) => prevStack.slice(0, -1)); // Remove the top modal from the stack
+    openModal('uploadAIFiles');
   };
 
   return (
@@ -52,25 +64,28 @@ const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
           className={clsx(contentFont.className, 'text-[26px] font-medium')}>
           {t('sections.sections')}
         </Link>
-        {reversedPath.map((item, index) => (
-          <React.Fragment key={item.id}>
-            <PathArrowSVG />
-            <Link
-              href={
-                item.type === 'folder'
-                  ? `/folders/${item.id}`
-                  : item.type === 'file'
-                  ? `/files/${item.id}`
-                  : `/sections/${item.id}`
-              }
-              className={clsx(
-                contentFont.className,
-                'text-[26px] font-medium',
-              )}>
-              {item.name}
-            </Link>
-          </React.Fragment>
-        ))}
+        {reversedPath &&
+          reversedPath.map((item, index) => (
+            <React.Fragment key={`${item.type}${item.id}`}>
+              <PathArrowSVG />
+              <Link
+                href={
+                  item.type === 'folder'
+                    ? `/folders/${item.id}`
+                    : item.type === 'file'
+                    ? `/files/${item.id}`
+                    : `/sections/${item.id}`
+                }
+                className={clsx(
+                  contentFont.className,
+                  'text-[26px] font-medium',
+                )}>
+                {item.name}
+              </Link>
+            </React.Fragment>
+          ))}
+
+        {pathRequired && !path && <h2>Error While fetching path</h2>}
       </div>
       {views && (
         <div className="flex gap-[16px] items-center flex-wrap">
@@ -94,7 +109,8 @@ const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
           </div>
 
           {/* CREATION */}
-          {/* <button
+
+          <button
             className={clsx(
               'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] bg-gradient-to-r from-blue1 to-blue2 w-fit text-textLight',
               contentFont.className,
@@ -102,17 +118,29 @@ const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
             onClick={() => handleAIClick()}>
             <FileAddAiSVG />
             <p className="text-[18px] font-medium">{t('files.addAI')}</p>
-          </button> */}
+          </button>
 
           <button
             className={clsx(
-              'flex gap-[10px] items-center h-fit px-[12px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
+              'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit text-blue1',
               contentFont.className,
             )}
-            onClick={() => openModal('createFolder')}>
-            <AddFolderSVG />
+            onClick={() => openModal('createSection')}>
+            <AddSVG />
+            <p className="text-[18px] font-medium">{t('sections.create')}</p>
           </button>
-          {addFiles && (
+
+          {path && (
+            <button
+              className={clsx(
+                'flex gap-[10px] items-center h-fit px-[12px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
+                contentFont.className,
+              )}
+              onClick={() => openModal('createFolder')}>
+              <AddFolderSVG />
+            </button>
+          )}
+          {path && addFiles && (
             <>
               <input
                 type="file"
@@ -127,7 +155,7 @@ const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
                   'flex gap-[10px] items-center h-fit px-[12px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
                   contentFont.className,
                 )}
-                onClick={() => inputRef.current.click()}>
+                onClick={() => openModal('uploadFiles')}>
                 <AddFileSVG />
               </button>
             </>
@@ -135,25 +163,42 @@ const ToolBar = ({ views, view, setView, path, addFiles = true }) => {
         </div>
       )}
 
+      <CreateFolderModal type={type} id={id} />
+      <CreateSectionModal />
+
       <Modal
-        isOpen={modalStack.includes('createFolder')}
-        onClose={closeModal}
-        className={contentFont.className}>
-        <h2 className="text-xl font-bold mb-[16px]">{t('folders.new')}</h2>
-        <input
-          type="text"
-          className="w-[100%] py-[20px] rounded-[8px] px-[16px] border-[1px] border-solid border-blue1 outline-none mb-[16px]"
-        />
-        <input
-          type="submit"
-          className="w-[100%] py-[20px] rounded-[8px] px-[16px] bg-blue1 outline-none text-textLight"
-        />
-      </Modal>
-      <Modal
-        isOpen={modalStack.includes('AIFiles')}
+        isOpen={modalStack.includes('uploadFiles')}
+        noOutside={true}
         onClose={closeModal}
         className={''}>
-        <FileAIResults />
+        <DragAndDropInput
+          type={'file'}
+          parentId={id}
+          setFile={setFile}
+          file={file}
+          setFileData={setFileData}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={modalStack.includes('AIResults')}
+        onClose={closeModal}
+        noOutside={true}>
+        <FileAIResults file={file} data={fileData} />
+      </Modal>
+
+      <Modal
+        isOpen={modalStack.includes('uploadAIFiles')}
+        noOutside={true}
+        onClose={closeModal}
+        className={''}>
+        <DragAndDropInput
+          type={'AI'}
+          parentId={id}
+          setFile={setFile}
+          file={file}
+          setFileData={setFileData}
+        />
       </Modal>
     </div>
   );

@@ -53,25 +53,27 @@ const SectionsPage = ({ sections }) => {
   const [view, setView] = useState('grid');
   const activeView =
     'px-[28px] py-[12px] rounded-[32px] bg-gradient-to-r from-[#CDAD8F] via-[#CDAD8F] to-[#FAE1CB]';
+
   return (
     <div>
       {/* TOOLBAR */}
       <ToolBar
         view={view}
         setView={setView}
-        views={false}
-        path={}
-        addFiles={false}
+        views={true}
+        path={null}
+        pathRequired={false}
+        addFiles={true}
       />
 
-      {view === 'grid' && (
+      {sections && view === 'grid' && (
         <div className={'flex flex-col gap-[32px]'}>
           <Sections sections={sections} />
           <ActivitySection />
         </div>
       )}
 
-      {view === 'list' && (
+      {sections && view === 'list' && (
         <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
           <table
             className={clsx(
@@ -120,6 +122,8 @@ const SectionsPage = ({ sections }) => {
           </table>
         </div>
       )}
+
+      {!sections && <h2>Error while Loading sections</h2>}
 
       <Modal
         isOpen={modalStack.includes('createSection')}

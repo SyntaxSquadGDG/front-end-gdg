@@ -13,7 +13,7 @@ const HorizontalNavbar = () => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <nav className="h-[104px] rounded-bl-[40px] rounded-br-[40px] w-[calc(100vw-132px)] lg:w-[calc(100vw-245px-32px)] fixed top-0 right-0 lg:right-[32px] bg-gradient-to-b from-blue1 to-blue2 items-center flex">
+    <nav className="h-[104px] rounded-bl-[40px] rounded-br-[40px] w-[calc(100vw-132px)] lg:w-[calc(100vw-245px-32px)] fixed top-0 right-0 lg:right-[32px] bg-gradient-to-b from-blue1 to-blue2 items-center flex z-50">
       <div
         className={
           "absolute inset-0 bg-[url('/images/navbar/background.png')] bg-cover bg-no-repeat mix-blend-multiply z-0 rounded-bl-[40px] rounded-br-[40px]"

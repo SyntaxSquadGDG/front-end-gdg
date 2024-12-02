@@ -1,25 +1,17 @@
 import SectionsPage from '@/app/_components/sections-page/sections-page';
+import { fetcher } from '@/app/_utils/fetch';
 import React from 'react';
 
-const page = () => {
-  const sections = [
-    {
-      id: 1,
-      name: 'Section1',
-      size: 1000,
-      lastModified: '2024-01-01',
-      numberOfFolders: 20,
-      numberOfEmployees: 40,
-    },
-    {
-      id: 2,
-      name: 'Section2',
-      size: 2000,
-      lastModified: '2024-01-01',
-      numberOfFolders: 30,
-      numberOfEmployees: 50,
-    },
-  ];
+const page = async () => {
+  let sections;
+
+  try {
+    sections = await fetcher('/Sections/getallsections', {
+      next: { revalidate: 0, tags: ['sections'] },
+    });
+  } catch (e) {
+    sections = null;
+  }
 
   return <SectionsPage sections={sections} />;
 };

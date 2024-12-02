@@ -8,6 +8,8 @@ import clsx from 'clsx';
 import NextTopLoader from 'nextjs-toploader';
 import { getCookie } from 'cookies-next';
 import { cookies } from 'next/headers';
+import { ModalProvider } from '../_hooks/modal-provider';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -36,6 +38,8 @@ export default async function RootLayout({
           !isAuth && '',
         )}>
         <NextTopLoader />
+        <Toaster position="top-center" reverseOrder={false} />
+
         <NextIntlClientProvider messages={messages}>
           {isAuth && (
             <>
@@ -43,7 +47,7 @@ export default async function RootLayout({
               <HorizontalNavbar />
             </>
           )}
-          {children}
+          <ModalProvider>{children}</ModalProvider>
         </NextIntlClientProvider>
       </body>
     </html>

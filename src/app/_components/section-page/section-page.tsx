@@ -20,7 +20,7 @@ import Folders from '../folders/folders';
 import ToolBar from '../navbars/toolbar';
 import Link from 'next/link';
 
-const SectionPage = ({ folders, sectionName, path }) => {
+const SectionPage = ({ folders, sectionName, path, type, id }) => {
   const t = useTranslations();
 
   const [view, setView] = useState('grid');
@@ -34,16 +34,18 @@ const SectionPage = ({ folders, sectionName, path }) => {
         setView={setView}
         path={path}
         addFiles={false}
+        type={type}
+        id={id}
       />
 
-      {view === 'grid' && (
+      {folders && view === 'grid' && (
         <div className={'flex flex-col gap-[32px]'}>
           <Folders folders={folders} sectionName={sectionName} />
           <ActivitySection />
         </div>
       )}
 
-      {view === 'list' && (
+      {folders && view === 'list' && (
         <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
           <table
             className={clsx(
@@ -90,6 +92,8 @@ const SectionPage = ({ folders, sectionName, path }) => {
           </table>
         </div>
       )}
+
+      {!folders && <h2>Error While fetching folders</h2>}
     </div>
   );
 };

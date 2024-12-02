@@ -1,38 +1,31 @@
 'use client';
 import AccuracyLevel from '@/app/_components/general/accuracy';
+import { useModal } from '@/app/_hooks/modal-provider';
 import { contentFont } from '@/app/_utils/fonts';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import React from 'react';
 
-const FileAIResults = () => {
+const FileAIResults = ({ file, data }) => {
+  const { closeModal } = useModal();
   const t = useTranslations();
-  const data = [
-    {
-      id: 1,
-      path: 'HR SectionFolder1Folder9',
-      accuracy: 30,
-      name: 'Namee',
-      type: 'pdf',
-    },
-    {
-      id: 2,
-      path: 'HR SectionFolder1Folder2',
-      accuracy: 80,
-      name: 'Name2',
-      type: 'word',
-    },
-  ];
+
+  async function handleConfirm() {}
+
   return (
     <div className={clsx(contentFont.className)}>
       <div className="flex justify-between items-center mb-[48px]">
         <p className="text-[22px] font-medium">New Files (With AI)</p>
         <div className="flex gap-[16px] items-center">
-          <button className="px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1">
+          <button
+            className="px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1"
+            onClick={() => handleConfirm()}>
             Confirm
           </button>
-          <button className="px-[32px] py-[10px] rounded-[10px] bg-red-600 text-white">
+          <button
+            className="px-[32px] py-[10px] rounded-[10px] bg-red-600 text-white"
+            onClick={() => closeModal()}>
             Cancel
           </button>
         </div>
@@ -54,23 +47,17 @@ const FileAIResults = () => {
             </tr>
           </thead>
           <tbody className="">
-            {data.map((file) => {
-              return (
-                <tr
-                  key={file.id}
-                  className="py-[40px] font-medium text-[18px] rounded-[32px]">
-                  <td>
-                    <div className="flex items-center justify-center">
-                      <AccuracyLevel accuracy={file.accuracy} />
-                    </div>
-                  </td>
-                  <td>{file.name}</td>
-                  <td>{file.name}</td>
-                  <td>{file.accuracy}%</td>
-                  <td>{file.path}</td>
-                </tr>
-              );
-            })}
+            <tr className="py-[40px] font-medium text-[18px] rounded-[32px]">
+              <td>
+                <div className="flex items-center justify-center">
+                  <AccuracyLevel accuracy={data.accuracy} />
+                </div>
+              </td>
+              <td>{file.name}</td>
+              <td>{file.name}</td>
+              <td>{data.accuracy}%</td>
+              <td>{data.path}</td>
+            </tr>
           </tbody>
         </table>
       </div>

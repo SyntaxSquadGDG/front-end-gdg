@@ -19,30 +19,23 @@ import VerticalDotsSVG from '../svgs/general/vertical-dots';
 import Link from 'next/link';
 import ToolBar from '../navbars/toolbar';
 
-const FoldersPage = ({ folderData, sectionName, path }) => {
+const FoldersPage = ({ folderData, sectionName, path, id, type }) => {
   const [view, setView] = useState('grid');
   const t = useTranslations();
-  const [modalStack, setModalStack] = useState([]);
-
-  const openModal = (modalId) => {
-    setModalStack((prevStack) => [...prevStack, modalId]); // Push new modal to the stack
-  };
-
-  const closeModal = () => {
-    setModalStack((prevStack) => prevStack.slice(0, -1)); // Remove the top modal from the stack
-  };
-
-  const activeView =
-    'px-[28px] py-[12px] rounded-[32px] bg-gradient-to-r from-[#CDAD8F] via-[#CDAD8F] to-[#FAE1CB]';
-
-  const reversedPath = [...path].reverse();
 
   return (
     <div>
       {/* TOOLBAR */}
-      <ToolBar path={path} views={true} view={view} setView={setView} />
+      <ToolBar
+        path={path}
+        views={true}
+        view={view}
+        setView={setView}
+        id={id}
+        type={type}
+      />
 
-      {view === 'grid' && (
+      {folderData && view === 'grid' && (
         <div className={'flex flex-col gap-[32px]'}>
           <Folders folders={folderData.folders} sectionName={sectionName} />
           <Files files={folderData.files} />
@@ -50,7 +43,7 @@ const FoldersPage = ({ folderData, sectionName, path }) => {
         </div>
       )}
 
-      {view === 'list' && (
+      {folderData && view === 'list' && (
         <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
           <table
             className={clsx(
@@ -98,20 +91,7 @@ const FoldersPage = ({ folderData, sectionName, path }) => {
         </div>
       )}
 
-      <Modal
-        isOpen={modalStack.includes('createFolder')}
-        onClose={closeModal}
-        className={contentFont.className}>
-        <h2 className="text-xl font-bold mb-[16px]">{t('folders.new')}</h2>
-        <input
-          type="text"
-          className="w-[100%] py-[20px] rounded-[8px] px-[16px] border-[1px] border-solid border-blue1 outline-none mb-[16px]"
-        />
-        <input
-          type="submit"
-          className="w-[100%] py-[20px] rounded-[8px] px-[16px] bg-blue1 outline-none text-textLight"
-        />
-      </Modal>
+      {!folderData && <h2>Error while Fetching folder data</h2>}
     </div>
   );
 };

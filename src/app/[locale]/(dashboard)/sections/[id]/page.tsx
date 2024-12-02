@@ -1,32 +1,46 @@
 import SectionPage from '@/app/_components/section-page/section-page';
+import { fetcher } from '@/app/_utils/fetch';
 import React from 'react';
 
-const page = () => {
-  const sectionName = 'MySection';
-  const folders = [
-    {
-      id: 1,
-      name: 'Folder1',
-      size: 1000,
-      numberOfEmployees: 14,
-      numberOfFolders: 20,
-      numberOfFiles: 25,
-      lastModified: '2024-02-02',
-    },
-    {
-      id: 2,
-      name: 'Folder2',
-      size: 950,
-      numberOfEmployees: 11,
-      numberOfFolders: 10,
-      numberOfFiles: 5,
-      lastModified: '2024-02-02',
-    },
-  ];
+const page = async ({ params }) => {
+  const id = (await params).id;
+  let sectionName;
+  let folders;
+  let path;
 
-  const path = [{ id: 1, name: 'Section1', type: 'section' }];
+  try {
+    const sectionNameData = await fetcher(`/Sections/SectioNameById?id=${id}`, {
+      next: { revalidate: 0, tags: ['sectionNameData', id] },
+    });
+    sectionName = sectionNameData.name;
+  } catch (e) {
+    sectionName = '';
+  }
+
+  try {
+    folders = await fetcher(`/Sections/FoldersByParentId?id=${id}`, {
+      next: { revalidate: 0, tags: ['sectionFolders', id] },
+    });
+  } catch (e) {
+    folders = null;
+  }
+
+  try {
+    path = await fetcher(`/Sections/path?id=${id}`, {
+      next: { revalidate: 0, tags: ['sectionPath', id] },
+    });
+  } catch (e) {
+    path = null;
+  }
+
   return (
-    <SectionPage folders={folders} sectionName={sectionName} path={path} />
+    <SectionPage
+      folders={folders}
+      sectionName={sectionName}
+      path={path}
+      type="section"
+      id={id}
+    />
   );
 };
 
