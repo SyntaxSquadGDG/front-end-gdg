@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useModal } from '@/app/_hooks/modal-provider';
+import { useModal } from '@app/_contexts/modal-provider';
 import { revalidatePath } from 'next/cache';
 import { usePathname } from 'next/navigation';
 import { revalidatePathAction } from '@/app/actions';

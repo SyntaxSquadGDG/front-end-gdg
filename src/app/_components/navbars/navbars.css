@@ -8,12 +8,9 @@
   @apply hidden lg:flex;
 }
 
-.gradient-text {
-  background: linear-gradient(
-    to right,
-    #cdad8f,
-    #fae1cb
-  ); /* Define the gradient */
+.active-link {
+  @apply bg-goldLinear;
+
   -webkit-background-clip: text; /* Clip the background to the text */
   color: transparent; /* Make the text color transparent so the background shows through */
 }

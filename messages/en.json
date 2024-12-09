@@ -9,7 +9,166 @@
     "logout": "Logout",
 
     "hello": "Hello",
-    "search": "Search"
+    "search": "Search",
+
+    "about": "About",
+    "services": "Services",
+    "solutions": "Solutions",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register"
+  },
+  "footer": {
+    "slogan": "Smarter Document Management Starts Here",
+    "quick": "Quick Links",
+    "contact": "Contact Us",
+    "location": "Mansoura",
+    "download": "Download our app now",
+    "copyright": "ArchivAI , All Right Reserved"
+  },
+  "home": {
+    "landing": {
+      "head": "Smarter Document Management Starts Here",
+      "description": "Effortlessly organize, classify, and retrieve documents with our AI-powered system to boost productivity.",
+      "getTour": "Get a Tour",
+      "requestDemo": "Request Demo"
+    },
+    "services": {
+      "head": "Explore Our Service",
+      "description": "Discover how our AI-driven platform transforms document management. From smart classification to seamless retrieval, our system simplifies your workflow and enhances productivity.",
+      "description2": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor. Incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+    },
+    "about": {
+      "head": "About Us",
+      "description": "A team of computer science students leveraging AI to deliver smart, efficient document management solutions",
+      "info1Head": "Streamlining Document Management",
+      "info1Description": "Our mission is to save time and minimize errors by using AI to revolutionize how organizations handle their documents",
+      "info2Head": "Smart Solutions for Smarter Workflows",
+      "info2Description": "Dedicated to making everyday tasks easier and more efficient through innovative AI-powered document management."
+    },
+    "solutions": {
+      "solution1": "Health Care",
+      "solution2": "Education",
+      "solution3": "Finance",
+      "explore": "Explore Our Solutions"
+    },
+    "download": "Download our app now",
+    "demo": {
+      "head": "See ArchivAI In Action!",
+      "description": "Experience the power of AI-driven document management firsthand. Request a demo today to see how our system simplifies organization, enhances search efficiency, and boosts productivity. Discover a smarter way to manage your documents.",
+      "request": "Request Demo"
+    }
+  },
+  "about": {
+    "landing": {
+      "head": "Welcome To ArchivAI",
+      "description": "Empower Your Workflow with Intelligent Document Management"
+    },
+    "accelerated": {
+      "head": "\"Empowering Businesses for Accelerated Growth and Success\"",
+      "description1": "\"Documents Management and Classification using AI\"",
+      "description2": "aims to streamline document handling with AI, saving time and minimizing errors. Our system transforms file management, making it faster and easier to find documents.",
+      "accelerated1Head": "Professional Team",
+      "accelerated1Description": "ex hendrerit ultrices eu luctus Nunc nec. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non",
+      "accelerated2Head": "Target Oriented",
+      "accelerated2Description": "ex hendrerit ultrices eu luctus Nunc nec. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non",
+      "accelerated3Head": "Success Guarantee",
+      "accelerated3Description": "ex hendrerit ultrices eu luctus Nunc nec. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non"
+    },
+    "different": {
+      "head": "What Makes Us Different from Others?",
+      "description": "We offer a variety of features and precise features to meet your many needs.",
+      "different1Head": "Improve Process Efficiency",
+      "different1Description": "Automated document workflows across creation, collaboration, and approval increase efficiency by 70%.",
+      "different2Head": "Redefine Document Management with AI",
+      "different2Description": "Streamline your processes and reduce errors with intelligent solutions tailored for your business.",
+      "different3Head": "Smarter Documents for Smarter Decisions",
+      "different3Description": "Leverage AI to organize, analyze, and retrieve your documents with unmatched precision."
+    },
+    "statistics": {
+      "statistics1Head": "70%",
+      "statistics1Description": "increase in productivity",
+      "statistics2Head": "85%",
+      "statistics2Description": "better document search",
+      "statistics3Head": "60%",
+      "statistics3Description": "increase in saving time"
+    }
+  },
+  "solutions": {
+    "landing": {
+      "head": "Smart Solutions for Efficient Document Management",
+      "description": "Discover how our AI-driven system transform document management across industries, streamlining workflows and enhancing efficiency"
+    },
+    "solutions": {
+      "head": "Digital Transformation Solutions",
+      "solution1": "Government institution",
+      "solution2": "Legal",
+      "solution3": "Small and Medium Enterprises (SMEs)",
+      "solution4": "Health Care",
+      "solution5": "Education",
+      "solution6": "Finance",
+      "solution7": "Libraries and Archives",
+      "solution8": "Human Resources"
+    },
+    "demo": {
+      "head": "Want To Explore More In Your Field?",
+      "description": "Experience the power of AI-driven document management firsthand. Request a demo today to see how our system simplifies organization, enhances search efficiency, and boosts productivity. Discover a smarter way to manage your documents.",
+      "request": "Request Demo"
+    }
+  },
+  "forms": {
+    "login": {
+      "head": "Welcome To ArchivAI",
+      "companyLabel": "Company Name",
+      "companyPlaceholder": "Enter Your Company Name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter Your Email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter Password",
+      "remember": "Remember me",
+      "forget": "Forget password ?",
+      "login": "Login",
+      "not": "Don't have an account ?",
+      "register": "Register",
+      "companyError": "Company name is required",
+      "emailError": "Invalid email address",
+      "passwordError": "Password must be at least 6 characters"
+    },
+    "register": {
+      "tab1": "Contact Details",
+      "tab2": "Business Information",
+      "head": "Tell Us About Your Business",
+      "companyLabel": "Company Name",
+      "companyPlaceholder": "Enter Your Company Name",
+      "companyError": "Company name is required",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter Your Email",
+      "emailError": "Invalid email address",
+      "numberLabel": "Phone Number",
+      "numberPlaceholder": "Enter Your Phone",
+      "numberError": "Wrong Number",
+      "countryLabel": "Country",
+      "countryPlaceholder": "Enter Your Country",
+      "countryError": "Wrong Country"
+    },
+    "forget": {
+      "head": "Find your account",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter Your Email",
+      "emailError": "Invalid email address",
+      "notifications": "You may receive Mobile notifications for security and login purposes"
+    },
+    "new": {
+      "head": "Create New Password",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.",
+      "newLabel": "New Password",
+      "newPlaceholder": "Enter Your New Password",
+      "newError": "Password can't be less than 6 characters",
+      "confirmLabel": "Confirm New Password",
+      "confirmPlaceholder": "Confirm Password",
+      "confirmError": "Password doesn't match"
+    }
   },
   "sections": {
     "sections": "Sections",
@@ -26,7 +185,17 @@
   },
   "general": {
     "storage": "Storage",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "remove": "Remove",
+    "readMore": "Read More",
+    "select": "Select an option",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "send": "Send",
+    "confirm": "Confirm",
+    "error": "Something went wrong !",
+    "home": "Go to home"
   },
   "activity": {
     "activity": "Activity Log"
@@ -57,7 +226,31 @@
     "viewMetaData": "View Metadata",
     "uploadNewVersion": "Upload New Version",
     "delete": "Delete a File",
-    "deleteDescription": "Are you sure you want to delete this file?"
+    "deleteDescription": "Are you sure you want to delete this file?",
+    "lock": "Lock File",
+    "lockButton": "Lock",
+    "documentId": "Document ID",
+    "ocrLanguage": "OCR Language",
+    "otherVersions": "Other Versions",
+    "uploaded": "Uploaded",
+    "fileName": "File Name",
+    "restore": "Restore"
+  },
+  "dashboard": {
+    "latestResults": "Latest Results",
+    "resultsOverview": "Get an overview of your recent document activity:",
+    "availableStorage": "Available Storage",
+    "enhance": "Looking to Enhance Your File Organization?",
+    "setupButton": "Smart File Setup",
+    "accuracy": "Categorization Accuracy",
+    "available": "Available",
+    "used": "Used"
+  },
+  "types": {
+    "pdf": "PDF",
+    "excel": "Excel",
+    "word": "Word",
+    "image": "Image"
   }
 }
 

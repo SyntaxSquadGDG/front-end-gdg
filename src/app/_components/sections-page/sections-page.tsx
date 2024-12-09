@@ -1,58 +1,23 @@
 'use client';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
-import SectionsSVG from '../svgs/sections/sections';
 import clsx from 'clsx';
 import { contentFont } from '@/app/_utils/fonts';
-import GridViewSVG from '../svgs/sections/grid-view';
-import ListViewSVG from '../svgs/sections/list-view';
-import SectionItem from './section-item';
-import ActivityItem from '../activity-logs/activity-item';
 import ActivitySection from '../activity-logs/activity-section';
 import Sections from './sections';
 import StackUsers from '../general/stack';
 import VerticalDotsSVG from '../svgs/general/vertical-dots';
 import './table.css';
 import Modal from '../modals/modal';
-import AddSVG from '../svgs/general/add';
-import FileAddAiSVG from '../svgs/files/file-add-ai';
 import Link from 'next/link';
 import ToolBar from '../navbars/toolbar';
-
-const sections = [
-  {
-    name: 'Section Name',
-    id: Math.random() * Math.random(),
-    foldersCount: 20,
-    employeesCount: 20,
-    lastModified: '2024-02-02',
-    storage: 50,
-  },
-  {
-    name: 'Section Name',
-    id: Math.random() * Math.random(),
-    foldersCount: 20,
-    employeesCount: 20,
-    lastModified: '2024-02-02',
-    storage: 50,
-  },
-];
+import { useModal } from '@app/_contexts/modal-provider';
 
 const SectionsPage = ({ sections }) => {
   const t = useTranslations();
-  const [modalStack, setModalStack] = useState([]);
 
-  const openModal = (modalId) => {
-    setModalStack((prevStack) => [...prevStack, modalId]); // Push new modal to the stack
-  };
-
-  const closeModal = () => {
-    setModalStack((prevStack) => prevStack.slice(0, -1)); // Remove the top modal from the stack
-  };
-
+  const { modalStack, openModal, closeModal } = useModal();
   const [view, setView] = useState('grid');
-  const activeView =
-    'px-[28px] py-[12px] rounded-[32px] bg-gradient-to-r from-[#CDAD8F] via-[#CDAD8F] to-[#FAE1CB]';
 
   return (
     <div>
@@ -75,14 +40,9 @@ const SectionsPage = ({ sections }) => {
 
       {sections && view === 'list' && (
         <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
-          <table
-            className={clsx(
-              'table-auto w-full min-w-[700px] border-collapse',
-              contentFont.className,
-              'table',
-            )}>
-            <thead className="rounded-[32px]">
-              <tr className="font-semibold text-[20px] border-b-solid border-b-tableBorder ">
+          <table className={clsx(contentFont.className, 'table')}>
+            <thead>
+              <tr>
                 <td>{t('sections.name')}</td>
                 <td>{t('sections.foldersCount')}</td>
                 <td>{t('sections.lastModified')}</td>
@@ -91,12 +51,10 @@ const SectionsPage = ({ sections }) => {
                 <td></td>
               </tr>
             </thead>
-            <tbody className="">
+            <tbody>
               {sections.map((section) => {
                 return (
-                  <tr
-                    key={section.id}
-                    className="py-[40px] font-medium text-[18px] rounded-[32px]">
+                  <tr key={section.id}>
                     <td>
                       <Link href={`/sections/${section.id}`}>
                         {section.name}

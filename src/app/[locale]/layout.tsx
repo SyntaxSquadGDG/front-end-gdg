@@ -1,15 +1,19 @@
 import type { Metadata } from 'next';
 import '../globals.css';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getLocale, getMessages } from 'next-intl/server';
 import VerticalNavbar from '../_components/navbars/vertical-navbar';
 import HorizontalNavbar from '../_components/navbars/horizontal-navbar';
 import clsx from 'clsx';
 import NextTopLoader from 'nextjs-toploader';
 import { getCookie } from 'cookies-next';
 import { cookies } from 'next/headers';
-import { ModalProvider } from '../_hooks/modal-provider';
+import { ModalProvider } from '../_contexts/modal-provider';
 import { Toaster } from 'react-hot-toast';
+import { getLangDir } from 'rtl-detect';
+import GuestNavbar from '@app/_components/navbars/guest-navbar';
+import OverlayImage from '@app/_components/general/overlay';
+import Footer from '@app/_components/navbars/footer';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -27,16 +31,29 @@ export default async function RootLayout({
   // const isAuth = !!allCookies.get('token');
   // console.log(allCookies);
 
-  const isAuth = true;
+  const isAuth = false;
+  const locale = await getLocale();
+  const direction = getLangDir(locale);
 
   return (
-    <html lang="en">
+    <html lang={locale} dir={direction}>
       <body
         className={clsx(
+          'overflow-x-hidden',
+          'text-textDark',
           isAuth &&
-            'pl-[calc(100px+32px)] lg:pl-[calc(213px+32px)] pt-[calc(104px+24px)] pr-[32px]',
-          !isAuth && '',
+            `${
+              direction === 'ltr'
+                ? 'pl-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pl-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight)+24px)] pr-[var(--navsBodySpacing)]'
+                : 'pr-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pr-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight)+24px)] pl-[var(--navsBodySpacing)]'
+            } `,
+          !isAuth &&
+            'relative pt-[calc(var(--guestNavHeight))] bg-guestMainColor bg-fixed bg-cover bg-[url("/images/patterns/guest.png")]',
         )}>
+        {!isAuth && (
+          <div className="w-[100vw] h-[100%] bg-guestMainColor mix-blend-multiply absolute top-0 left-0" />
+        )}
+        {/* {!isAuth && <OverlayImage />} */}
         <NextTopLoader />
         <Toaster position="top-center" reverseOrder={false} />
 
@@ -47,7 +64,14 @@ export default async function RootLayout({
               <HorizontalNavbar />
             </>
           )}
-          <ModalProvider>{children}</ModalProvider>
+          {!isAuth && <GuestNavbar />}
+          <ModalProvider>
+            <main className="relative z-50">
+              {children}
+              {!isAuth && <Footer />}
+
+            </main>
+          </ModalProvider>
         </NextIntlClientProvider>
       </body>
     </html>

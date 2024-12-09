@@ -1,5 +1,4 @@
 'use client';
-import Link from 'next/link';
 import React from 'react';
 import HomeSVG from '../svgs/navbars/home';
 import { useLocale, useTranslations } from 'next-intl';
@@ -13,9 +12,10 @@ import RolesSVG from '../svgs/navbars/roles';
 import ActivitySVG from '../svgs/navbars/activity';
 import ProfileSVG from '../svgs/navbars/profile';
 import LogoutSVG from '../svgs/navbars/logout';
-// import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { deleteCookie } from 'cookies-next';
+import OverlayImage from '../general/overlay';
+import VerticalNavbarItem from './vertical-navbar-item';
 
 const VerticalNavbar = () => {
   const t = useTranslations();
@@ -23,7 +23,39 @@ const VerticalNavbar = () => {
   const direction = getLangDir(locale);
   const fullPathname = usePathname();
   const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
-  console.log(pathName);
+
+  const data = [
+    {
+      path: '/dashboard',
+      text: t('navbar.home'),
+      svg: HomeSVG,
+    },
+    {
+      path: '/sections',
+      text: t('navbar.sections'),
+      svg: SectionsSVG,
+    },
+    {
+      path: '/employees',
+      text: t('navbar.employees'),
+      svg: EmployeesSVG,
+    },
+    {
+      path: '/roles',
+      text: t('navbar.roles'),
+      svg: RolesSVG,
+    },
+    {
+      path: '/activity',
+      text: t('navbar.activity'),
+      svg: ActivitySVG,
+    },
+    {
+      path: '/profile',
+      text: t('navbar.profile'),
+      svg: ProfileSVG,
+    },
+  ];
 
   function handleLogout() {
     deleteCookie('token');
@@ -31,71 +63,40 @@ const VerticalNavbar = () => {
 
   return (
     <nav
-      className={
-        'h-screen w-[100px] lg:w-[213px] rounded-tr-bigRounded rounded-br-bigRounded bg-gradient-to-b from-blue1 to-blue2 fixed top-0 left-0 text-[16px]'
-      }>
-      <div
+      className={clsx(
+        direction === 'ltr'
+          ? 'left-0 rounded-tr-navsRadius rounded-br-navsRadius'
+          : 'right-0 rounded-tl-navsRadius rounded-bl-navsRadius',
+        'h-screen w-verticalNavSmallWidth lg:w-verticalNavWidth bg-mainDashboardLinear fixed top-0 text-[16px] font-medium',
+      )}>
+      <OverlayImage
+        url="/images/navbar/background.png"
         className={
-          "absolute inset-0 bg-[url('/images/navbar/background.png')] bg-cover bg-center mix-blend-multiply rounded-br-bigRounded rounded-tr-bigRounded z-0"
+          direction === 'ltr'
+            ? 'rounded-tr-navsRadius rounded-br-navsRadius'
+            : 'rounded-tl-navsRadius rounded-bl-navsRadius'
         }
       />
 
       <div
         className={clsx(
-          'w-[100%] h-[100%] text-[white] relative z-[5] flex flex-col justify-between px-[32px]',
+          'w-[100%] h-[100%] text-textLight relative z-[5] flex flex-col justify-between px-[32px]',
           headFont.className,
         )}>
         <div>
           <p className="my-[32px]">LOGO</p>
           <ul className="vertical-list flex flex-col gap-[32px]">
-            <li>
-              <Link href={'/dashboard'}>
-                <HomeSVG active={pathName === '/dashboard'} />
-                <p className={pathName === '/dashboard' ? 'gradient-text' : ''}>
-                  {t('navbar.home')}
-                </p>
-              </Link>
-            </li>
-            <li>
-              <Link href={'/sections'}>
-                <SectionsSVG active={pathName === '/sections'} />
-                <p className={pathName === '/sections' ? 'gradient-text' : ''}>
-                  {t('navbar.sections')}
-                </p>
-              </Link>
-            </li>
-            <li>
-              <Link href={'/employees'}>
-                <EmployeesSVG active={pathName === '/employees'} />
-                <p className={pathName === '/employees' ? 'gradient-text' : ''}>
-                  {t('navbar.employees')}
-                </p>
-              </Link>
-            </li>
-            <li>
-              <Link href={'/roles'}>
-                <RolesSVG active={pathName === '/roles'} />
-                <p className={pathName === '/roles' ? 'gradient-text' : ''}>
-                  {t('navbar.roles')}
-                </p>
-              </Link>
-            </li>
-            <li>
-              <Link href={'/activity'}>
-                <ActivitySVG active={pathName === '/activity'} />
-                <p className={pathName === '/activity' ? 'gradient-text' : ''}>
-                  {t('navbar.activity')}
-                </p>
-              </Link>
-            </li>
-            <li>
-              <Link href={'/profile'}>
-                <ProfileSVG active={pathName === '/profile'} />
-                <p className={pathName === '/profile' ? 'gradient-text' : ''}>
-                  {t('navbar.profile')}
-                </p>
-              </Link>
-            </li>
+            {data.map((item) => {
+              return (
+                <VerticalNavbarItem
+                  key={item.path}
+                  path={item.path}
+                  pathName={pathName}
+                  text={item.text}
+                  SVG={item.svg}
+                />
+              );
+            })}
           </ul>
         </div>
 

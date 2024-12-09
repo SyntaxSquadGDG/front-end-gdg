@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import VerticalDotsSVG from '../svgs/general/vertical-dots';
 import ImageSVG from '../svgs/files/image';
 import WordSVG from '../svgs/files/word';
@@ -9,38 +9,16 @@ import { contentFont } from '@/app/_utils/fonts';
 import Link from 'next/link';
 import Modal from '../modals/modal';
 import { useTranslations } from 'next-intl';
+import { useModal } from '@app/_contexts/modal-provider';
+import useClickOutside from '@app/_hooks/useclickoutside';
 
 const FileItem = ({ file }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const t = useTranslations();
+  const { openModal, closeModal, modalStack } = useModal();
 
-  const [modalStack, setModalStack] = useState([]);
-
-  const openModal = (modalId) => {
-    setModalStack((prevStack) => [...prevStack, modalId]); // Push new modal to the stack
-  };
-
-  const closeModal = () => {
-    setModalStack((prevStack) => prevStack.slice(0, -1)); // Remove the top modal from the stack
-  };
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target)
-      ) {
-        setIsOpen(false); // Change the state when clicking outside
-      }
-    }
-
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
+  useClickOutside(containerRef, () => setIsOpen(false));
 
   return (
     <div

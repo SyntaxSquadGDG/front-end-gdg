@@ -8,6 +8,49 @@
 
   --gold1: '#CDAD8F';
   --gold2: '#FAE1CB';
+
+  /* COLORS */
+  --guestMainColor: #18223f;
+  --guestButtonText: #0d1329;
+  --guestSecondary1: #e8c4a2;
+  --guestSecondary2: #f0ccaa;
+  --guestSecondary3: #ffeddd;
+  --textLight: #ffffff;
+  --textDark: #000000;
+  --mainColor1: #132863;
+  --mainColor2: #021c63;
+  --mainColor3: #3c57a4;
+  --mainColor1Opacity: #132863e6;
+  --mainColor2Opacity: #021c63e6;
+  --mainColorPie: #616f96;
+  --mainColorBar: #7391e1;
+  --dangerColor: #b62424;
+  --errorColor: #ee4646;
+  --placeHolderColor: #b3b3b3;
+  --cardColor: #d4ddf7;
+  --tableText: #5f5f5f;
+  --tableBorder: #6e6e6e;
+  --storageContainer: #f6f8ff;
+  --secondaryColor1: #cdad8f;
+  --secondaryColor2: #fae1cb;
+  --lowColor: #930b0b;
+  --highColor: #0b9318;
+
+  /* SIZES */
+  --horizontalNavHeight: 104px;
+  --verticalNavWidth: 213px;
+  --verticalNavSmallWidth: 100px;
+  --guestNavHeight: 100px;
+
+  /* RADIUS */
+  --navsRadius: 40px;
+
+  /* SPACING */
+  --navsBodySpacing: 32px;
+  --searchBarTop: 96px;
+  --activitySpace: 432px;
+  --sectionPadding: 80px;
+  --sectionGap: 48px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,9 +69,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.table {
+  @apply table-auto w-full min-w-[700px] border-collapse;
+}
+
 .table tr td,
 .table tr th {
-  @apply py-[40px] text-center mx-auto text-[#5F5F5F] text-[18px] font-medium;
+  @apply py-[40px] text-center mx-auto text-tableText text-[18px] font-medium;
 }
 
 .table tr {
@@ -39,6 +86,59 @@ body {
   @apply text-blue1 font-bold;
 }
 
+.table tbody tr {
+  @apply py-[40px] font-medium text-[18px] rounded-[32px];
+}
+
 input[type='submit'] {
   @apply cursor-pointer;
 }
+
+.linearMainText {
+  @apply bg-mainDashboardLinear;
+
+  -webkit-background-clip: text; /* Clip the background to the text */
+  color: transparent; /* Make the text color transparent so the background shows through */
+}
+
+.linearGuestText {
+  @apply bg-goldText;
+
+  -webkit-background-clip: text; /* Clip the background to the text */
+  color: transparent; /* Make the text color transparent so the background shows through */
+}
+
+.linearGuestText2 {
+  @apply bg-goldLinear;
+
+  -webkit-background-clip: text; /* Clip the background to the text */
+  color: transparent; /* Make the text color transparent so the background shows through */
+}
+
+.minHeightSection {
+  @apply min-h-[calc(100vh-var(--guestNavHeight))];
+}
+
+.minHeightFormSection {
+  @apply min-h-[calc(100vh-var(--guestNavHeight)-80px)];
+}
+
+.box2 {
+  clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+}
+
+.box3 {
+  clip-path: polygon(100% 0, 100% 50%, 100% 100%, 0% 100%, 15% 50%, 0% 0%);
+}
+
+.flt_svg {
+  visibility: hidden;
+  position: absolute;
+  width: 0px;
+  height: 0px;
+}
+
+.box_parent {
+  filter: url('#flt_tag');
+}
+

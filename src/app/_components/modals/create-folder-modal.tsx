@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { contentFont } from '@/app/_utils/fonts'; // Assuming this is your font
 import { useTranslations } from 'next-intl';
-import { useModal } from '@/app/_hooks/modal-provider';
+import { useModal } from '@app/_contexts/modal-provider';
 import Modal from './modal';
 import toast from 'react-hot-toast';
 import { fetcher } from '@/app/_utils/fetch';

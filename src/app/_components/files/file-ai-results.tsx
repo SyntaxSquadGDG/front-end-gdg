@@ -1,6 +1,6 @@
 'use client';
 import AccuracyLevel from '@/app/_components/general/accuracy';
-import { useModal } from '@/app/_hooks/modal-provider';
+import { useModal } from '@app/_contexts/modal-provider';
 import { contentFont } from '@/app/_utils/fonts';
 import { revalidatePathAction } from '@/app/actions';
 import clsx from 'clsx';
@@ -84,7 +84,12 @@ const FileAIResults = ({ file, data }) => {
               </td>
               <td>{file.name}</td>
               <td>{file.name}</td>
-              <td>{data.accuracy}%</td>
+              <td
+                className={clsx(
+                  data.accuracy < 50 ? 'text-lowColor' : 'text-highColor',
+                )}>
+                {data.accuracy}%
+              </td>
               <td>{data.path}</td>
             </tr>
           </tbody>

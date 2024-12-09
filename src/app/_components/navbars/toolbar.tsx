@@ -8,16 +8,17 @@ import AddFolderSVG from '../svgs/folders/add';
 import AddFileSVG from '../svgs/files/add';
 import FileAddAiSVG from '../svgs/files/file-add-ai';
 import ListViewSVG from '../svgs/sections/list-view';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import GridViewSVG from '../svgs/sections/grid-view';
 import Modal from '../modals/modal';
 import FileAIResults from '../files/file-ai-results';
 import DragAndDropInput from '../files/drag-drop';
-import { useModal } from '@/app/_hooks/modal-provider';
+import { useModal } from '@app/_contexts/modal-provider';
 import AddSVG from '../svgs/general/add';
 import CreateSectionModal from '../modals/create-section-modal';
 import CreateFolderModal from '../modals/create-folder-modal';
+import { getLangDir } from 'rtl-detect';
 
 const ToolBar = ({
   views,
@@ -30,9 +31,10 @@ const ToolBar = ({
   pathRequired = true,
 }) => {
   const t = useTranslations();
+  const locale = useLocale();
+  const direction = getLangDir(locale);
   const { modalStack, openModal, closeModal } = useModal();
-  const activeView =
-    'px-[28px] py-[12px] rounded-[32px] bg-gradient-to-r from-[#CDAD8F] via-[#CDAD8F] to-[#FAE1CB]';
+  const activeView = 'px-[28px] py-[12px] rounded-[32px] bg-goldLinear';
   const reversedPath = path ? [...path].reverse() : null;
 
   const [file, setFile] = useState(null);
@@ -94,14 +96,22 @@ const ToolBar = ({
           <div className="rounded-[32px] flex items-center border-[1px] border-solid border-blue1 w-fit">
             <button
               className={clsx(
-                view === 'grid' ? activeView : 'pr-[12px] pl-[21px]',
+                view === 'grid'
+                  ? activeView
+                  : direction === 'ltr'
+                  ? 'pr-[12px] pl-[21px]'
+                  : 'pl-[12px] pr-[21px]',
               )}
               onClick={() => setView('grid')}>
               <GridViewSVG />
             </button>
             <button
               className={clsx(
-                view === 'list' ? activeView : 'pl-[12px] pr-[21px]',
+                view === 'list'
+                  ? activeView
+                  : direction === 'ltr'
+                  ? 'pl-[12px] pr-[21px]'
+                  : 'pr-[12px] pl-[21px]',
               )}
               onClick={() => setView('list')}>
               <ListViewSVG />
@@ -112,7 +122,7 @@ const ToolBar = ({
 
           <button
             className={clsx(
-              'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] bg-gradient-to-r from-blue1 to-blue2 w-fit text-textLight',
+              'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] bg-mainColor1 w-fit text-textLight',
               contentFont.className,
             )}
             onClick={() => handleAIClick()}>
@@ -122,7 +132,7 @@ const ToolBar = ({
 
           <button
             className={clsx(
-              'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit text-blue1',
+              'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit text-textDark',
               contentFont.className,
             )}
             onClick={() => openModal('createSection')}>
