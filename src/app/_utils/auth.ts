@@ -1,37 +1,23 @@
-export function decodeJwtFromCookie(cookieName) {
-  // Helper function to retrieve the value of a specific cookie by name
-  function getCookieValue(name) {
-    const cookies = document.cookie.split('; ');
-    const cookie = cookies.find((row) => row.startsWith(`${name}=`));
-    return cookie ? decodeURIComponent(cookie.split('=')[1]) : null;
-  }
+export function decodeJWT(token) {
+  // Split the token into its 3 parts
+  const [header, payload, signature] = token.split('.');
 
-  // Helper function to decode base64 strings
-  function base64Decode(base64String) {
-    const base64 = base64String.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map((c) => `%${c.charCodeAt(0).toString(16).padStart(2, '0')}`)
-        .join(''),
-    );
-    return JSON.parse(jsonPayload);
-  }
+  // Decode the header and payload (from Base64 URL encoding to Base64 standard)
+  const decodeBase64 = (str) => {
+    // Add the necessary padding for Base64 URL decoding
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (str.length % 4) str += '=';
+    return atob(str); // atob is a built-in browser function for Base64 decoding
+  };
 
-  // Retrieve the JWT token from the cookie
-  const token = getCookieValue(cookieName);
-  if (!token) {
-    throw new Error('JWT cookie not found or empty.');
-  }
+  // Decode both parts and parse them into JSON
+  const decodedHeader = JSON.parse(decodeBase64(header));
+  const decodedPayload = JSON.parse(decodeBase64(payload));
 
-  // Decode the JWT token
-  try {
-    const [header, payload, signature] = token.split('.');
-    if (!payload) {
-      throw new Error('Invalid JWT structure.');
-    }
-    return base64Decode(payload);
-  } catch (error) {
-    throw new Error('Invalid JWT token.');
-  }
+  return {
+    header: decodedHeader,
+    payload: decodedPayload,
+    signature: signature, // Signature cannot be decoded
+  };
 }
+

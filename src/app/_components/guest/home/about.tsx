@@ -9,19 +9,23 @@ import { contentFont } from '@app/_utils/fonts';
 import RectangleInfo from '../common/rectangle-info';
 import AiSVG from '@app/_components/svgs/guest/ai';
 import DocumentsSVG from '@app/_components/svgs/guest/documents';
+import OverlaySection from '../common/overlay-section';
 
 const About = async () => {
   const t = await getTranslations();
   return (
     <section className={clsx('minHeightSection relative')}>
-      <div className='bg-[url("/images/patterns/wave2.png")] bg-no-repeat bg-cover bg-left-bottom w-[100%] h-[100%] minHeightSection absolute top-0 left-0 z-[1px] opacity-20' />
+      <OverlaySection
+        className={'bg-[url("/images/patterns/wave2.png")] opacity-10'}
+      />
+
       <div
         className={clsx(
           'relative z-[5px] container mx-auto flex items-center minHeightSection flex-col lg:flex-row',
           'py-sectionPadding gap-sectionGap',
         )}>
-        <ImageDiv src={'/images/guest/home/about.png'} />
-        <div className="">
+        <ImageDiv src={'/images/guest/home/about.png'} direction="left" />
+        <div className="w-[100%]">
           <HeadText>{t('home.about.head')}</HeadText>
           <p
             className={clsx(

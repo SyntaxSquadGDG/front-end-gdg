@@ -6,6 +6,8 @@ import RectangleInfo from '../common/rectangle-info';
 import ImproveSVG from '@app/_components/svgs/guest/improve';
 import AiSVG from '@app/_components/svgs/guest/ai';
 import DocumentsSVG from '@app/_components/svgs/guest/documents';
+import OverlaySection from '../common/overlay-section';
+import ImageDiv from '../common/image';
 
 const Different = async () => {
   const t = await getTranslations();
@@ -28,16 +30,16 @@ const Different = async () => {
   ];
   return (
     <section className={clsx('relative minHeightSection')}>
-      <div className='bg-[url("/images/patterns/wave2.png")] bg-no-repeat bg-contain bg-left-bottom w-[100%] h-[100%] minHeightSection absolute top-0 left-0 z-[1px] opacity-20' />
+      <OverlaySection
+        className={'bg-[url("/images/patterns/wave2.png")] opacity-10'}
+      />
       <div
         className={clsx(
           'relative z-[5px] container mx-auto flex items-center justify-center lg:flex-row flex-col text-textLight',
           'py-sectionPadding minHeightSection gap-sectionGap',
         )}>
-        <div>
-          <img src="/images/guest/about/light.png" alt="" />
-        </div>
-        <div>
+        <ImageDiv src={'/images/guest/about/light.png'} direction="middle" />
+        <div className="w-[100%]">
           <h2
             className={clsx(
               headFont.className,

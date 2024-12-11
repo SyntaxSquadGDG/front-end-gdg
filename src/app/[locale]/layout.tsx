@@ -14,6 +14,7 @@ import { getLangDir } from 'rtl-detect';
 import GuestNavbar from '@app/_components/navbars/guest-navbar';
 import OverlayImage from '@app/_components/general/overlay';
 import Footer from '@app/_components/navbars/footer';
+import { decodeJWT, decodeJwtFromCookie } from '@app/_utils/auth';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -26,12 +27,19 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const messages = await getMessages();
+  let isAuth = false;
   // const allCookies = await cookies();
 
   // const isAuth = !!allCookies.get('token');
   // console.log(allCookies);
 
-  const isAuth = false;
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token');
+  if (token) {
+    const decoded = decodeJWT(token.value);
+    isAuth = decoded && !!decoded.payload;
+  }
+
   const locale = await getLocale();
   const direction = getLangDir(locale);
 
@@ -69,7 +77,6 @@ export default async function RootLayout({
             <main className="relative z-50">
               {children}
               {!isAuth && <Footer />}
-
             </main>
           </ModalProvider>
         </NextIntlClientProvider>

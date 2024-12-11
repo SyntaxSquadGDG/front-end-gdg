@@ -7,6 +7,7 @@ import EducationSVG from '@app/_components/svgs/guest/solutions/education';
 import FinanceSVG from '@app/_components/svgs/guest/solutions/finance';
 import HeadText from '../common/head';
 import GuestButton from '@app/_components/general/guest-button';
+import OverlaySection from '../common/overlay-section';
 
 const Solutions = async () => {
   const t = await getTranslations();
@@ -29,7 +30,7 @@ const Solutions = async () => {
   ];
   return (
     <section className={clsx('minHeightSection relative')}>
-      <div className="bg-guestLinear w-[100%] h-[100%] minHeightSection absolute top-0 left-0 z-[1px]" />
+      <OverlaySection className={'bg-guestLinear'} />
       <div
         className={clsx(
           'relative z-[5px] container mx-auto flex items-center minHeightSection flex-col lg:flex-row',

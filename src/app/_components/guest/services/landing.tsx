@@ -18,13 +18,13 @@ const Landing = async () => {
           'relative z-[5px] container mx-auto flex items-center justify-center flex-col text-center',
           'py-[240px] ',
         )}>
-        <HeadText>{t('about.landing.head')}</HeadText>
+        <HeadText>{t('services.landing.head')}</HeadText>
         <p
           className={clsx(
             contentFont.className,
             'text-[30px] font-medium mt-[32px] text-textLight',
           )}>
-          {t('about.landing.description')}
+          {t('services.landing.description')}
         </p>
       </div>
     </section>

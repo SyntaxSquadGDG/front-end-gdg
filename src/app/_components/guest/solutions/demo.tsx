@@ -4,6 +4,7 @@ import HeadText from '../common/head';
 import { getTranslations } from 'next-intl/server';
 import DescriptionText from '../common/description';
 import GuestButton from '@app/_components/general/guest-button';
+import ImageDiv from '../common/image';
 
 const Demo = async () => {
   const t = await getTranslations();
@@ -14,7 +15,7 @@ const Demo = async () => {
           'relative z-[5px] container mx-auto flex items-center flex-col lg:flex-row',
           'gap-sectionGap py-sectionPadding',
         )}>
-        <div>
+        <div className="w-[100%]">
           <HeadText variant="light">{t('solutions.demo.head')}</HeadText>
           <DescriptionText size={22}>
             {t('solutions.demo.description')}
@@ -26,9 +27,7 @@ const Demo = async () => {
             {t('solutions.demo.request')}
           </GuestButton>
         </div>
-        <div className="shrink-0">
-          <img src="/images/guest/solutions/demo.png" alt="" />
-        </div>
+        <ImageDiv src="/images/guest/solutions/demo.png" />
       </div>
     </section>
   );

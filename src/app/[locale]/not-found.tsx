@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 
-const Error = () => {
+const NotFound = () => {
   const t = useTranslations();
   return (
     <FormSection>
@@ -20,7 +20,7 @@ const Error = () => {
             headFont.className,
             'text-[40px] font-bold mt-[16px] mb-[40px] text-textLight',
           )}>
-          {t('general.error')}
+          {t('general.notFound')}
         </p>
         <GuestButton link={true} href={'/'}>
           {t('general.home')}
@@ -30,5 +30,5 @@ const Error = () => {
   );
 };
 
-export default Error;
+export default NotFound;
 

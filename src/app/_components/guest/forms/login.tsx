@@ -14,9 +14,13 @@ import { z } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
+import { setCookie } from 'cookies-next/client';
+import { revalidatePathAction } from '@app/actions';
+import { redirect, useRouter } from 'next/navigation';
 
 const Login = () => {
   const t = useTranslations();
+  const router = useRouter();
 
   const loginSchema = z.object({
     company: z.string().min(1, t('forms.login.companyError')),
@@ -37,8 +41,15 @@ const Login = () => {
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
+
+    setCookie(
+      'token',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+    );
+    await revalidatePathAction('/dashboard');
+    router.push('/dashboard');
   };
 
   return (

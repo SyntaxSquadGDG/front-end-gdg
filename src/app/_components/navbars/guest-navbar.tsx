@@ -1,8 +1,8 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import GuestNavbarItem from './guest-navbar-item';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
 import useClickOutside from '@app/_hooks/useclickoutside';
@@ -43,9 +43,13 @@ const GuestNavbar = () => {
 
   useClickOutside(navRef, () => setIsOpen(false));
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathName]);
+
   return (
     <nav
-      className="fixed h-guestNavHeight top-0 left-0 bg-gray-600 w-[100vw] flex items-center z-[999]"
+      className="fixed h-guestNavHeight top-0 left-0 w-[100vw] flex items-center z-[999] custom-blur"
       ref={navRef}>
       <div className="container mx-auto flex items-center gap-[80px] justify-between">
         <p>LOGO</p>
@@ -57,9 +61,9 @@ const GuestNavbar = () => {
 
         <div
           className={clsx(
-            'flex-grow',
+            'flex-grow z-[1000]',
             isOpen &&
-              'absolute top-guestNavSpacing bg-slate-500 left-0 w-[100vw] flex py-[32px]',
+              'fixed top-guestNavSpacing custom-blur left-0 w-[100vw] flex py-[32px] ',
             isOpen && '2xl:static 2xl:w-auto 2xl:bg-transparent 2xl:py-0',
             !isOpen && 'hidden 2xl:flex',
           )}>
@@ -70,7 +74,7 @@ const GuestNavbar = () => {
             )}>
             <ul
               className={clsx(
-                'flex items-center gap-[32px]',
+                'flex items-center gap-[4px]',
                 isOpen && 'flex-col items-stretch',
                 isOpen && '2xl:flex-row 2xl:items-center',
               )}>

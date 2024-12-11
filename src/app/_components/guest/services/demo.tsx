@@ -16,18 +16,18 @@ const Demo = async () => {
           'gap-sectionGap py-sectionPadding',
         )}>
         <div className="w-[100%]">
-          <HeadText variant="light">{t('home.demo.head')}</HeadText>
+          <HeadText variant="light">{t('solutions.demo.head')}</HeadText>
           <DescriptionText size={22}>
-            {t('home.demo.description')}
+            {t('solutions.demo.description')}
           </DescriptionText>
           <GuestButton
             link={true}
             href={'/demo'}
             className={'w-[100%] lg:w-fit'}>
-            {t('home.demo.request')}
+            {t('solutions.demo.request')}
           </GuestButton>
         </div>
-        <ImageDiv src={'/images/guest/home/demo.png'} />
+        <ImageDiv src="/images/guest/services/demo.png" />
       </div>
     </section>
   );

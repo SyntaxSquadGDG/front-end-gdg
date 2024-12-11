@@ -117,6 +117,27 @@
       "request": "Request Demo"
     }
   },
+  "services": {
+    "landing": {
+      "head": "AI-Powered Document Management Service",
+      "description": "Transform chaos into clarity with our AI-driven document platform"
+    },
+    "features": {
+      "head": "Digital Transformation Features",
+      "service1Head": "Folder and File Management",
+      "service1Description": "ex hendrerit ultrices eu luctus Nunc nec sollicitudin. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non",
+      "service2Head": "Version Control",
+      "service2Description": "ex hendrerit ultrices eu luctus Nunc nec sollicitudin. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non",
+      "service3Head": "Access Management",
+      "service3Description": "ex hendrerit ultrices eu luctus Nunc nec sollicitudin. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non",
+      "service4Head": "Custom Metadata",
+      "service4Description": "ex hendrerit ultrices eu luctus Nunc nec sollicitudin. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non",
+      "service5Head": "OCR",
+      "service5Description": "ex hendrerit ultrices eu luctus Nunc nec sollicitudin. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non",
+      "service6Head": "Semantic Search",
+      "service6Description": "ex hendrerit ultrices eu luctus Nunc nec sollicitudin. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non"
+    }
+  },
   "forms": {
     "login": {
       "head": "Welcome To ArchivAI",
@@ -195,6 +216,7 @@
     "send": "Send",
     "confirm": "Confirm",
     "error": "Something went wrong !",
+    "notFound": "Page Not Found!",
     "home": "Go to home"
   },
   "activity": {

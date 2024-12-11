@@ -12,10 +12,11 @@ import RolesSVG from '../svgs/navbars/roles';
 import ActivitySVG from '../svgs/navbars/activity';
 import ProfileSVG from '../svgs/navbars/profile';
 import LogoutSVG from '../svgs/navbars/logout';
-import { usePathname } from 'next/navigation';
+import { redirect, usePathname, useRouter } from 'next/navigation';
 import { deleteCookie } from 'cookies-next';
 import OverlayImage from '../general/overlay';
 import VerticalNavbarItem from './vertical-navbar-item';
+import { revalidatePathAction } from '@app/actions';
 
 const VerticalNavbar = () => {
   const t = useTranslations();
@@ -23,6 +24,7 @@ const VerticalNavbar = () => {
   const direction = getLangDir(locale);
   const fullPathname = usePathname();
   const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
+  const router = useRouter();
 
   const data = [
     {
@@ -57,8 +59,10 @@ const VerticalNavbar = () => {
     },
   ];
 
-  function handleLogout() {
+  async function handleLogout() {
     deleteCookie('token');
+    await revalidatePathAction('/login');
+    router.push('/login');
   }
 
   return (

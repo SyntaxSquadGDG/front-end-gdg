@@ -3,12 +3,15 @@ import React from 'react';
 import HeadText from '../common/head';
 import { getTranslations } from 'next-intl/server';
 import GoogleButton from '../common/google-button';
+import OverlaySection from '../common/overlay-section';
 
 const Download = async () => {
   const t = await getTranslations();
   return (
     <section className={clsx('relative')}>
-      <div className='bg-[url("/images/patterns/wave2.png")] bg-no-repeat bg-cover bg-left-bottom w-[100%] h-[100%] absolute top-0 left-0 z-[1px] opacity-20' />
+      <OverlaySection
+        className={'bg-[url("/images/patterns/wave2.png")] opacity-10'}
+      />
       <div
         className={clsx(
           'relative z-[5px] container mx-auto flex items-center flex-col lg:flex-row',

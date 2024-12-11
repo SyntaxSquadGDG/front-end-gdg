@@ -7,6 +7,7 @@ import TeamSVG from '@app/_components/svgs/guest/about/team';
 import TargetSVG from '@app/_components/svgs/guest/about/target';
 import SuccessSVG from '@app/_components/svgs/guest/about/success';
 import CircularInfo from '../common/circular-info';
+import OverlaySection from '../common/overlay-section';
 
 const Accelerated = async () => {
   const t = await getTranslations();
@@ -29,7 +30,7 @@ const Accelerated = async () => {
   ];
   return (
     <section className={clsx('relative minHeightSection')}>
-      <div className="bg-guestLinear w-[100%] h-[100%] minHeightSection absolute top-0 left-0 z-[1px]" />
+      <OverlaySection className={'bg-guestLinear'} />
       <div
         className={clsx(
           'relative z-[5px] container mx-auto flex items-center justify-center  flex-col text-textLight text-center',
