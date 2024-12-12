@@ -24,9 +24,9 @@ const OcrSVG = () => {
           x2="106.402"
           y2="56.0001"
           gradientUnits="userSpaceOnUse">
-          <stop stopColor="#CDAD8F" />
-          <stop offset="0.504277" stopColor="#CDAD8F" />
-          <stop offset="1" stopColor="#FAE1CB" />
+          <stop stopColor="var(--secondaryColor1)" />
+          <stop offset="0.504277" stopColor="var(--secondaryColor1)" />
+          <stop offset="1" stopColor="var(--secondaryColor2)" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_1997_276"
@@ -35,9 +35,9 @@ const OcrSVG = () => {
           x2="84"
           y2="56"
           gradientUnits="userSpaceOnUse">
-          <stop stopColor="#CDAD8F" />
-          <stop offset="0.504277" stopColor="#CDAD8F" />
-          <stop offset="1" stopColor="#FAE1CB" />
+          <stop stopColor="var(--secondaryColor1)" />
+          <stop offset="0.504277" stopColor="var(--secondaryColor1)" />
+          <stop offset="1" stopColor="var(--secondaryColor2)" />
         </linearGradient>
       </defs>
     </svg>

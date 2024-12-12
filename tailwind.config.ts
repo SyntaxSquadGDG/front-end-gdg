@@ -34,6 +34,7 @@ export default {
 
         textLight: 'var(--textLight)',
         textDark: 'var(--textDark)',
+        iconLight: 'var(--iconLight)',
         mainColor1: 'var(--mainColor1)',
         mainColor2: 'var(--mainColor2)',
         mainColor3: 'var(--mainColor3)',

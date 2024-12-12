@@ -20,9 +20,9 @@ const AccessSVG = () => {
           x2="101.5"
           y2="56.9829"
           gradientUnits="userSpaceOnUse">
-          <stop stopColor="#CDAD8F" />
-          <stop offset="0.504277" stopColor="#CDAD8F" />
-          <stop offset="1" stopColor="#FAE1CB" />
+          <stop stopColor="var(--secondaryColor1)" />
+          <stop offset="0.504277" stopColor="var(--secondaryColor1)" />
+          <stop offset="1" stopColor="var(--secondaryColor2)" />
         </linearGradient>
       </defs>
     </svg>

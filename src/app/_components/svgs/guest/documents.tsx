@@ -28,9 +28,9 @@ const DocumentsSVG = () => {
           x2="33.0743"
           y2="22.8281"
           gradientUnits="userSpaceOnUse">
-          <stop stopColor="#CDAD8F" />
-          <stop offset="0.504277" stopColor="#CDAD8F" />
-          <stop offset="1" stopColor="#FAE1CB" />
+          <stop stopColor="var(--secondaryColor1)" />
+          <stop offset="0.504277" stopColor="var(--secondaryColor1)" />
+          <stop offset="1" stopColor="var(--secondaryColor2)" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_1481_919"
@@ -39,9 +39,9 @@ const DocumentsSVG = () => {
           x2="48.8243"
           y2="29.3906"
           gradientUnits="userSpaceOnUse">
-          <stop stopColor="#CDAD8F" />
-          <stop offset="0.504277" stopColor="#CDAD8F" />
-          <stop offset="1" stopColor="#FAE1CB" />
+          <stop stopColor="var(--secondaryColor1)" />
+          <stop offset="0.504277" stopColor="var(--secondaryColor1)" />
+          <stop offset="1" stopColor="var(--secondaryColor2)" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_1481_919"
@@ -50,9 +50,9 @@ const DocumentsSVG = () => {
           x2="50.7489"
           y2="23.25"
           gradientUnits="userSpaceOnUse">
-          <stop stopColor="#CDAD8F" />
-          <stop offset="0.504277" stopColor="#CDAD8F" />
-          <stop offset="1" stopColor="#FAE1CB" />
+          <stop stopColor="var(--secondaryColor1)" />
+          <stop offset="0.504277" stopColor="var(--secondaryColor1)" />
+          <stop offset="1" stopColor="var(--secondaryColor2)" />
         </linearGradient>
       </defs>
     </svg>
