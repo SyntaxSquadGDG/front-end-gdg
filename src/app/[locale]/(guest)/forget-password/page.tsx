@@ -1,4 +1,4 @@
-import Forget from '@app/_components/guest/forms/forget';
+import Forget from '@app/_components/(guest)/forms/forget';
 import React from 'react';
 
 const page = () => {

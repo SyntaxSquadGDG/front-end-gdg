@@ -1,4 +1,4 @@
-import SectionsPage from '@/app/_components/sections-page/sections-page';
+import SectionsPage from '@app/_components/(dashboard)/sections-page/sections-page';
 import { fetcher } from '@/app/_utils/fetch';
 import React from 'react';
 

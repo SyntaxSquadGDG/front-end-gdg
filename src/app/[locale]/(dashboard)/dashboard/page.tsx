@@ -1,8 +1,8 @@
-import ActivitySection from '@app/_components/activity-logs/activity-section';
-import AiTrain from '@app/_components/dashboard/ai-train';
-import BarChartPage from '@app/_components/dashboard/bar';
-import Results from '@app/_components/dashboard/results';
-import Storage from '@app/_components/dashboard/storage';
+import ActivitySection from '@app/_components/(dashboard)/activity-logs/activity-section';
+import AiTrain from '@app/_components/(dashboard)/dashboard/ai-train';
+import BarChartPage from '@app/_components/(dashboard)/dashboard/bar';
+import Results from '@app/_components/(dashboard)/dashboard/results';
+import Storage from '@app/_components/(dashboard)/dashboard/storage';
 import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import { getTranslations } from 'next-intl/server';

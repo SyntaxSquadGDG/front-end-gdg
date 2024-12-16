@@ -14,7 +14,7 @@ import ProfileSVG from '../svgs/navbars/profile';
 import LogoutSVG from '../svgs/navbars/logout';
 import { redirect, usePathname, useRouter } from 'next/navigation';
 import { deleteCookie } from 'cookies-next';
-import OverlayImage from '../general/overlay';
+import OverlayImage from '../(dashboard)/general/overlay';
 import VerticalNavbarItem from './vertical-navbar-item';
 import { revalidatePathAction } from '@app/actions';
 

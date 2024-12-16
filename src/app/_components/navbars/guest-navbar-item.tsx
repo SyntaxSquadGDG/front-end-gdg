@@ -4,6 +4,8 @@ import Link from 'next/link';
 import React from 'react';
 
 const GuestNavbarItem = ({ path, pathName, text }) => {
+  console.log(pathName);
+  console.log(path);
   return (
     <li>
       <Link
@@ -13,7 +15,7 @@ const GuestNavbarItem = ({ path, pathName, text }) => {
           'flex text-[20px] font-medium text-textLight px-[28px] py-[14px] rounded-[16px]',
           pathName === path && 'bg-guestLinear',
         )}>
-        <p className={pathName === path ? 'active-link' : ''}>{text}</p>
+        <p className={pathName === path ? 'linearGuestText2' : ''}>{text}</p>
       </Link>
     </li>
   );

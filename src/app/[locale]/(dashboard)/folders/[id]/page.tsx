@@ -1,7 +1,7 @@
-import ActivitySection from '@/app/_components/activity-logs/activity-section';
-import FileItem from '@/app/_components/files/file-item';
-import Files from '@/app/_components/files/files';
-import FoldersPage from '@/app/_components/folders-page/folders-page';
+import ActivitySection from '@app/_components/(dashboard)/activity-logs/activity-section';
+import FileItem from '@app/_components/(dashboard)/files/file-item';
+import Files from '@app/_components/(dashboard)/files/files';
+import FoldersPage from '@app/_components/(dashboard)/folders-page/folders-page';
 import { fetcher } from '@/app/_utils/fetch';
 import React from 'react';
 

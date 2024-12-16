@@ -136,6 +136,134 @@
       "service5Description": "ex hendrerit ultrices eu luctus Nunc nec sollicitudin. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non",
       "service6Head": "Semantic Search",
       "service6Description": "ex hendrerit ultrices eu luctus Nunc nec sollicitudin. Lorem nibh Donec non. dignissim, non , eu adipiscing elementum amet, lacus turpis diam diam in nisl. non"
+    },
+    "demo": {
+      "head": "Start Your Journey With ArchivAI!",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do. Incididunt ut labore et dolore magna aliqua. veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
+      "request": "Request Demo"
+    }
+  },
+  "pricing": {
+    "landing": {
+      "head": "Flexible Pricing Plans to Fit Your Needs",
+      "description": "Simplify your workflow and unlock powerful features with our pricing plans, designed to keep you focused on growth."
+    },
+    "plans": {
+      "head": "The Perfect Plan For Your Needs",
+      "plan1": {
+        "head": "Free",
+        "price": "$ 0",
+        "description": "Per user/month, billed annualy",
+        "featuresHead": "Features: ",
+        "feature1": "Lorem ipsum dolor sit amet, ",
+        "feature2": "Lorem ipsum dolor sit amet, ",
+        "feature3": "Lorem ipsum dolor sit amet, "
+      },
+      "plan2": {
+        "head": "Pro",
+        "price": "$ 400",
+        "description": "Per user/month, billed annualy",
+        "featuresHead": "Features: ",
+        "feature1": "Lorem ipsum dolor sit amet, ",
+        "feature2": "Lorem ipsum dolor sit amet, ",
+        "feature3": "Lorem ipsum dolor sit amet, ",
+        "feature4": "Lorem ipsum dolor sit amet, "
+      },
+      "plan3": {
+        "head": "Enterprise",
+        "price": "Custom",
+        "description": "Per user/month, billed annualy",
+        "featuresHead": "Features: ",
+        "feature1": "Lorem ipsum dolor sit amet, ",
+        "feature2": "Lorem ipsum dolor sit amet, ",
+        "feature3": "Lorem ipsum dolor sit amet, ",
+        "feature4": "Lorem ipsum dolor sit amet, ",
+        "feature5": "Lorem ipsum dolor sit amet, "
+      }
+    },
+    "include": {
+      "head": "All Plans Are Include :",
+      "feature1": "Document upload and standard metadata tagging.",
+      "feature2": "Document upload and standard metadata tagging.",
+      "feature3": "Basic version control to track changes.",
+      "feature4": "Basic version control to track changes.",
+      "feature5": "Multi-device support for web and mobile.",
+      "feature6": "Multi-device support for web and mobile.",
+      "feature7": "Regular software updates to improve functionality.",
+      "feature8": "Regular software updates to improve functionality."
+    }
+  },
+  "demo": {
+    "landing": {
+      "head": "Request a demo and Start Your Journey",
+      "description": "Request a demo to experience smarter document management today"
+    },
+    "form": {
+      "show1": "Indexes  documents for smarter management.",
+      "show2": "Provides secure, anytime access from any device.",
+      "show3": "Boosts document search with AI.",
+      "show4": "Eliminates paper clutter—and more!",
+      "show5": "Ensures compliance with industry regulations.",
+      "show6": "Enhances collaboration with easy file sharing.",
+      "step1": "Fill out the form to schedule your demo.",
+      "step2": "Discuss your needs and timeline.",
+      "step3": "Experience a personalized demo of ArchivAI.",
+      "showHead": "Your demo will show you how ArchivAI:",
+      "stepsHead": "Next steps:",
+      "formHead": "Send Us A Message",
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter your name",
+      "nameError": "Invalid Name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "emailError": "Invalid Email",
+      "companyLabel": "Company",
+      "companyPlaceholder": "Enter your company",
+      "companyError": "Invalid Company",
+      "countryLabel": "Country",
+      "countryPlaceholder": "Enter your country",
+      "countryError": "Invalid Country",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Enter your message",
+      "messageError": "Invalid Message",
+      "demoButton": "Schedule Your Demo",
+      "successHead": "Your Request Sent Successfully!",
+      "successDescription": "We Will Send You An Email Include All Details."
+    }
+  },
+  "tour": {
+    "landing": {
+      "head": "Explore the System’s Capabilities",
+      "description": "Take an interactive tour to see how AI streamlines organizing, searching, and securing your documents"
+    },
+    "demo": {
+      "head": "Want To Explore More In Your Field?",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do. Incididunt ut labore et dolore magna aliqua. veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
+      "request": "Request Demo"
+    }
+  },
+  "contact": {
+    "landing": {
+      "head": "Get in Touch and Start Your Journey",
+      "description": "Simplify your workflow and unlock powerful features with our pricing plans, designed to keep you focused on growth."
+    },
+    "form": {
+      "head": "Contact Us",
+      "description": "Feel free to reach out to us with any questions or support needs – we're here to help!",
+      "addressText": "Address : Mansoura 24 bla bla street",
+      "phoneText": "+123-456-7890",
+      "emailText": "Archvai@gmail.com",
+      "followText": "Follow Our Social Media",
+      "head2": "Send Us A Message",
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter your name",
+      "nameError": "Invalid Name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "emailError": "Invalid Email",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Enter your message",
+      "messageError": "Invalid Message"
     }
   },
   "forms": {
@@ -171,7 +299,45 @@
       "numberError": "Wrong Number",
       "countryLabel": "Country",
       "countryPlaceholder": "Enter Your Country",
-      "countryError": "Wrong Country"
+      "countryError": "Wrong Country",
+      "typeLabel": "Business Type",
+      "typeError": "Wrong business Type",
+      "typeOptions": {
+        "personal": "Personal",
+        "nonPersonal": "Non-Personal"
+      },
+      "sizeLabel": "Company Size",
+      "sizeError": "Wrong Size",
+      "sizeOptions": {
+        "personal": "Personal",
+        "nonPersonal": "Non-Personal"
+      },
+      "haveLabel": "Have you ever set up an EDM system?",
+      "haveError": "Wrong Value",
+      "haveOptions": {
+        "personal": "Personal",
+        "nonPersonal": "Non-Personal"
+      },
+      "filesLabel": "How many files you upload daily?",
+      "filesError": "Wrong files count",
+      "filesOptions": {
+        "personal": "Personal",
+        "nonPersonal": "Non-Personal"
+      },
+      "whenLabel": "When do you plan to launch?",
+      "whenError": "Wrong Value",
+      "whenOptions": {
+        "personal": "Personal",
+        "nonPersonal": "Non-Personal"
+      },
+      "employeesLabel": "How many employees will use ArchivAI?",
+      "employeesError": "Wrong number of employees",
+      "employeesOptions": {
+        "personal": "Personal",
+        "nonPersonal": "Non-Personal"
+      },
+      "registerSuccessHead": "Your Request Sent Successfully!",
+      "registerSuccessDescription": "Your form has been sent successfully. We will contact you soon !"
     },
     "forget": {
       "head": "Find your account",
@@ -188,7 +354,8 @@
       "newError": "Password can't be less than 6 characters",
       "confirmLabel": "Confirm New Password",
       "confirmPlaceholder": "Confirm Password",
-      "confirmError": "Password doesn't match"
+      "confirmError": "Password doesn't match",
+      "newSuccessHead": "Your Password Changed Successfully!"
     }
   },
   "sections": {
@@ -217,17 +384,25 @@
     "confirm": "Confirm",
     "error": "Something went wrong !",
     "notFound": "Page Not Found!",
-    "home": "Go to home"
+    "home": "Go to home",
+    "search": "Search",
+    "noResults": "No Results Found"
   },
   "activity": {
-    "activity": "Activity Log"
+    "activity": "Activity Log",
+    "item": "Item",
+    "action": "Action",
+    "lastModified": "Last Modified",
+    "employeeName": "Employee Name"
   },
   "permissions": {
     "id": "ID",
     "name": "Name",
     "roles": "Roles",
     "email": "Email",
-    "permissions": "Permissions"
+    "permissions": "Permissions",
+    "remove": "Remove Access",
+    "addAnother": "Add Another Permission"
   },
   "folders": {
     "name": "Folder Name",
@@ -273,6 +448,53 @@
     "excel": "Excel",
     "word": "Word",
     "image": "Image"
+  },
+  "employees": {
+    "employees": "Employees",
+    "add": "Add New Employee",
+    "addButton": "Add New Employee",
+    "id": "ID",
+    "name": "Name",
+    "roles": "Roles",
+    "email": "Email",
+    "view": "View All",
+    "firstNameLabel": "First Name",
+    "firstNamePlaceholder": "First Name",
+    "firstNameError": "Error in first name",
+    "lastNameLabel": "Last Name",
+    "lastNamePlaceholder": "Last Name",
+    "lastNameError": "Error in last name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Email",
+    "emailError": "Error in Email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Password",
+    "passwordError": "Error in Password",
+    "roleLabel": "Role",
+    "rolePlaceholder": "Role",
+    "roleError": "Error in Role",
+    "addEmployeeButton": "Add Employee",
+    "profile": "'s profile",
+    "idLabel": "ID",
+    "updateEmployeeButton": "Update Employee"
+  },
+  "roles": {
+    "roles": "Roles",
+    "id": "ID",
+    "name": "Name",
+    "addAnother": "Add Another Role",
+    "members": "Members",
+    "addButton": "Add New Role",
+    "nameLabel": "Name",
+    "namePlaceholder": "Role Name",
+    "nameError": "Error in Role",
+    "employeeLabel": "Employee",
+    "employeePlaceholder": "Employee",
+    "employeeError": "Error in Employee",
+    "addRoleButton": "Add Role",
+    "add": "Add New Role",
+    "idLabel": "ID",
+    "updateRoleButton": "Update Role"
   }
 }
 

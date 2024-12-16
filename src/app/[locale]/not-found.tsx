@@ -1,7 +1,7 @@
 'use client';
 
-import GuestButton from '@app/_components/general/guest-button';
-import FormSection from '@app/_components/guest/common/form-section';
+import GuestButton from '@app/_components/(guest)/common/guest-button';
+import FormSection from '@app/_components/(guest)/common/form-section';
 import { headFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';

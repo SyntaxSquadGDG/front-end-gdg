@@ -11,13 +11,13 @@ import ListViewSVG from '../svgs/sections/list-view';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import GridViewSVG from '../svgs/sections/grid-view';
-import Modal from '../modals/modal';
-import FileAIResults from '../files/file-ai-results';
-import DragAndDropInput from '../files/drag-drop';
+import Modal from '../(dashboard)/modals/modal';
+import FileAIResults from '../(dashboard)/files/file-ai-results';
+import DragAndDropInput from '../(dashboard)/files/drag-drop';
 import { useModal } from '@app/_contexts/modal-provider';
 import AddSVG from '../svgs/general/add';
-import CreateSectionModal from '../modals/create-section-modal';
-import CreateFolderModal from '../modals/create-folder-modal';
+import CreateSectionModal from '../(dashboard)/modals/create-section-modal';
+import CreateFolderModal from '../(dashboard)/modals/create-folder-modal';
 import { getLangDir } from 'rtl-detect';
 
 const ToolBar = ({

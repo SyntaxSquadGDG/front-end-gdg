@@ -1,7 +1,7 @@
 'use client';
-import Checkbox from '@app/_components/guest/common/checkbox';
-import Input from '@app/_components/guest/common/input';
-import CustomSelect from '@app/_components/guest/common/select';
+import Checkbox from '@app/_components/(guest)/common/checkbox';
+import Input from '@app/_components/(guest)/common/input';
+import CustomSelect from '@app/_components/(guest)/common/select';
 import PasswordSVG from '@app/_components/svgs/guest/forms/password';
 import React, { useState } from 'react';
 

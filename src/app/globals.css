@@ -18,6 +18,7 @@
   --textLight: #ffffff;
   --iconLight: #ffffff;
   --textDark: #000000;
+  --iconDark: #000000;
   --mainColor1: #132863;
   --mainColor2: #021c63;
   --mainColor3: #3c57a4;
@@ -70,16 +71,44 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.permissionsTable {
+  @apply table-auto w-full min-w-[700px] border-collapse;
+}
+
+.permissionsTable tr td,
+.permissionsTable tr th {
+  @apply py-[16px] text-center mx-auto text-[18px] px-[24px];
+}
+
+.permissionsTable tr:nth-of-type(odd) td {
+  @apply bg-cardColor;
+}
+
+.activityTable {
+  @apply table-auto w-full min-w-[700px] border-collapse;
+}
+
+.activityTable tr td,
+.activityTable tr th {
+  @apply py-[16px] text-center mx-auto text-[18px] px-[24px];
+}
+
+.activityTable thead tr,
+.activityTable tbody tr:not(:last-of-type) {
+  @apply border-b-[1px] border-solid border-tableBorder;
+}
+
 .table {
   @apply table-auto w-full min-w-[700px] border-collapse;
 }
 
 .table tr td,
 .table tr th {
-  @apply py-[40px] text-center mx-auto text-tableText text-[18px] font-medium;
+  @apply py-[40px] text-center mx-auto text-tableText text-[18px] font-medium px-[32px];
 }
 
-.table tr {
+.table thead tr,
+.table tbody tr {
   @apply border-b-[1px] border-solid border-tableBorder;
 }
 
@@ -177,5 +206,31 @@ input[type='submit'] {
   background-repeat: no-repeat;
   background-position: center;
   mix-blend-mode: overlay;
+}
+
+.gradient-borders {
+  position: relative;
+}
+
+.gradient-borders-absolute {
+  position: absolute;
+}
+
+.gradient-borders::before,
+.gradient-borders-absolute::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  z-index: -1;
+  background: linear-gradient(
+    to right,
+    var(--secondaryColor1),
+    var(--secondaryColor1),
+    var(--secondaryColor2)
+  );
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
 }
 

@@ -1,5 +1,5 @@
 'use client';
-import AccuracyLevel from '@/app/_components/general/accuracy';
+import AccuracyLevel from '@app/_components/(dashboard)/general/accuracy';
 import { contentFont } from '@/app/_utils/fonts';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';

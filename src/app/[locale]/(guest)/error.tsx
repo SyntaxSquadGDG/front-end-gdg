@@ -1,7 +1,7 @@
 'use client';
 
-import GuestButton from '@app/_components/general/guest-button';
-import FormSection from '@app/_components/guest/common/form-section';
+import GuestButton from '@app/_components/(guest)/common/guest-button';
+import FormSection from '@app/_components/(guest)/common/form-section';
 import { headFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
@@ -18,11 +18,11 @@ const Error = () => {
         <p
           className={clsx(
             headFont.className,
-            'text-[40px] font-bold mt-[16px] mb-[40px] text-textLight',
+            'text-[40px] font-bold mt-[16px] mb-[40px] text-textLight text-center',
           )}>
           {t('general.error')}
         </p>
-        <GuestButton link={true} href={'/'}>
+        <GuestButton link={true} href={'/'} className={'w-[100%] lg:w-fit'}>
           {t('general.home')}
         </GuestButton>
       </div>

@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { headFont } from '@/app/_utils/fonts';
 import { formatDate } from '@/app/_utils/formats';
-import OverlayImage from '../general/overlay';
+import OverlayImage from '../(dashboard)/general/overlay';
 import { getLangDir } from 'rtl-detect';
 import useClickOutside from '@app/_hooks/useclickoutside';
 
@@ -28,8 +28,16 @@ const HorizontalNavbar = () => {
         direction === 'ltr'
           ? 'right-0 lg:right-navsBodySpacing '
           : 'left-0 lg:left-navsBodySpacing',
-        'text-textLight bg-mainDashboardLinear h-horizontalNavHeight rounded-bl-navsRadius rounded-br-navsRadius w-[calc(100vw-var(--verticalNavSmallWidth)-var(--navsBodySpacing))] lg:w-[calc(100vw-var(--verticalNavWidth)-2*var(--navsBodySpacing))] fixed top-0 items-center flex z-50',
+        'text-textLight bg-mainDashboardLinear h-horizontalNavHeight rounded-bl-navsRadius rounded-br-navsRadius w-[calc(100vw-var(--verticalNavSmallWidth)-var(--navsBodySpacing))] lg:w-[calc(100vw-var(--verticalNavWidth)-2*var(--navsBodySpacing))] fixed top-0 items-center flex z-[9999]',
       )}>
+      {/* <nav
+      ref={navbarRef}
+      className={clsx(
+        direction === 'ltr'
+          ? 'right-0 lg:right-0 '
+          : 'left-0 lg:left-navsBodySpacing',
+        'text-textLight bg-mainDashboardLinear h-horizontalNavHeight rounded-bl-navsRadius rounded-br-navsRadius w-[calc(100vw-var(--verticalNavSmallWidth)-var(--navsBodySpacing))] lg:w-[calc(100vw-var(--verticalNavWidth)-var(--navsBodySpacing))] fixed top-0 items-center flex z-[9999]',
+      )}> */}
       <OverlayImage
         url="/images/navbar/background.png"
         className="rounded-br-navsRadius rounded-bl-navsRadius"

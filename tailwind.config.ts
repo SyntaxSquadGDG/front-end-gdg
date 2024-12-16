@@ -8,6 +8,7 @@ export default {
   ],
   theme: {
     container: {
+      center: true,
       padding: {
         DEFAULT: '16px',
       },
@@ -35,6 +36,7 @@ export default {
         textLight: 'var(--textLight)',
         textDark: 'var(--textDark)',
         iconLight: 'var(--iconLight)',
+        iconDark: 'var(--iconDark)',
         mainColor1: 'var(--mainColor1)',
         mainColor2: 'var(--mainColor2)',
         mainColor3: 'var(--mainColor3)',
@@ -65,7 +67,7 @@ export default {
       },
       boxShadow: {
         activityLog: '0 0 4.4px rgba(19, 40, 99, 0.7)',
-        tableShadow: '0 0 7.6px rgba(19, 40, 99, 0.8)',
+        tableShadow: '0 0 8px 0 rgba(19, 40, 99, 0.5)',
       },
       borderRadius: {
         bigRounded: '40px',

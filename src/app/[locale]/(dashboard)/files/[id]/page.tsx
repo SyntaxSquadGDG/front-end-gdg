@@ -1,14 +1,14 @@
 'use client';
-import ActivitySection from '@/app/_components/activity-logs/activity-section';
+import ActivitySection from '@app/_components/(dashboard)/activity-logs/activity-section';
 import ToolBar from '@/app/_components/navbars/toolbar';
 import ExcelSVG from '@/app/_components/svgs/files/excel';
 import ImageSVG from '@/app/_components/svgs/files/image';
 import PdfSVG from '@/app/_components/svgs/files/pdf';
 import WordSVG from '@/app/_components/svgs/files/word';
 import { contentFont } from '@/app/_utils/fonts';
-import Button from '@app/_components/general/button';
-import HeadText from '@app/_components/general/headtext';
-import Input from '@app/_components/general/input';
+import Button from '@app/_components/(dashboard)/general/button';
+import HeadText from '@app/_components/(dashboard)/general/headtext';
+import Input from '@app/_components/(dashboard)/general/input';
 import RemoveSVG from '@app/_components/svgs/files/remove';
 import RestoreSVG from '@app/_components/svgs/files/restore';
 import clsx from 'clsx';

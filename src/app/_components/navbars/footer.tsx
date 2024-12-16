@@ -10,7 +10,7 @@ import { contentFont } from '@app/_utils/fonts';
 import PhoneSVG from '../svgs/guest/footer/phone';
 import XSVG from '../svgs/guest/footer/x';
 import EmailSVG from '../svgs/guest/footer/email';
-import GoogleButton from '../guest/common/google-button';
+import GoogleButton from '../(guest)/common/google-button';
 
 const Footer = () => {
   const t = useTranslations();

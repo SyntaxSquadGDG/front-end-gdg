@@ -7,8 +7,12 @@ export const authRoutes = [
   '/dashboard',
   '/sections',
   '/employees',
+  '/employees/new',
+  '/employees/:id',
   '/roles',
-  '/logs',
+  '/roles/new',
+  '/roles/:id',
+  '/activity',
   '/profile',
 ];
 
@@ -23,5 +27,9 @@ export const guestRoutes = [
   '/contact',
   '/login',
   '/register',
+  '/forget-password',
+  '/new-password',
+  '/demo',
+  '/tour',
 ];
 
