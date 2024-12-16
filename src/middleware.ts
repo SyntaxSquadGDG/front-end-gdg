@@ -22,6 +22,7 @@ const intlMiddleware = createMiddleware(routing);
 export default async function middleware(request) {
   const { nextUrl } = request;
   const pathname = nextUrl.pathname;
+  const search = nextUrl.search; // Get the search query (e.g., ?q=searchValue)
 
   // Check if the URL contains a locale
   const hasLocale = locales.some(
@@ -31,7 +32,7 @@ export default async function middleware(request) {
   // If no locale is found, redirect to the same path with the default locale
   if (!hasLocale) {
     return NextResponse.redirect(
-      new URL(`/${defaultLocale}${pathname}`, nextUrl),
+      new URL(`/${defaultLocale}${pathname}${search}`, nextUrl),
     );
   }
 

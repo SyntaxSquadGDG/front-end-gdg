@@ -48,18 +48,21 @@ export default function Modal({
         'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50',
         className,
       )}>
-      <div
-        className="bg-whiteBackground rounded-[16px] py-[36px] px-[50px] w-11/12 md:w-1/2 relative"
-        onClick={(e) => e.stopPropagation()}>
-        {children}
-        <button
-          onClick={() => onClose()}
-          className={clsx(
-            contentFont.className,
-            'absolute right-[10px] top-[8px] w-[25px] h-[25px] rounded-full flex items-center justify-center font-bold text-textLight bg-mainColor1 z-50',
-          )}>
-          <CloseModalSVG />
-        </button>
+      <div className="bg-green-400 rounded-[16px] py-[36px] px-[50px] w-11/12 md:w-1/2 relative">
+        <div
+          ref={modalRef}
+          onClick={(e) => e.stopPropagation()}
+          className="bg-white rounded-lg shadow-lg p-6 overflow-y-auto max-h-[90vh] bg-orange-400">
+          {children}
+          <button
+            onClick={() => onClose()}
+            className={clsx(
+              contentFont.className,
+              'absolute right-[10px] top-[8px] w-[25px] h-[25px] rounded-full flex items-center justify-center font-bold text-textLight bg-mainColor1 z-50',
+            )}>
+            <CloseModalSVG />
+          </button>
+        </div>
       </div>
     </div>,
     document.body,

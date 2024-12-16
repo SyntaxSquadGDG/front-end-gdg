@@ -1,5 +1,5 @@
 'use client';
-import CheckedCheckboxSVG from '@app/_components/svgs/guest/forms/checked-checkbox';
+import CheckedCheckboxSVG from '@app/_components/svgs/general/checked-checkbox';
 import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import React, { useId } from 'react';
@@ -20,9 +20,9 @@ const Checkbox = ({ alwaysTrue = false, label, value, onChange }) => {
         className={clsx(contentFont.className, 'flex items-center gap-[8px]')}>
         <div
           className={clsx(
-            'w-[24px] h-[24px] border-[2px] border-solid border-white relative rounded-[4px]',
+            'w-[24px] h-[24px] border-[2px] border-solid border-mainColor1 relative rounded-[4px]',
             !alwaysTrue && 'cursor-pointer',
-            (value || alwaysTrue) && 'bg-goldLinear border-none',
+            (value || alwaysTrue) && 'bg-mainColor1 border-none',
           )}
           onClick={alwaysTrue ? () => {} : () => onChange(!value)}>
           {(value || alwaysTrue) && (
@@ -31,9 +31,7 @@ const Checkbox = ({ alwaysTrue = false, label, value, onChange }) => {
             </div>
           )}
         </div>
-        <label
-          className="text-[18px] text-textLight cursor-pointer"
-          htmlFor={checkboxId}>
+        <label className="text-[18px] cursor-pointer" htmlFor={checkboxId}>
           {label}
         </label>
       </div>

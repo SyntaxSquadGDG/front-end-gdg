@@ -35,7 +35,7 @@ const Plans = async () => {
           'py-sectionPadding',
         )}>
         <HeadText>{t('pricing.plans.head')}</HeadText>
-        <div className="flex items-center gap-[72px] text-textLight mt-[92px]">
+        <div className="flex items-center justify-between gap-[72px] text-textLight mt-[92px]">
           <PlanItem
             head={t('pricing.plans.plan1.head')}
             description={t('pricing.plans.plan1.description')}

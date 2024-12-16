@@ -31,8 +31,10 @@
   --placeHolderColor: #b3b3b3;
   --cardColor: #d4ddf7;
   --tableText: #5f5f5f;
+  --secondText: #5f5f5f;
   --tableBorder: #6e6e6e;
   --storageContainer: #f6f8ff;
+  --whiteBackground: #f6f8ff;
   --secondaryColor1: #cdad8f;
   --secondaryColor2: #fae1cb;
   --lowColor: #930b0b;
@@ -40,7 +42,7 @@
 
   /* SIZES */
   --horizontalNavHeight: 104px;
-  --verticalNavWidth: 213px;
+  --verticalNavWidth: 224px;
   --verticalNavSmallWidth: 100px;
   --guestNavHeight: 100px;
 

@@ -38,6 +38,21 @@ const VerticalNavbar = () => {
       svg: SectionsSVG,
     },
     {
+      path: '/folders',
+      text: t('navbar.folders'),
+      svg: SectionsSVG,
+    },
+    {
+      path: '/files',
+      text: t('navbar.files'),
+      svg: SectionsSVG,
+    },
+    {
+      path: '/managers',
+      text: t('navbar.managers'),
+      svg: EmployeesSVG,
+    },
+    {
       path: '/employees',
       text: t('navbar.employees'),
       svg: EmployeesSVG,
@@ -53,8 +68,18 @@ const VerticalNavbar = () => {
       svg: ActivitySVG,
     },
     {
+      path: '/plans',
+      text: t('navbar.plans'),
+      svg: ActivitySVG,
+    },
+    {
       path: '/profile',
       text: t('navbar.profile'),
+      svg: ProfileSVG,
+    },
+    {
+      path: '/help',
+      text: t('navbar.help'),
       svg: ProfileSVG,
     },
   ];
@@ -84,12 +109,12 @@ const VerticalNavbar = () => {
 
       <div
         className={clsx(
-          'w-[100%] h-[100%] text-textLight relative z-[5] flex flex-col justify-between px-[32px]',
+          'w-[100%] h-[100%] text-textLight relative z-[5] flex flex-col justify-between',
           headFont.className,
         )}>
-        <div>
-          <p className="my-[32px]">LOGO</p>
-          <ul className="vertical-list flex flex-col gap-[32px]">
+        <div className="px-[32px]">
+          <p className="my-[32px] h-[40px]">LOGO</p>
+          <ul className="vertical-list flex flex-col gap-[32px] overflow-auto h-[calc(100vh-40px-200px)]">
             {data.map((item) => {
               return (
                 <VerticalNavbarItem
@@ -104,7 +129,7 @@ const VerticalNavbar = () => {
           </ul>
         </div>
 
-        <div>
+        <div className="px-[32px]">
           <button
             className="logoutButton my-[48px]"
             onClick={() => handleLogout()}>

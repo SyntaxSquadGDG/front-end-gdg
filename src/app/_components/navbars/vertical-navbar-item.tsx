@@ -7,8 +7,8 @@ const VerticalNavbarItem = ({ path, pathName, text, SVG }) => {
   return (
     <li>
       <Link href={path}>
-        <SVG active={pathName === path} />
-        <p className={pathName === path ? 'active-link' : ''}>{text}</p>
+        <SVG active={pathName.startsWith(path)} />
+        <p className={pathName.startsWith(path) ? 'active-link' : ''}>{text}</p>
       </Link>
     </li>
   );

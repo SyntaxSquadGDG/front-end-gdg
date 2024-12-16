@@ -2,10 +2,15 @@
   "navbar": {
     "home": "Home",
     "sections": "Sections",
+    "folders": "Folders",
+    "files": "Files",
+    "managers": "Managers",
     "employees": "Employees",
     "roles": "Roles",
     "activity": "Activity Log",
+    "plans": "Plans",
     "profile": "Profile",
+    "help": "Help",
     "logout": "Logout",
 
     "hello": "Hello",
@@ -386,7 +391,9 @@
     "notFound": "Page Not Found!",
     "home": "Go to home",
     "search": "Search",
-    "noResults": "No Results Found"
+    "noResults": "No Results Found",
+    "no": "No",
+    "yes": "Yes"
   },
   "activity": {
     "activity": "Activity Log",
@@ -495,6 +502,90 @@
     "add": "Add New Role",
     "idLabel": "ID",
     "updateRoleButton": "Update Role"
+  },
+  "profile": {
+    "profile": "Profile",
+    "image": {
+      "upload": "Upload Picture",
+      "delete": "Delete"
+    },
+    "personalInfo": {
+      "head": "Personal Info",
+      "firstNameLabel": "First Name",
+      "firstNamePlaceholder": "First Name",
+      "firstNameError": "Error in first name",
+      "lastNameLabel": "Last Name",
+      "lastNamePlaceholder": "Last Name",
+      "lastNameError": "Error in last name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Email",
+      "emailError": "Invalid Email",
+      "updateButton": "Update"
+    },
+    "changePassword": {
+      "head": "Change Password",
+      "currentLabel": "Current Password",
+      "currentPlaceholder": "Current Password",
+      "currentError": "Error in Password",
+      "newLabel": "New Password",
+      "newPlaceholder": "New Password",
+      "newError": "Error in new Password",
+      "updateButton": "Update"
+    }
+  },
+  "plans": {
+    "head": "Plans",
+    "current": "Current",
+    "subscribe": "Subscribe now",
+    "info": "Your current plan is set to auto-renew on a regular basis.",
+    "cancelButton": "Cancel your subscription",
+    "payment": {
+      "holderLabel": "Cardholder's Name",
+      "holderPlaceholder": "Enter Name",
+      "holderError": "Error in Holder's name",
+      "numberLabel": "Card Number",
+      "numberPlaceholder": "Enter Number",
+      "numberError": "Error in Card Number",
+      "expiryLabel": "Expiry",
+      "expiryPlaceholder": "Enter Expiry Date",
+      "expiryError": "Error in Expiry",
+      "cvcLabel": "CVC",
+      "cvcPlaceholder": "Enter CVC",
+      "cvcError": "Error in CVC",
+      "remember": "Remember bank card",
+      "payButton": "Pay Now",
+      "backButton": "Back to plans",
+      "successText": "Thank you for your payment.\nYour transaction has been successfully completed"
+    },
+    "modals": {
+      "unsubscribeHead": "Un Subscribe !",
+      "unsubscribeDescription": "We are sorry to seeing you go!",
+      "unsubscribeSure": "Are you sure you want to unsubscribe form ArchivAI system?",
+      "subscribeHead": "Subscribe Now!",
+      "subscribeDescription": "Write your email and we will send you a detailed email with all features for the upgraded plan.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter Your Email",
+      "emailError": "Invalid Email",
+      "subscribeButton": "Send"
+    }
+  },
+  "search": {
+    "results": "Search Results",
+    "total": "Total Results:",
+    "file": "File",
+    "fileName": "File Name",
+    "similarityScore": "Similarity Score",
+    "path": "Path"
+  },
+  "help": {
+    "head": "Help",
+    "description": "Find support and solutions to help resolve issues quickly and efficiently",
+    "messageError": "Invalid Message",
+    "support": "Support Team"
+  },
+  "notifications": {
+    "head": "Notifications",
+    "markAsReadButton": "Mark all as read"
   }
 }
 

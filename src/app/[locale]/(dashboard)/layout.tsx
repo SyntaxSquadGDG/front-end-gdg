@@ -33,8 +33,8 @@ export default async function RootLayout({
           'text-textDark',
           `${
             direction === 'ltr'
-              ? 'pl-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pl-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight)+24px)] pr-[var(--navsBodySpacing)]'
-              : 'pr-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pr-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight)+24px)] pl-[var(--navsBodySpacing)]'
+              ? 'pl-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pl-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight)+24px)] pb-[calc(var(--navsBodySpacing))] pr-[var(--navsBodySpacing)]'
+              : 'pr-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pr-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight)+24px)] pb-[calc(var(--navsBodySpacing))] pl-[var(--navsBodySpacing)]'
           } `,
         )}>
         <NextTopLoader />

@@ -14,6 +14,10 @@ export const authRoutes = [
   '/roles/:id',
   '/activity',
   '/profile',
+  '/plans',
+  '/search',
+  '/help',
+  '/notifications',
 ];
 
 export const sharedRoutes = ['/shared'];
