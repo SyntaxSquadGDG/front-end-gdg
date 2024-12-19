@@ -3,17 +3,21 @@ import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { contentFont } from '@/app/_utils/fonts';
-import ActivitySection from '../(dashboard)/activity-logs/activity-section';
-import StackUsers from '../(dashboard)/general/stack';
-import VerticalDotsSVG from '../svgs/general/vertical-dots';
-import Folders from '../(dashboard)/folders/folders';
-import ToolBar from '../navbars/toolbar';
+import ActivitySection from '@/app/_components/(dashboard)/activity-logs/activity-section';
+import StackUsers from '@/app/_components/(dashboard)/general/stack';
+import VerticalDotsSVG from '@/app/_components/svgs/general/vertical-dots';
+import Folders from '@/app/_components/(dashboard)/folders/folders';
+import ToolBar from '@/app/_components/navbars/toolbar';
 import Link from 'next/link';
+import DeleteFolderModal from '../modals/delete-folder-modal';
+import ItemModal from '../modals/item-modal';
+import FolderListItem from '../folders/folder-list-item';
 
 const SectionPage = ({ folders, sectionName, path, type, id }) => {
   const t = useTranslations();
 
   const [view, setView] = useState('grid');
+  const [isFolderOpen, setIsFolderOpen] = useState(false);
 
   return (
     <div>
@@ -57,25 +61,11 @@ const SectionPage = ({ folders, sectionName, path, type, id }) => {
             <tbody className="">
               {folders.map((folder) => {
                 return (
-                  <tr
+                  <FolderListItem
                     key={folder.id}
-                    className="py-[40px] font-medium text-[18px] rounded-[32px]">
-                    <td>
-                      <Link href={`/folders/${folder.id}`}>{folder.name}</Link>
-                    </td>
-                    <td>{sectionName}</td>
-                    <td>{folder.numberOfFiles}</td>
-                    <td>{folder.lastModified}</td>
-                    <td>{folder.size}</td>
-                    <td>
-                      <div className="flex w-[100%] h-[100%] items-center justify-center">
-                        <StackUsers employeesCount={folder.numberOfEmployees} />
-                      </div>
-                    </td>
-                    <td>
-                      <VerticalDotsSVG />
-                    </td>
-                  </tr>
+                    folder={folder}
+                    sectionName={sectionName}
+                  />
                 );
               })}
             </tbody>

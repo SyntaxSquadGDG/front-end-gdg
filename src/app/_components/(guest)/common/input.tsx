@@ -5,7 +5,15 @@ import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import React, { useState, useId } from 'react';
 
-const Input = ({ SVG, label, placeHolder, type, error, ...rest }) => {
+const Input = ({
+  SVG,
+  label,
+  placeHolder,
+  type,
+  error,
+  disabled = false,
+  ...rest
+}) => {
   const [inputType, setInputType] = useState(type);
   const inputId = useId();
 
@@ -29,6 +37,7 @@ const Input = ({ SVG, label, placeHolder, type, error, ...rest }) => {
           <textarea
             placeholder={placeHolder}
             id={inputId}
+            disabled={disabled}
             className="bg-transparent outline-none text-textLight w-[100%] py-[20px] mx-[8px] placeholder:text-placeHolderColor resize-none min-h-[190px]"
             {...rest}></textarea>
         )}
@@ -36,6 +45,7 @@ const Input = ({ SVG, label, placeHolder, type, error, ...rest }) => {
           <input
             type={inputType}
             id={inputId}
+            disabled={disabled}
             placeholder={placeHolder}
             className="bg-transparent outline-none text-textLight w-[100%] py-[20px] mx-[8px] placeholder:text-placeHolderColor"
             {...rest}

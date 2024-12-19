@@ -12,12 +12,15 @@ import Modal from '../modals/modal';
 import Link from 'next/link';
 import ToolBar from '../../navbars/toolbar';
 import { useModal } from '@app/_contexts/modal-provider';
+import DeleteSectionModal from '../modals/delete-section-modal';
+import ItemModal from '../modals/item-modal';
 
 const SectionsPage = ({ sections }) => {
   const t = useTranslations();
 
   const { modalStack, openModal, closeModal } = useModal();
   const [view, setView] = useState('grid');
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div>
@@ -71,7 +74,18 @@ const SectionsPage = ({ sections }) => {
                       </div>
                     </td>
                     <td>
-                      <VerticalDotsSVG />
+                      <div className="relative flex justify-end">
+                        <button onClick={() => setIsOpen(true)}>
+                          <VerticalDotsSVG />
+                        </button>
+
+                        <ItemModal
+                          isOpen={isOpen}
+                          setIsOpen={setIsOpen}
+                          modalName={`deleteModal${section.id}`}
+                        />
+                        <DeleteSectionModal id={section.id} />
+                      </div>
                     </td>
                   </tr>
                 );
@@ -82,21 +96,6 @@ const SectionsPage = ({ sections }) => {
       )}
 
       {!sections && <h2>Error while Loading sections</h2>}
-
-      <Modal
-        isOpen={modalStack.includes('createSection')}
-        onClose={closeModal}
-        className={contentFont.className}>
-        <h2 className="text-xl font-bold mb-[16px]">{t('sections.new')}</h2>
-        <input
-          type="text"
-          className="w-[100%] py-[20px] rounded-[8px] px-[16px] border-[1px] border-solid border-blue1 outline-none mb-[16px]"
-        />
-        <input
-          type="submit"
-          className="w-[100%] py-[20px] rounded-[8px] px-[16px] bg-blue1 outline-none text-textLight"
-        />
-      </Modal>
     </div>
   );
 };

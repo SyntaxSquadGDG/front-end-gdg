@@ -45,7 +45,7 @@ export default function Modal({
       {...props}
       onClick={noOutside ? () => {} : handleOutsideClick}
       className={clsx(
-        'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50',
+        'fixed inset-0 z-[9999999999999999] flex items-center justify-center bg-black bg-opacity-50',
         className,
       )}>
       <div
@@ -56,7 +56,7 @@ export default function Modal({
           onClick={() => onClose()}
           className={clsx(
             contentFont.className,
-            'absolute right-[10px] top-[8px] w-[25px] h-[25px] rounded-full flex items-center justify-center font-bold text-textLight bg-mainColor1 z-50',
+            'absolute right-[10px] top-[8px] w-[26px] h-[26px] rounded-full flex items-center justify-center font-bold text-textLight bg-mainColor1 z-50',
           )}>
           <CloseModalSVG />
         </button>

@@ -14,3 +14,17 @@ export const extendCustomSelect = (array, label1, label2, value) => {
   }));
 };
 
+export function extractPath(elements) {
+  let path = [];
+
+  console.log(elements);
+
+  // Reverse traverse the elements and construct the path
+  for (let i = elements.length - 1; i >= 0; i--) {
+    path.push(elements[i].name);
+  }
+
+  // Join the accumulated names to form the final path
+  return path.join('/');
+}
+

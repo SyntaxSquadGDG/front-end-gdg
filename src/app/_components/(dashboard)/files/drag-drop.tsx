@@ -6,11 +6,12 @@ import { useModal } from '@app/_contexts/modal-provider';
 import { revalidatePath } from 'next/cache';
 import { usePathname } from 'next/navigation';
 import { revalidatePathAction } from '@/app/actions';
+import { extractPath } from '@app/_utils/helper';
 
 const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
   const [dragActive, setDragActive] = useState(false);
   const [files, setFiles] = useState(null);
-  const { modalStack, setModal, openModal } = useModal();
+  const { modalStack, setModal, openModal, closeModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
   const pathName = usePathname();
 
@@ -28,22 +29,31 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
       setIsLoading(true);
 
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('files', file);
+      formData.append('folderId', null);
 
       for (let pair of formData.entries()) {
         console.log(pair[0] + ': ' + pair[1]);
       }
-      const response = await fetch('http://localhost:8000/classify-image', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        `http://syntaxsquad.runasp.net/api/Sfiles/uploadbyai`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
       const data = await response.json();
       console.log('SENT?');
       console.log(data);
+      const myPath = extractPath(data.path);
+      console.log(myPath);
       console.log('OP?');
       setFileData({
         accuracy: data.accuracy,
-        path: data.path,
+        path: extractPath(data.path),
+        name: data.fileName,
+        type: data.type,
+        folderId: data.folderid,
       });
       setModal('AIResults');
       await revalidatePathAction(pathName);
@@ -56,32 +66,35 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
   const handleConfirmFiles = async () => {
     try {
       setIsLoading(true);
-      // const formData = new FormData();
-      // Array.from(files).forEach((file) => {
-      //   formData.append('files', file);
-      // });
-
-      // formData.append('folderId', parentId);
+      const formData = new FormData();
+      Array.from(files).forEach((file) => {
+        formData.append('files', file);
+      });
 
       // formData.append('file', 'file');
 
       // for (let pair of formData.entries()) {
       //   console.log(pair[0] + ': ' + pair[1]);
       // }
-      // const response = await fetch(
-      //   `http://syntaxsquad.runasp.net/api/SFiles/test`,
-      //   {
-      //     method: 'POST',
-      //     body: JSON.stringify({
+      const response = await fetch(
+        `http://syntaxsquad.runasp.net/api/SFiles/upload?folderid=${parentId}`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
 
-      //     })
-      //   },
-      // );
+      const res = await response.json();
 
       console.log(response);
+      console.log(res);
 
       if (response.status === 404) throw new Error('Error');
       toast.success('Files uploaded successfully!');
+      closeModal();
+      setFiles(null);
+      setFileData(null);
+      setFile(null);
       await revalidatePathAction(pathName);
     } catch (error) {
       toast.error('Error while uploading the files');

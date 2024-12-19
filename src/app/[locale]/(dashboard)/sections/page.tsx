@@ -9,6 +9,7 @@ const page = async () => {
     sections = await fetcher('/Sections/getallsections', {
       next: { revalidate: 0, tags: ['sections'] },
     });
+    console.log(sections);
     // sections = sections.filter((section) => {
     //   return section.name === 'SyntaxSquad';
     // });

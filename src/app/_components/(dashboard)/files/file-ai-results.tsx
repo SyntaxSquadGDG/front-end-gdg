@@ -9,33 +9,48 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
+import FileIcon from '../general/file-icon';
 
-const FileAIResults = ({ file, data }) => {
+const FileAIResults = ({ file, data, setFile, setFileData }) => {
   const { closeModal } = useModal();
   const t = useTranslations();
   const pathName = usePathname();
   const [isLoading, setIsLoading] = useState(false);
+  console.log(data);
+
+  const handleClick = () => {
+    if (file) {
+      const imageURL = URL.createObjectURL(file); // Create a temporary URL for the file
+      window.open(imageURL, '_blank'); // Open the image in a new tab
+      // Optional: Revoke the object URL after opening to free memory
+      setTimeout(() => URL.revokeObjectURL(imageURL), 1000);
+    }
+  };
 
   async function handleConfirm() {
     // // REQUEST
-    // try {
-    //   setIsLoading(true);
-    //   const formData = new FormData();
-    //   formData.append('file', file);
-    //   formData.append('path', data.path);
-    //   await fetch('####', {
-    //     method: 'POST',
-    //     body: formData,
-    //   });
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append('files', file);
+      formData.append('path', data.path);
+      const response = await fetch(
+        `http://syntaxsquad.runasp.net/api/SFiles/upload?folderid=${data.folderId}`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
 
-    //   closeModal();
-    //   await revalidatePathAction(pathName);
-    // } catch (e) {
-    // } finally {
-    //   setIsLoading(false);
-    // }
-    closeModal();
-    toast.success('Classified successfully');
+      closeModal();
+      setFile(null);
+      setFileData(null);
+      await revalidatePathAction(pathName);
+      toast.success('Classified successfully');
+    } catch (e) {
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   if (isLoading) {
@@ -82,7 +97,11 @@ const FileAIResults = ({ file, data }) => {
                   <AccuracyLevel accuracy={data.accuracy} />
                 </div>
               </td>
-              <td>{file.name}</td>
+              <td>
+                <button onClick={handleClick}>
+                  <FileIcon type={file.type} />
+                </button>
+              </td>
               <td>{file.name}</td>
               <td
                 className={clsx(

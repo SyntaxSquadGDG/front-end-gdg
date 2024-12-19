@@ -6,6 +6,13 @@ export const publicRoutes = ['/public'];
 export const authRoutes = [
   '/dashboard',
   '/sections',
+  '/sections/:id',
+  '/sections/:id/employees',
+  '/folders',
+  '/folders/:id',
+  '/files',
+  '/files/:id',
+  '/files/:id/preview',
   '/employees',
   '/employees/new',
   '/employees/:id',
@@ -18,6 +25,7 @@ export const authRoutes = [
   '/search',
   '/help',
   '/notifications',
+  '/preview',
 ];
 
 export const sharedRoutes = ['/shared'];

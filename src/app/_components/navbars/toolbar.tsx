@@ -19,6 +19,7 @@ import AddSVG from '../svgs/general/add';
 import CreateSectionModal from '../(dashboard)/modals/create-section-modal';
 import CreateFolderModal from '../(dashboard)/modals/create-folder-modal';
 import { getLangDir } from 'rtl-detect';
+import { usePathname } from 'next/navigation';
 
 const ToolBar = ({
   views,
@@ -36,6 +37,8 @@ const ToolBar = ({
   const { modalStack, openModal, closeModal } = useModal();
   const activeView = 'px-[28px] py-[12px] rounded-[32px] bg-goldLinear';
   const reversedPath = path ? [...path].reverse() : null;
+  const fullPathname = usePathname();
+  const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
 
   const [file, setFile] = useState(null);
   const [fileData, setFileData] = useState(null);
@@ -61,15 +64,16 @@ const ToolBar = ({
     <div className="flex justify-between flex-wrap mb-[32px]">
       {/* Sections Text */}
       <div className="flex gap-[16px] items-center flex-wrap">
-        <Link
-          href="/sections"
-          className={clsx(contentFont.className, 'text-[26px] font-medium')}>
-          {t('sections.sections')}
-        </Link>
+        {pathName === '/sections' && (
+          <Link
+            href="/sections"
+            className={clsx(contentFont.className, 'text-[26px] font-medium')}>
+            {t('sections.sections')}
+          </Link>
+        )}
         {reversedPath &&
           reversedPath.map((item, index) => (
             <React.Fragment key={`${item.type}${item.id}`}>
-              <PathArrowSVG />
               <Link
                 href={
                   item.type === 'folder'
@@ -84,6 +88,7 @@ const ToolBar = ({
                 )}>
                 {item.name}
               </Link>
+              {index !== reversedPath.length - 1 && <PathArrowSVG />}
             </React.Fragment>
           ))}
 
@@ -152,22 +157,22 @@ const ToolBar = ({
           )}
           {path && addFiles && (
             <>
-              {/* <input
+              <input
                 type="file"
                 multiple
                 onChange={handleFileChange}
                 className="hidden"
                 ref={inputRef}
-              /> */}
+              />
 
-              {/* <button
+              <button
                 className={clsx(
                   'flex gap-[10px] items-center h-fit px-[12px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
                   contentFont.className,
                 )}
                 onClick={() => openModal('uploadFiles')}>
                 <AddFileSVG />
-              </button> */}
+              </button>
             </>
           )}
         </div>
@@ -194,7 +199,12 @@ const ToolBar = ({
         isOpen={modalStack.includes('AIResults')}
         onClose={closeModal}
         noOutside={true}>
-        <FileAIResults file={file} data={fileData} />
+        <FileAIResults
+          file={file}
+          data={fileData}
+          setFile={setFile}
+          setFileData={setFileData}
+        />
       </Modal>
 
       <Modal

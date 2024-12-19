@@ -49,10 +49,10 @@ const GuestNavbar = () => {
 
   return (
     <nav
-      className="fixed h-guestNavHeight top-0 left-0 w-[100vw] flex items-center z-[999] custom-blur"
+      className="fixed h-guestNavHeight top-0 left-0 w-[100vw] flex items-center z-[999] custom-blur text-textLight"
       ref={navRef}>
       <div className="container mx-auto flex items-center gap-[80px] justify-between">
-        <p>LOGO</p>
+        <Link href={'/'}>LOGO</Link>
         <button
           className={clsx('2xl:hidden flex')}
           onClick={() => setIsOpen((oldValue) => !oldValue)}>

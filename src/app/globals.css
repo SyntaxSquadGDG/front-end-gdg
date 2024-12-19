@@ -236,3 +236,29 @@ input[type='submit'] {
   mask-composite: exclude;
 }
 
+.textLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  font-family: sans-serif;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+/* ul {
+  padding-left: 20px;
+}
+li {
+  list-style-type: disc;
+} */
+
+input:disabled,
+button:disabled {
+  cursor: not-allowed;
+}
+
+.reset-to-native * {
+  all: revert; /* Removes all custom styles */
+}
+

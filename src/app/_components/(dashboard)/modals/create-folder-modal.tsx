@@ -10,6 +10,8 @@ import toast from 'react-hot-toast';
 import { fetcher } from '@/app/_utils/fetch';
 import { usePathname } from 'next/navigation';
 import { revalidatePathAction } from '@/app/actions';
+import { useState } from 'react';
+import clsx from 'clsx';
 
 // Define a Zod schema for validation
 const schema = z.object({
@@ -20,12 +22,14 @@ const CreateFolderModal = ({ type, id }) => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
   const currentRoute = usePathname();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Use React Hook Form with Zod validation
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: zodResolver(schema),
   });
@@ -37,6 +41,7 @@ const CreateFolderModal = ({ type, id }) => {
     console.log(data);
 
     try {
+      setIsLoading(true);
       const response = await fetch(
         type === 'section'
           ? `http://syntaxsquad.runasp.net/api/Folders/newfolder?name=${data.folderName}&FolderParentId&SectionParentId=${id}`
@@ -48,13 +53,15 @@ const CreateFolderModal = ({ type, id }) => {
       console.log(response);
       if (response.status === 404) throw new Error('Error');
       toast.success('Created');
+      await revalidatePathAction(currentRoute);
+      // handle form data (e.g., create a new folder)
+      closeModal(); // Close modal after submitting
+      reset();
     } catch (e) {
       toast.error('Error while Creating the section');
+    } finally {
+      setIsLoading(false);
     }
-
-    await revalidatePathAction(currentRoute);
-    // handle form data (e.g., create a new folder)
-    closeModal(); // Close modal after submitting
   };
 
   return (
@@ -69,6 +76,7 @@ const CreateFolderModal = ({ type, id }) => {
           {...register('folderName')}
           type="text"
           placeholder="Enter Folder Name"
+          disabled={isLoading}
           className="w-[100%] py-[20px] rounded-[8px] px-[16px] border-[1px] border-solid border-blue1 outline-none mb-[16px]"
         />
         {errors.folderName && (
@@ -79,7 +87,11 @@ const CreateFolderModal = ({ type, id }) => {
 
         <input
           type="submit"
-          className="w-[100%] py-[20px] rounded-[8px] px-[16px] bg-blue1 outline-none text-textLight"
+          disabled={isLoading}
+          className={clsx(
+            'w-[100%] py-[20px] rounded-[8px] px-[16px] bg-blue1 outline-none text-textLight',
+            isLoading && 'bg-slate-400',
+          )}
         />
       </form>
     </Modal>

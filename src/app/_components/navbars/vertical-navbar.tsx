@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import HomeSVG from '../svgs/navbars/home';
 import { useLocale, useTranslations } from 'next-intl';
 import { getLangDir } from 'rtl-detect';
@@ -17,6 +17,8 @@ import { deleteCookie } from 'cookies-next';
 import OverlayImage from '../(dashboard)/general/overlay';
 import VerticalNavbarItem from './vertical-navbar-item';
 import { revalidatePathAction } from '@app/actions';
+import HelpSVG from '../svgs/navbars/help';
+import PlansSVG from '../svgs/navbars/plans';
 
 const VerticalNavbar = () => {
   const t = useTranslations();
@@ -25,6 +27,7 @@ const VerticalNavbar = () => {
   const fullPathname = usePathname();
   const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
   const router = useRouter();
+  const [isPending, setIsPending] = useState(false);
 
   const data = [
     {
@@ -37,21 +40,21 @@ const VerticalNavbar = () => {
       text: t('navbar.sections'),
       svg: SectionsSVG,
     },
-    {
-      path: '/folders',
-      text: t('navbar.folders'),
-      svg: SectionsSVG,
-    },
-    {
-      path: '/files',
-      text: t('navbar.files'),
-      svg: SectionsSVG,
-    },
-    {
-      path: '/managers',
-      text: t('navbar.managers'),
-      svg: EmployeesSVG,
-    },
+    // {
+    //   path: '/folders',
+    //   text: t('navbar.folders'),
+    //   svg: SectionsSVG,
+    // },
+    // {
+    //   path: '/files',
+    //   text: t('navbar.files'),
+    //   svg: SectionsSVG,
+    // },
+    // {
+    //   path: '/managers',
+    //   text: t('navbar.managers'),
+    //   svg: EmployeesSVG,
+    // },
     {
       path: '/employees',
       text: t('navbar.employees'),
@@ -70,7 +73,7 @@ const VerticalNavbar = () => {
     {
       path: '/plans',
       text: t('navbar.plans'),
-      svg: ActivitySVG,
+      svg: PlansSVG,
     },
     {
       path: '/profile',
@@ -80,14 +83,20 @@ const VerticalNavbar = () => {
     {
       path: '/help',
       text: t('navbar.help'),
-      svg: ProfileSVG,
+      svg: HelpSVG,
     },
   ];
 
   async function handleLogout() {
-    deleteCookie('token');
-    await revalidatePathAction('/login');
-    router.push('/login');
+    try {
+      setIsPending(true);
+      deleteCookie('token');
+      await revalidatePathAction('/login');
+      router.push('/login');
+    } catch (e) {
+    } finally {
+      setIsPending(false);
+    }
   }
 
   return (
@@ -130,12 +139,17 @@ const VerticalNavbar = () => {
         </div>
 
         <div className="px-[32px]">
-          <button
-            className="logoutButton my-[48px]"
-            onClick={() => handleLogout()}>
-            <LogoutSVG />
-            <p>{t('navbar.logout')}</p>
-          </button>
+          {isPending && (
+            <p className="logoutButton my-[48px]">Logging Out!...</p>
+          )}
+          {!isPending && (
+            <button
+              className="logoutButton my-[48px]"
+              onClick={() => handleLogout()}>
+              <LogoutSVG />
+              <p>{t('navbar.logout')}</p>
+            </button>
+          )}
         </div>
       </div>
     </nav>

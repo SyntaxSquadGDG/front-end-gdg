@@ -21,6 +21,8 @@ const FileIcon = ({ type }) => {
   if (type === 'image') {
     return <ImageSVG />;
   }
+
+  return <ImageSVG />;
 };
 
 export default FileIcon;

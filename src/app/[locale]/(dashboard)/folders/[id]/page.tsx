@@ -24,7 +24,7 @@ const page = async ({ params }) => {
   }
 
   try {
-    path = await fetcher(`/Folders/Path?id=${id}`, {
+    path = await fetcher(`/Folders/path?id=${id}`, {
       next: { revalidate: 0, tags: ['folderPath', id] },
     });
   } catch (e) {
@@ -35,8 +35,10 @@ const page = async ({ params }) => {
     folderData = await fetcher(`/Folders/FoldersByParentId?id=${id}`, {
       next: { revalidate: 0, tags: ['folderData', id] },
     });
+    console.log(folderData);
   } catch (e) {
     folderData = null;
+    console.log('NULLLLLLLLL');
   }
 
   return (

@@ -9,12 +9,14 @@ const Button = ({
   SVG,
   text,
   onClick,
+  disabled = false,
   className,
   expand = false,
 }) => {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       className={clsx(
         expand && 'min-w-[200px]',
         contentFont.className,

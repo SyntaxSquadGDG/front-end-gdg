@@ -438,7 +438,13 @@
     "otherVersions": "Other Versions",
     "uploaded": "Uploaded",
     "fileName": "File Name",
-    "restore": "Restore"
+    "restore": "Restore",
+    "file": "File",
+    "section": "Section Name",
+    "folderName": "Folder Name",
+    "lastModified": "Last Modified",
+    "size": "File Size",
+    "permissions": "Permissions"
   },
   "dashboard": {
     "latestResults": "Latest Results",
