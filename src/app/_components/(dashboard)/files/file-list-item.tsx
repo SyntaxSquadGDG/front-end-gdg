@@ -3,9 +3,10 @@
 import React, { useState } from 'react';
 import FileIcon from '../general/file-icon';
 import Link from 'next/link';
-import DeleteFolderModal from '../modals/delete-folder-modal';
 import ItemModal from '../modals/item-modal';
 import VerticalDotsSVG from '@app/_components/svgs/general/vertical-dots';
+import DeleteFileModal from '../modals/delete-file-modal';
+import StackUsers from '../general/stack';
 
 const FileListItem = ({ file, path }) => {
   const [isFileOpen, setIsFileOpen] = useState(false);
@@ -30,7 +31,7 @@ const FileListItem = ({ file, path }) => {
         </div>
       </td>
       <td>
-        <div className="relative flex justify-end">
+        <div className="relative">
           <button onClick={() => setIsFileOpen(true)}>
             <VerticalDotsSVG />
           </button>
@@ -40,7 +41,7 @@ const FileListItem = ({ file, path }) => {
             setIsOpen={setIsFileOpen}
             modalName={`deleteFileModal${file.id}`}
           />
-          <DeleteFolderModal
+          <DeleteFileModal
             id={file.id}
             parentId={file.parentFolderId}
             redirect={false}

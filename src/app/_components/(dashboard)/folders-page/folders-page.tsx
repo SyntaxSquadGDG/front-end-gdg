@@ -23,6 +23,8 @@ import { useModal } from '@app/_contexts/modal-provider';
 import DeleteFileModal from '../modals/delete-file-modal';
 import ItemModal from '../modals/item-modal';
 import DeleteFolderModal from '../modals/delete-folder-modal';
+import FolderListItem from '../folders/folder-list-item';
+import FileListItem from '../files/file-list-item';
 
 const FoldersPage = ({ folderData, sectionName, path, id, type }) => {
   const [view, setView] = useState('grid');
@@ -77,40 +79,11 @@ const FoldersPage = ({ folderData, sectionName, path, id, type }) => {
               <tbody className="">
                 {folderData.folders.map((folder) => {
                   return (
-                    <tr
+                    <FolderListItem
+                      folder={folder}
+                      sectionName={sectionName}
                       key={folder.id}
-                      className="py-[40px] font-medium text-[18px] rounded-[32px]">
-                      <td>
-                        <Link href={`/folders/${folder.id}`}>
-                          {folder.name}
-                        </Link>
-                      </td>
-                      <td>{sectionName}</td>
-                      <td>{folder.numberOfFiles}</td>
-                      <td>{folder.lastModified}</td>
-                      <td>{folder.size}</td>
-                      <td>
-                        <div className="flex w-[100%] h-[100%] items-center justify-center">
-                          <StackUsers
-                            employeesCount={folder.numberOfEmployees}
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <div className="relative flex justify-end">
-                          <button onClick={() => setIsFolderOpen(true)}>
-                            <VerticalDotsSVG />
-                          </button>
-
-                          <ItemModal
-                            isOpen={isFolderOpen}
-                            setIsOpen={setIsFolderOpen}
-                            modalName={`deleteFolderModal${folder.id}`}
-                          />
-                          <DeleteFolderModal id={folder.id} />
-                        </div>
-                      </td>
-                    </tr>
+                    />
                   );
                 })}
               </tbody>
@@ -139,46 +112,7 @@ const FoldersPage = ({ folderData, sectionName, path, id, type }) => {
               </thead>
               <tbody className="">
                 {folderData.files.map((file) => {
-                  return (
-                    <tr
-                      key={file.id}
-                      className="py-[40px] font-medium text-[18px] rounded-[32px]">
-                      <td>
-                        <Link href={`/files/${file.id}`}>
-                          <FileIcon type={file.type} />
-                        </Link>
-                      </td>
-                      <td>
-                        <Link href={`/files/${file.id}`}>{file.name}</Link>
-                      </td>
-                      <td>{path[0].name}</td>
-                      <td>{file.uploadedAt}</td>
-                      <td>{file.size}</td>
-                      <td>
-                        <div className="flex w-[100%] h-[100%] items-center justify-center">
-                          <StackUsers employeesCount={file.numberOfEmployees} />
-                        </div>
-                      </td>
-                      <td>
-                        <div className="relative flex justify-end">
-                          <button onClick={() => setIsFileOpen(true)}>
-                            <VerticalDotsSVG />
-                          </button>
-
-                          <ItemModal
-                            isOpen={isFileOpen}
-                            setIsOpen={setIsFileOpen}
-                            modalName={`deleteFileModal${file.id}`}
-                          />
-                          <DeleteFolderModal
-                            id={file.id}
-                            parentId={file.parentFolderId}
-                            redirect={false}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                  );
+                  return <FileListItem file={file} path={path} key={file.id} />;
                 })}
               </tbody>
             </table>

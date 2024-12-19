@@ -12,6 +12,8 @@ import { useModal } from '@app/_contexts/modal-provider';
 import toast from 'react-hot-toast';
 import { revalidatePathAction } from '@/app/actions';
 import useClickOutside from '@app/_hooks/useclickoutside';
+import ItemModal from '../modals/item-modal';
+import DeleteSectionModal from '../modals/delete-section-modal';
 
 const SectionItem = ({ section }) => {
   const t = useTranslations();
@@ -75,13 +77,12 @@ const SectionItem = ({ section }) => {
             <SettingsSVG />
           </button>
 
-          {isOpen && (
-            <div className="absolute right-0 p-[24px] bg-slate-200 rounded-[16px] shadow-tableShadow">
-              <button onClick={() => openModal(`deleteModal${section.id}`)}>
-                Delete
-              </button>
-            </div>
-          )}
+          <ItemModal
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            modalName={`deleteModal${section.id}`}
+          />
+          <DeleteSectionModal id={section.id} />
         </div>
       </div>
 
@@ -107,26 +108,6 @@ const SectionItem = ({ section }) => {
           <StackUsers employeesCount={section.numberOfEmployees} />
         </div>
       </div>
-
-      <Modal
-        isOpen={modalStack.includes(`deleteModal${section.id}`)}
-        onClose={closeModal}
-        className={contentFont.className}>
-        <h2 className="text-xl font-bold mb-[16px]">{t('sections.delete')}</h2>
-        <p className="text-xl font-bold mb-[12px]">
-          {t('sections.deleteDescription')}
-        </p>
-        <input
-          type="submit"
-          value={isDeleting ? 'Deleting...' : 'Delete'}
-          disabled={isDeleting}
-          className={clsx(
-            'w-[100%] py-[20px] rounded-[8px] px-[16px] bg-red-400 outline-none text-textLight cursor-pointer',
-            isDeleting && 'bg-gray-400',
-          )}
-          onClick={() => handleDelete()}
-        />
-      </Modal>
     </div>
   );
 };

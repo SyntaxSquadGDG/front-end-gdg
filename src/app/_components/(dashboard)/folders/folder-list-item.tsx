@@ -25,7 +25,7 @@ const FolderListItem = ({ folder, sectionName }) => {
         </div>
       </td>
       <td>
-        <div className="relative flex justify-end">
+        <div className="relative">
           <button onClick={() => setIsFolderOpen(true)}>
             <VerticalDotsSVG />
           </button>

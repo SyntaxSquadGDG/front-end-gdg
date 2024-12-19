@@ -14,6 +14,7 @@ import ToolBar from '../../navbars/toolbar';
 import { useModal } from '@app/_contexts/modal-provider';
 import DeleteSectionModal from '../modals/delete-section-modal';
 import ItemModal from '../modals/item-modal';
+import SectionListItem from './section-list-item';
 
 const SectionsPage = ({ sections }) => {
   const t = useTranslations();
@@ -42,7 +43,7 @@ const SectionsPage = ({ sections }) => {
       )}
 
       {sections && view === 'list' && (
-        <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
+        <div className="w-full rounded-[32px] h-fit shadow-tableShadow overflow-x-auto">
           <table className={clsx(contentFont.className, 'table')}>
             <thead>
               <tr>
@@ -56,39 +57,7 @@ const SectionsPage = ({ sections }) => {
             </thead>
             <tbody>
               {sections.map((section) => {
-                return (
-                  <tr key={section.id}>
-                    <td>
-                      <Link href={`/sections/${section.id}`}>
-                        {section.name}
-                      </Link>
-                    </td>
-                    <td>{section.numberOfFolders}</td>
-                    <td>{section.lastModified}</td>
-                    <td>{section.size}</td>
-                    <td>
-                      <div className="flex w-[100%] h-[100%] items-center justify-center">
-                        <StackUsers
-                          employeesCount={section.numberOfEmployees}
-                        />
-                      </div>
-                    </td>
-                    <td>
-                      <div className="relative flex justify-end">
-                        <button onClick={() => setIsOpen(true)}>
-                          <VerticalDotsSVG />
-                        </button>
-
-                        <ItemModal
-                          isOpen={isOpen}
-                          setIsOpen={setIsOpen}
-                          modalName={`deleteModal${section.id}`}
-                        />
-                        <DeleteSectionModal id={section.id} />
-                      </div>
-                    </td>
-                  </tr>
-                );
+                return <SectionListItem key={section.id} section={section} />;
               })}
             </tbody>
           </table>

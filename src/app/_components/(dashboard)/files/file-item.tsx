@@ -13,6 +13,8 @@ import { useModal } from '@app/_contexts/modal-provider';
 import useClickOutside from '@app/_hooks/useclickoutside';
 import FileIcon from '../general/file-icon';
 import DeleteFileModal from '../modals/delete-file-modal';
+import ItemModal from '../modals/item-modal';
+import SettingsSVG from '@app/_components/svgs/general/settings';
 
 const FileItem = ({ file }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,16 +41,19 @@ const FileItem = ({ file }) => {
       className="rounded-[16px] border-[1px] border-solid border-blue3 p-[24px]">
       <div className="relative flex justify-end">
         <button onClick={() => setIsOpen(true)}>
-          <VerticalDotsSVG />
+          <SettingsSVG />
         </button>
 
-        {isOpen && (
-          <div className="absolute right-0 p-[24px] bg-slate-200 rounded-[16px] shadow-tableShadow">
-            <button onClick={() => openModal(`deleteFileModal${file.id}`)}>
-              Delete
-            </button>
-          </div>
-        )}
+        <ItemModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          modalName={`deleteFileModal${file.id}`}
+        />
+        <DeleteFileModal
+          id={file.id}
+          parentId={file.parentFolderId}
+          redirect={false}
+        />
       </div>
       <Link
         href={`/files/${file.id}`}
