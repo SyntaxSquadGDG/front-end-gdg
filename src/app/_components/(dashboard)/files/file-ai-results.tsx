@@ -94,7 +94,7 @@ const FileAIResults = ({ file, data, setFile, setFileData }) => {
             <tr className="py-[40px] font-medium text-[18px] rounded-[32px]">
               <td>
                 <div className="flex items-center justify-center">
-                  <AccuracyLevel accuracy={data.accuracy} />
+                  <AccuracyLevel accuracy={data.accuracy || 0} />
                 </div>
               </td>
               <td>
@@ -105,9 +105,13 @@ const FileAIResults = ({ file, data, setFile, setFileData }) => {
               <td>{file.name}</td>
               <td
                 className={clsx(
-                  data.accuracy < 50 ? 'text-lowColor' : 'text-highColor',
+                  data.accuracy
+                    ? data.accuracy < 50
+                      ? 'text-lowColor'
+                      : 'text-highColor'
+                    : 'text-lowColor',
                 )}>
-                {data.accuracy}%
+                {data.accuracy || 0}%
               </td>
               <td>{data.path}</td>
             </tr>

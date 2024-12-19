@@ -17,6 +17,7 @@ const MarkdownRenderer = ({ markdown }) => {
       'div',
       'p',
       'ul',
+      'ol',
       'li',
       'h1',
       'h2',

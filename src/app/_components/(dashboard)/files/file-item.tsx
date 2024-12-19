@@ -69,12 +69,6 @@ const FileItem = ({ file }) => {
         <p className="text-[18px] font-medium">{file.name}</p>
         <p className="text-[14px] font-medium text-textGray">{file.size}</p>
       </div>
-
-      <DeleteFileModal
-        id={file.id}
-        parentId={file.parentFolderId}
-        redirect={false}
-      />
     </div>
   );
 };
