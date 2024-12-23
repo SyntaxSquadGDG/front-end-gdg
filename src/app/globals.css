@@ -57,7 +57,7 @@
   --sectionGap: 48px;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
@@ -65,7 +65,7 @@
     --gold1: '#CDAD8F';
     --gold2: '#FAE1CB';
   }
-}
+} */
 
 body {
   color: var(--foreground);
@@ -106,11 +106,16 @@ body {
 
 .table tr td,
 .table tr th {
-  @apply py-[40px] text-center mx-auto text-tableText text-[18px] font-medium px-[32px];
+  @apply py-[24px] text-center mx-auto text-tableText text-[18px] font-medium px-[32px];
+}
+
+.table thead tr td,
+.table thead tr th {
+  @apply text-[20px];
 }
 
 .table thead tr,
-.table tbody tr {
+.table tbody tr:not(:last-of-type) {
   @apply border-b-[1px] border-solid border-tableBorder;
 }
 

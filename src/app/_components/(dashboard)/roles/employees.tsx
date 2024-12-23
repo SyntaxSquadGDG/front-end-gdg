@@ -6,8 +6,10 @@ import React from 'react';
 import Link from 'next/link';
 import DeleteSVG from '@app/_components/svgs/permissions/delete';
 import AddSVG from '@app/_components/svgs/general/add';
+import EmployeeItemTable from './employee-item-table';
+import ViewSVG from '@app/_components/svgs/employees/view';
 
-const Employees = () => {
+const Employees = ({ full }) => {
   const t = useTranslations();
   const employees = [
     {
@@ -24,59 +26,29 @@ const Employees = () => {
     },
   ];
   return (
-    <div className="my-[32px]">
-      <h2
-        className={clsx(
-          contentFont.className,
-          'text-[24px] font-medium mb-[24px]',
-        )}>
-        {t('employees.employees')}
-      </h2>
-
-      <div className="w-full rounded-[32px] border-[1px] border-solid border-black overflow-y-hidden overflow-x-auto">
-        <table className={clsx(contentFont.className, 'table')}>
-          <thead>
-            <tr>
-              <td></td>
-              <td>{t('employees.id')}</td>
-              <td>{t('employees.name')}</td>
-              <td>{t('employees.email')}</td>
-              <td></td>
-            </tr>
-          </thead>
-          <tbody>
-            {employees.map((employee) => {
-              return (
-                <tr key={employee.id}>
-                  <td>
-                    <div className="flex items-center justify-center">
-                      <img src="/images/defaults/user.png" alt="" />
-                    </div>
-                  </td>
-                  <td>
-                    <Link href={`/employees/${employee.id}`}>
-                      {employee.id}
-                    </Link>
-                  </td>
-                  <td>
-                    {employee.firstName} {employee.lastName}
-                  </td>
-                  <td>{employee.email}</td>
-                  <td>
-                    <div className="flex items-center justify-center">
-                      <DeleteSVG />
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <div className="py-[16px] px-[24px] flex items-center gap-[16px]">
-          <AddSVG />
-          <p className="text-[18px]">{t('roles.addAnother')}</p>
+    <div className="w-full rounded-[32px] border-[1px] border-solid border-black overflow-y-hidden overflow-x-auto">
+      <table className={clsx(contentFont.className, 'table')}>
+        <thead>
+          <tr>
+            <td></td>
+            <td>{t('employees.id')}</td>
+            <td>{t('employees.name')}</td>
+            <td>{t('employees.email')}</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          {employees.map((employee) => {
+            return <EmployeeItemTable employee={employee} key={employee.id} />;
+          })}
+        </tbody>
+      </table>
+      {!full && (
+        <div className="py-[16px] px-[24px] flex items-center gap-[16px] bg-slate-200">
+          <ViewSVG />
+          <p className="text-[18px]">{t('employees.viewAll')}</p>
         </div>
-      </div>
+      )}
     </div>
   );
 };

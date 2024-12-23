@@ -8,10 +8,11 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import Input from '../general/input';
 import Button from '../general/button';
+import { useChangePasswordSchema } from '@app/_schemas/change-password';
 
 const ChangePassword = () => {
   const t = useTranslations();
-  const personalInfoSchema = usePersonalInfoSchema();
+  const changePasswordSchema = useChangePasswordSchema();
 
   const {
     register,
@@ -19,7 +20,7 @@ const ChangePassword = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(personalInfoSchema),
+    resolver: zodResolver(changePasswordSchema),
   });
 
   function onSuccess(data) {

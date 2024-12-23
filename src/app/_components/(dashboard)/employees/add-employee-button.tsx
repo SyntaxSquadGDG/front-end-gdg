@@ -10,6 +10,8 @@ const AddEmployeeButton = () => {
     <Button
       variant="outline"
       SVG={Add2SVG}
+      type="link"
+      href="/employees/new"
       text={t('employees.addButton')}
       onClick={() => console.log('S')}
     />

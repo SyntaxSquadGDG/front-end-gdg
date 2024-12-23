@@ -16,9 +16,16 @@ export const authRoutes = [
   '/employees',
   '/employees/new',
   '/employees/:id',
+  '/employees/:id/edit',
+  '/employees/:id/permissions',
+  '/employees/:id/roles',
+  '/employees/:id/activity',
   '/roles',
   '/roles/new',
   '/roles/:id',
+  '/roles/:id/edit',
+  '/roles/:id/permissions',
+  '/roles/:id/employees',
   '/activity',
   '/profile',
   '/plans',
@@ -26,6 +33,7 @@ export const authRoutes = [
   '/help',
   '/notifications',
   '/preview',
+  '/test',
 ];
 
 export const sharedRoutes = ['/shared'];

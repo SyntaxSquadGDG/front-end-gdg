@@ -6,14 +6,15 @@ import React from 'react';
 import VerticalDotsSVG from '@app/_components/svgs/general/vertical-dots';
 import Link from 'next/link';
 import ViewSVG from '@app/_components/svgs/employees/view';
+import EmployeeItemTable from './employee-item-table';
 
 const EmployeesTable = () => {
   const t = useTranslations();
   const employees = [
     {
       id: 1,
-      name: 'amr',
-      email: 'amr@gmail.com',
+      name: 'Amr Shoukry',
+      email: 'shoukryworkamr1@gmail.com',
       roles: [
         {
           id: 1,
@@ -42,7 +43,7 @@ const EmployeesTable = () => {
     },
   ];
   return (
-    <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
+    <div className="w-full rounded-[32px] shadow-tableShadow ">
       <table className={clsx(contentFont.className, 'table')}>
         <thead>
           <tr>
@@ -55,31 +56,7 @@ const EmployeesTable = () => {
         </thead>
         <tbody>
           {employees.map((employee) => {
-            return (
-              <tr key={employee.id}>
-                <td>
-                  <div className="w-[36px] h-[36px] shrink-0">
-                    <img src="/images/defaults/user.png" alt="" />
-                  </div>
-                </td>
-                <td>
-                  <Link href={`/employees/${employee.id}`}>{employee.id}</Link>
-                </td>
-                <td>{employee.name}</td>
-                <td>
-                  <div className="flex items-center gap-[8px] justify-center">
-                    <ViewSVG />
-                    <p>{t('employees.view')}</p>
-                  </div>
-                </td>
-                <td>{employee.email}</td>
-                <td>
-                  <div className="flex justify-end items-center">
-                    <VerticalDotsSVG />
-                  </div>
-                </td>
-              </tr>
-            );
+            return <EmployeeItemTable employee={employee} key={employee.id} />;
           })}
         </tbody>
       </table>

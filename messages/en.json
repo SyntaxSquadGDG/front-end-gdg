@@ -393,7 +393,14 @@
     "search": "Search",
     "noResults": "No Results Found",
     "no": "No",
-    "yes": "Yes"
+    "yes": "Yes",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "permissions": "Permissions",
+    "roles": "Roles",
+    "employees": "Employees",
+    "activity": "Activity Log"
   },
   "activity": {
     "activity": "Activity Log",
@@ -409,7 +416,10 @@
     "email": "Email",
     "permissions": "Permissions",
     "remove": "Remove Access",
-    "addAnother": "Add Another Permission"
+    "addAnother": "Add Another Permission",
+    "addPermission": "Add permission",
+    "removePermissionFromEmployeeText": "Are You Sure You Want to Delete This Permission From the employee?",
+    "removePermissionFromRoleText": "Are You Sure You Want to Delete This Permission From the role?"
   },
   "folders": {
     "name": "Folder Name",
@@ -466,6 +476,7 @@
     "employees": "Employees",
     "add": "Add New Employee",
     "addButton": "Add New Employee",
+    "viewAll": "View All Employees",
     "id": "ID",
     "name": "Name",
     "roles": "Roles",
@@ -489,7 +500,11 @@
     "addEmployeeButton": "Add Employee",
     "profile": "'s profile",
     "idLabel": "ID",
-    "updateEmployeeButton": "Update Employee"
+    "updateEmployeeButton": "Update Employee",
+    "removeEmployeeFromRoleText": "Are You Sure You Want to Delete This Employee from the role?",
+    "removeEmployeeText": "Are You Sure You Want to Delete This Employee?",
+    "editEmployee": "Edit Employee",
+    "removeEmployee": "Remove Employee"
   },
   "roles": {
     "roles": "Roles",
@@ -507,7 +522,11 @@
     "addRoleButton": "Add Role",
     "add": "Add New Role",
     "idLabel": "ID",
-    "updateRoleButton": "Update Role"
+    "updateRoleButton": "Update Role",
+    "editRole": "Edit Role",
+    "removeRole": "Remove Role",
+    "removeRoleText": "Are You Sure You Want to Delete This Role?",
+    "removeRoleFromEmployeeText": "Are You Sure You Want to Delete This Role? from this employee"
   },
   "profile": {
     "profile": "Profile",

@@ -30,7 +30,7 @@ export default async function RootLayout({
       <body
         className={clsx(
           'overflow-x-hidden',
-          'text-textDark',
+          'text-textDark font-normal',
           `${
             direction === 'ltr'
               ? 'pl-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pl-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight)+24px)] pb-[calc(var(--navsBodySpacing))] pr-[var(--navsBodySpacing)]'

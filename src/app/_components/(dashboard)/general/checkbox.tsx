@@ -4,7 +4,13 @@ import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import React, { useId } from 'react';
 
-const Checkbox = ({ alwaysTrue = false, label, value, onChange }) => {
+const Checkbox = ({
+  alwaysTrue = false,
+  label,
+  value,
+  onChange,
+  disabled = false,
+}) => {
   const checkboxId = useId();
 
   return (
@@ -14,6 +20,7 @@ const Checkbox = ({ alwaysTrue = false, label, value, onChange }) => {
         id={checkboxId}
         checked={alwaysTrue ? true : value ? value : false}
         className="hidden"
+        disabled={disabled}
         onChange={alwaysTrue ? () => {} : (e) => onChange(e.target.checked)}
       />
       <div
@@ -23,6 +30,7 @@ const Checkbox = ({ alwaysTrue = false, label, value, onChange }) => {
             'w-[24px] h-[24px] border-[2px] border-solid border-mainColor1 relative rounded-[4px]',
             !alwaysTrue && 'cursor-pointer',
             (value || alwaysTrue) && 'bg-mainColor1 border-none',
+            disabled && 'opacity-15',
           )}
           onClick={alwaysTrue ? () => {} : () => onChange(!value)}>
           {(value || alwaysTrue) && (

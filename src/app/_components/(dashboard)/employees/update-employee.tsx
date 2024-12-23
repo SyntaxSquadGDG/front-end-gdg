@@ -68,9 +68,9 @@ const UpdateEmployee = ({ id }) => {
 
             <Input label={t('employees.idLabel')} readOnly={true} value={id} />
           </div>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-start">
             <Button
-              className={'w-[100%] lg:w-[50%] mt-[50px]'}
+              className={'w-[100%] lg:w-[400px] mt-[50px]'}
               text={t('employees.updateEmployeeButton')}
             />
           </div>

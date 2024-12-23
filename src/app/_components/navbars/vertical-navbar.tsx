@@ -50,11 +50,11 @@ const VerticalNavbar = () => {
     //   text: t('navbar.files'),
     //   svg: SectionsSVG,
     // },
-    // {
-    //   path: '/managers',
-    //   text: t('navbar.managers'),
-    //   svg: EmployeesSVG,
-    // },
+    {
+      path: '/managers',
+      text: t('navbar.managers'),
+      svg: EmployeesSVG,
+    },
     {
       path: '/employees',
       text: t('navbar.employees'),
@@ -80,11 +80,11 @@ const VerticalNavbar = () => {
       text: t('navbar.profile'),
       svg: ProfileSVG,
     },
-    {
-      path: '/help',
-      text: t('navbar.help'),
-      svg: HelpSVG,
-    },
+    // {
+    //   path: '/help',
+    //   text: t('navbar.help'),
+    //   svg: HelpSVG,
+    // },
   ];
 
   async function handleLogout() {
@@ -123,7 +123,7 @@ const VerticalNavbar = () => {
         )}>
         <div className="px-[32px]">
           <p className="my-[32px] h-[40px]">LOGO</p>
-          <ul className="vertical-list flex flex-col gap-[32px] overflow-auto h-[calc(100vh-40px-200px)]">
+          <ul className="vertical-list flex flex-col gap-[32px] overflow-auto h-[calc(100vh-40px-300px)]">
             {data.map((item) => {
               return (
                 <VerticalNavbarItem
@@ -143,12 +143,17 @@ const VerticalNavbar = () => {
             <p className="logoutButton my-[48px]">Logging Out!...</p>
           )}
           {!isPending && (
-            <button
-              className="logoutButton my-[48px]"
-              onClick={() => handleLogout()}>
-              <LogoutSVG />
-              <p>{t('navbar.logout')}</p>
-            </button>
+            <div className="flex flex-col gap-[24px] my-[48px]">
+              <button className="logoutButton" onClick={() => handleLogout()}>
+                <HelpSVG />
+                <p>{t('navbar.help')}</p>
+              </button>
+
+              <button className="logoutButton" onClick={() => handleLogout()}>
+                <LogoutSVG />
+                <p>{t('navbar.logout')}</p>
+              </button>
+            </div>
           )}
         </div>
       </div>

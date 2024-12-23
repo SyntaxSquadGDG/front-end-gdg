@@ -17,8 +17,10 @@ const CustomSelect = ({ label, options, value, onChange, error }) => {
   useClickOutside(selectRef, () => setIsOpen(false));
 
   // Filter options based on search query
-  const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredOptions = options.filter(
+    (option) =>
+      option.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(option.value).toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -65,13 +67,14 @@ const CustomSelect = ({ label, options, value, onChange, error }) => {
                 filteredOptions.map((option) => (
                   <li
                     key={option.value}
-                    className="py-[22px] px-[16px] cursor-pointer text-mainColor1 font-medium hover:bg-mainColor3 hover:text-textLight"
+                    className="py-[22px] px-[16px] cursor-pointer text-mainColor1 font-medium hover:bg-mainColor3 hover:text-textLight flex flex-col gap-[8px]"
                     onClick={() => {
                       onChange(option);
                       setIsOpen(false);
                       setSearchQuery(''); // Clear the search query when selecting a role
                     }}>
-                    {option.label}
+                    <p className="font-bold text-[20px]">{option.label}</p>
+                    <p>{option.value}</p>
                   </li>
                 ))
               ) : (

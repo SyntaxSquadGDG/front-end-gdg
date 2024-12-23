@@ -1,5 +1,6 @@
 'use client';
-import React, { createContext, useContext, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 // Create a context
 const MyContext = createContext();
@@ -19,6 +20,12 @@ export const ModalProvider = ({ children }) => {
   const setModal = (modalId) => {
     setModalStack([modalId]); // Remove the top modal from the stack
   };
+
+  const fullPathname = usePathname();
+
+  useEffect(() => {
+    setModalStack([]);
+  }, [fullPathname]);
 
   return (
     <MyContext.Provider value={{ modalStack, openModal, closeModal, setModal }}>

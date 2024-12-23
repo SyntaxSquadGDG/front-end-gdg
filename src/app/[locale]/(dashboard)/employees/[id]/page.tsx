@@ -3,7 +3,9 @@ import Permissions from '@app/_components/(dashboard)/employees/permissions';
 import Roles from '@app/_components/(dashboard)/employees/roles';
 import UpdateEmployee from '@app/_components/(dashboard)/employees/update-employee';
 import HeadBar from '@app/_components/(dashboard)/general/head-bar';
+import RoleHead from '@app/_components/(dashboard)/roles/head';
 import EmployeesSVG from '@app/_components/svgs/employees/employees';
+import ViewSVG from '@app/_components/svgs/employees/view';
 import { getTranslations } from 'next-intl/server';
 import React from 'react';
 
@@ -23,9 +25,35 @@ const page = async ({ params }) => {
     <div>
       <HeadBar items={items} SVG={EmployeesSVG} />
       <UpdateEmployee id={id} />
-      <Permissions />
-      <Activity />
-      <Roles />
+      <div className="my-[32px]">
+        <RoleHead
+          text={t('general.permissions')}
+          SVG={ViewSVG}
+          href={`/employees/${id}/permissions`}
+        />
+
+        <Permissions />
+      </div>
+
+      <div className="my-[32px]">
+        <RoleHead
+          text={t('general.activity')}
+          SVG={ViewSVG}
+          href={`/employees/${id}/activity`}
+        />
+
+        <Activity />
+      </div>
+
+      <div className="my-[32px]">
+        <RoleHead
+          text={t('general.roles')}
+          SVG={ViewSVG}
+          href={`/employees/${id}/roles`}
+        />
+
+        <Roles />
+      </div>
     </div>
   );
 };

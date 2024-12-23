@@ -8,6 +8,8 @@ const AddRoleButton = () => {
   const t = useTranslations();
   return (
     <Button
+      type="link"
+      href="/roles/new"
       variant="outline"
       SVG={Add2SVG}
       text={t('roles.addButton')}

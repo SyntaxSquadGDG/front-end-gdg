@@ -8,6 +8,7 @@ import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import React from 'react';
+import PermissionItem from './permission-item';
 
 const Permissions = () => {
   const t = useTranslations();
@@ -28,55 +29,29 @@ const Permissions = () => {
       id: 2,
     },
   ];
+  const role = {
+    id: 1,
+    name: 'HR',
+  };
   return (
-    <div className="my-[32px]">
-      <h2
-        className={clsx(
-          contentFont.className,
-          'text-[24px] font-medium mb-[24px]',
-        )}>
-        {t('permissions.permissions')}
-      </h2>
-
-      <div className="rounded-[16px] overflow-x-auto border-[1px] border-solid border-black">
-        <table className="permissionsTable">
-          <tbody>
-            {permissions.map((item) => {
-              return (
-                <tr key={`${item.type}${item.id}`}>
-                  <td className="py-[16px]">
-                    <div className="flex items-center gap-[18px] justify-start">
-                      <span>
-                        {item.type === 'section' && (
-                          <SectionItemPermissionSVG />
-                        )}
-                        {item.type === 'folder' && <FolderItemPermissionSVG />}
-                        {item.type === 'file' && <FileItemPermissionSVG />}
-                      </span>
-                      <span>{item.name}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div>PEN</div>
-                  </td>
-                  <td>
-                    <div className="flex items-center gap-[10px] justify-end">
-                      <DeleteSVG />
-                      <p className="text-[20px] text-dangerColor">
-                        {t('permissions.remove')}
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <div className="py-[16px] px-[24px] flex items-center gap-[16px]">
-          <AddSVG />
-          <p className="text-[18px]">{t('permissions.addAnother')}</p>
-        </div>
-      </div>
+    <div className="rounded-[16px] overflow-x-auto border-[1px] border-solid border-black">
+      <table className="permissionsTable">
+        <tbody>
+          {permissions.map((item) => {
+            return (
+              <PermissionItem
+                item={item}
+                role={role}
+                key={`${item.id}${item.type}`}
+              />
+            );
+          })}
+        </tbody>
+      </table>
+      {/* <div className="py-[16px] px-[24px] flex items-center gap-[16px]">
+        <AddSVG />
+        <p className="text-[18px]">{t('permissions.addAnother')}</p>
+      </div> */}
     </div>
   );
 };

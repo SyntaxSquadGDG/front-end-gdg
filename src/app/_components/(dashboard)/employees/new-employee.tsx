@@ -120,7 +120,7 @@ const NewEmployee = () => {
                       <div
                         key={index}
                         className="flex items-center bg-blue-500 text-white p-2 rounded">
-                        {role.name}
+                        {role.name} {role.id}
                         <button
                           type="button"
                           onClick={() => handleRoleChange(role)} // Deselect role

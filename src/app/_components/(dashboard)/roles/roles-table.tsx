@@ -6,6 +6,7 @@ import React from 'react';
 import VerticalDotsSVG from '@app/_components/svgs/general/vertical-dots';
 import Link from 'next/link';
 import ViewSVG from '@app/_components/svgs/employees/view';
+import RoleItemTable from './role-item-table';
 
 const RolesTable = () => {
   const t = useTranslations();
@@ -22,7 +23,7 @@ const RolesTable = () => {
     },
   ];
   return (
-    <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
+    <div className="w-full rounded-[32px] shadow-tableShadow">
       <table className={clsx(contentFont.className, 'table')}>
         <thead>
           <tr>
@@ -35,30 +36,7 @@ const RolesTable = () => {
         </thead>
         <tbody>
           {roles.map((role) => {
-            return (
-              <tr key={role.id}>
-                <td>
-                  <div className="w-[36px] h-[36px] shrink-0">
-                    <img src="/images/defaults/user.png" alt="" />
-                  </div>
-                </td>
-                <td>
-                  <Link href={`/roles/${role.id}`}>{role.id}</Link>
-                </td>
-                <td>{role.name}</td>
-                <td>
-                  <div className="flex items-center justify-center gap-[8px]">
-                    <ViewSVG />
-                    <span>{role.employeesCount}</span>
-                  </div>
-                </td>
-                <td>
-                  <div className="flex justify-end items-center">
-                    <VerticalDotsSVG />
-                  </div>
-                </td>
-              </tr>
-            );
+            return <RoleItemTable role={role} key={role.id} />;
           })}
         </tbody>
       </table>
