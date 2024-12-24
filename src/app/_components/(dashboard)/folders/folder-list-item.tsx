@@ -5,6 +5,7 @@ import ItemModal from '../modals/item-modal';
 import DeleteFolderModal from '../modals/delete-folder-modal';
 import Link from 'next/link';
 import StackUsers from '../general/stack';
+import FolderSettings from './folder-settings';
 
 const FolderListItem = ({ folder, sectionName }) => {
   const [isFolderOpen, setIsFolderOpen] = useState(false);
@@ -25,18 +26,7 @@ const FolderListItem = ({ folder, sectionName }) => {
         </div>
       </td>
       <td>
-        <div className="relative">
-          <button onClick={() => setIsFolderOpen(true)}>
-            <VerticalDotsSVG />
-          </button>
-
-          <ItemModal
-            isOpen={isFolderOpen}
-            setIsOpen={setIsFolderOpen}
-            modalName={`deleteFolderModal${folder.id}`}
-          />
-          <DeleteFolderModal id={folder.id} />
-        </div>
+        <FolderSettings folder={folder} />
       </td>
     </tr>
   );

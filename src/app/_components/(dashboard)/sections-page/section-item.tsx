@@ -14,36 +14,22 @@ import { revalidatePathAction } from '@/app/actions';
 import useClickOutside from '@app/_hooks/useclickoutside';
 import ItemModal from '../modals/item-modal';
 import DeleteSectionModal from '../modals/delete-section-modal';
+import ItemModalItem from '../modals/item-modal-item';
+import RemoveSVG from '@app/_components/svgs/modals/remove';
+import DeleteModal from '../modals/delete-modal';
+import EditSVG from '@app/_components/svgs/modals/edit';
+import RenameModal from '../modals/rename-modal';
+import PermittedEmployeesSVG from '@app/_components/svgs/modals/permitted-employees';
+import EditPermissionsSVG from '@app/_components/svgs/modals/edit-permissions';
+import ItemPermissionsEditModal from '../modals/item-permissions-edit-modal';
+import SectionFormPermissions from '../permissions/section-form-permissions';
+import SectionSettings from './section-settings';
 
 const SectionItem = ({ section }) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const containerRef = useRef(null);
   const { closeModal, modalStack, openModal } = useModal();
-
-  async function handleDelete() {
-    try {
-      setIsDeleting(true);
-      const res = await fetch(
-        `http://syntaxsquad.runasp.net/api/Sections/deletesection?id=${section.id}`,
-        {
-          method: 'DELETE',
-        },
-      );
-      if (!res.ok) {
-        throw new Error('error');
-      }
-      console.log(res);
-      closeModal();
-      toast.success('Deleted Successfully');
-      await revalidatePathAction('/sections');
-    } catch (e) {
-      toast.error('Error while deleting section');
-    } finally {
-      setIsDeleting(false);
-    }
-  }
 
   useClickOutside(containerRef, () => setIsOpen(false));
 
@@ -71,19 +57,7 @@ const SectionItem = ({ section }) => {
             </p>
           </div>
         </Link>
-
-        <div className="relative">
-          <button onClick={() => setIsOpen(true)}>
-            <SettingsSVG />
-          </button>
-
-          <ItemModal
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            modalName={`deleteModal${section.id}`}
-          />
-          <DeleteSectionModal id={section.id} />
-        </div>
+        <SectionSettings section={section} />
       </div>
 
       {/* Footer */}

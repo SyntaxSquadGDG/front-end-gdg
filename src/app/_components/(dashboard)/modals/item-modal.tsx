@@ -12,10 +12,10 @@ const ItemModal = ({ isOpen, setIsOpen, modalName, children }) => {
       {isOpen && (
         <div
           ref={popUpRef}
-          className="bg-whiteBackground shadow-tableShadow rounded-[16px] py-[37px] px-[43px] w-max absolute right-[16px] top-0 z-[50000000000000] flex flex-col gap-[24px]">
-          {modalName && (
+          className="bg-whiteBackground shadow-tableShadow rounded-[16px] py-[24px] px-[24px] w-max absolute right-[16px] top-0 z-[50000000000000] flex flex-col gap-[24px]">
+          {/* {modalName && (
             <button onClick={() => openModal(modalName)}>Delete</button>
-          )}
+          )} */}
           {children}
         </div>
       )}

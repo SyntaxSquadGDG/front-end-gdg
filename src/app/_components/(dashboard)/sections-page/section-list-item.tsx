@@ -6,6 +6,7 @@ import StackUsers from '../general/stack';
 import VerticalDotsSVG from '@app/_components/svgs/general/vertical-dots';
 import ItemModal from '../modals/item-modal';
 import DeleteSectionModal from '../modals/delete-section-modal';
+import SectionSettings from './section-settings';
 
 const SectionListItem = ({ section }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,18 +24,7 @@ const SectionListItem = ({ section }) => {
         </div>
       </td>
       <td>
-        <div className="relative">
-          <button onClick={() => setIsOpen(true)}>
-            <VerticalDotsSVG />
-          </button>
-
-          <ItemModal
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            modalName={`deleteModal${section.id}`}
-          />
-          <DeleteSectionModal id={section.id} />
-        </div>
+        <SectionSettings section={section} />
       </td>
     </tr>
   );

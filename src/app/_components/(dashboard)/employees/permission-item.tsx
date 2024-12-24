@@ -6,6 +6,10 @@ import { useTranslations } from 'use-intl';
 import { useModal } from '@app/_contexts/modal-provider';
 import DeletePermissionFromEmployeeModal from '../modals/delete-permission-from-employee';
 import EditSVG from '@app/_components/svgs/modals/edit';
+import PermissionItemEditModal from '../modals/permission-item-edit-modal';
+import SectionFormPermissions from '../permissions/section-form-permissions';
+import FolderFormPermissions from '../permissions/folder-form-permissions';
+import FileFormPermissions from '../permissions/file-form-permissions';
 
 const PermissionItem = ({ item, employee }) => {
   const t = useTranslations();
@@ -21,9 +25,15 @@ const PermissionItem = ({ item, employee }) => {
         </div>
       </td>
       <td>
-        <div className="flex items-center justify-center">
-          <EditSVG />
-        </div>
+        <button
+          onClick={() => openModal(`permissionItemEdit${item.id}${item.type}`)}>
+          <div className="flex items-center justify-center gap-[10px]">
+            <EditSVG />
+            <p className="text-[20px] text-mainColor1">
+              {t('permissions.edit')}
+            </p>
+          </div>
+        </button>
       </td>
       <td>
         <div className="flex items-center gap-[10px] justify-end">
@@ -45,7 +55,17 @@ const PermissionItem = ({ item, employee }) => {
             <DeletePermissionFromEmployeeModal
               id={`${employee.id}${item.id}${item.type}`}
             />
-            {/* <DeleteFolderModal id={folder.id} /> */}
+            <PermissionItemEditModal id={`${item.id}${item.type}`}>
+              {item.type === 'section' && (
+                <SectionFormPermissions id={1} type={'employee'} />
+              )}
+              {item.type === 'folder' && (
+                <FolderFormPermissions id={1} type={'employee'} />
+              )}
+              {item.type === 'file' && (
+                <FileFormPermissions id={1} type={'employee'} />
+              )}
+            </PermissionItemEditModal>
           </div>
         </div>
       </td>

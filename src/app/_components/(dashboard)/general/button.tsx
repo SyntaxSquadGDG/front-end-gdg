@@ -20,12 +20,10 @@ const Button = ({
     contentFont.className,
     'px-[24px] py-[12px] text-[18px] font-medium rounded-[8px] flex items-center justify-center text-center gap-[8px]',
     expand && 'min-w-[200px]',
-    {
-      'bg-mainDashboardLinear text-textLight': variant === 'fill',
-      'linearMainText border-[1px] border-solid border-mainColor3':
-        variant === 'outline',
-      'border-none px-0': variant === 'solid',
-    },
+    variant === 'fill' && 'bg-mainDashboardLinear text-textLight',
+    variant === 'outline' &&
+      'linearMainText border-[1px] border-solid border-mainColor3',
+    variant === 'solid' && 'border-none px-[0px]',
     className,
   );
 

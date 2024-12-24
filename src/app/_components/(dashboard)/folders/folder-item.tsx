@@ -15,37 +15,27 @@ import { usePathname } from 'next/navigation';
 import useClickOutside from '@app/_hooks/useclickoutside';
 import ItemModal from '../modals/item-modal';
 import DeleteFolderModal from '../modals/delete-folder-modal';
+import DeleteModal from '../modals/delete-modal';
+import ItemModalItem from '../modals/item-modal-item';
+import EditPermissionsSVG from '@app/_components/svgs/modals/edit-permissions';
+import RenameModal from '../modals/rename-modal';
+import EditSVG from '@app/_components/svgs/modals/edit';
+import ItemPermissionsEditModal from '../modals/item-permissions-edit-modal';
+import MoveSVG from '@app/_components/svgs/modals/move';
+import MoveModal from '../modals/move-modal';
+import CopySVG from '@app/_components/svgs/modals/copy';
+import MetadataSVG from '@app/_components/svgs/modals/metadata';
+import RemoveSVG from '@app/_components/svgs/modals/remove';
+import FolderSettings from './folder-settings';
 
 const FolderItem = ({ folder, sectionName }) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
   const containerRef = useRef(null);
   const { openModal, closeModal, modalStack } = useModal();
   const path = usePathname();
-
-  async function handleDelete() {
-    try {
-      setIsDeleting(true);
-      const res = await fetch(
-        `http://syntaxsquad.runasp.net/api/Folders/deletefolderbyid?id=${folder.id}`,
-        {
-          method: 'DELETE',
-        },
-      );
-      if (!res.ok) {
-        throw new Error('error');
-      }
-      console.log(res);
-      closeModal();
-      toast.success('Deleted Successfully');
-      await revalidatePathAction(path);
-    } catch (e) {
-      toast.error('Error while deleting section');
-    } finally {
-      setIsDeleting(false);
-    }
-  }
 
   useClickOutside(containerRef, () => setIsOpen(false));
 
@@ -84,18 +74,7 @@ const FolderItem = ({ folder, sectionName }) => {
             </div>
           </Link>
 
-          <div className="relative">
-            <button onClick={() => setIsOpen(true)}>
-              <SettingsSVG />
-            </button>
-
-            <ItemModal
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              modalName={`deleteFolderModal${folder.id}`}
-            />
-            <DeleteFolderModal id={folder.id} />
-          </div>
+          <FolderSettings folder={folder} />
         </div>
 
         {/* Footer */}

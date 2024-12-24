@@ -7,6 +7,7 @@ import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import React, { useState, useRef } from 'react';
+import SelectedSelect from './selected-select';
 
 const CustomSelect = ({ label, options, value, onChange, error }) => {
   const [isOpen, setIsOpen] = useState(false);

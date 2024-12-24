@@ -28,6 +28,11 @@ const Permissions = () => {
       name: 'folderName2',
       id: 2,
     },
+    {
+      type: 'file',
+      name: 'FileName',
+      id: 1,
+    },
   ];
   const employee = {
     id: 1,

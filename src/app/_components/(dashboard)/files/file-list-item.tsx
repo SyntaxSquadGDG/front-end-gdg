@@ -7,6 +7,7 @@ import ItemModal from '../modals/item-modal';
 import VerticalDotsSVG from '@app/_components/svgs/general/vertical-dots';
 import DeleteFileModal from '../modals/delete-file-modal';
 import StackUsers from '../general/stack';
+import FileSettings from './file-settings';
 
 const FileListItem = ({ file, path }) => {
   const [isFileOpen, setIsFileOpen] = useState(false);
@@ -32,20 +33,7 @@ const FileListItem = ({ file, path }) => {
       </td>
       <td>
         <div className="relative">
-          <button onClick={() => setIsFileOpen(true)}>
-            <VerticalDotsSVG />
-          </button>
-
-          <ItemModal
-            isOpen={isFileOpen}
-            setIsOpen={setIsFileOpen}
-            modalName={`deleteFileModal${file.id}`}
-          />
-          <DeleteFileModal
-            id={file.id}
-            parentId={file.parentFolderId}
-            redirect={false}
-          />
+          <FileSettings file={file} />
         </div>
       </td>
     </tr>

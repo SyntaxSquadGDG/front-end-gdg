@@ -1,10 +1,16 @@
 'use client';
 import React, { useState } from 'react';
 import Checkbox from '../general/checkbox';
+import PermissionsHeadText from './permissions-head-text';
+import { useTranslations } from 'next-intl';
+import Button from '../general/button';
+import PermissionsDiv from './permissions-div';
 
 const SectionFormPermissions = ({ type, id }) => {
   const defaultPermissions = [];
   const [permissions, setPermissions] = useState(defaultPermissions); // Stores selected permissions
+  const t = useTranslations();
+  const disabledCondition = permissions.length === 0;
 
   const handleToggle = (index) => {
     setPermissions((prev) => {
@@ -25,18 +31,31 @@ const SectionFormPermissions = ({ type, id }) => {
 
   return (
     <div>
-      <p>Section Permissions</p>
-      <div>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <Checkbox
-            key={index}
-            value={permissions.includes(index)}
-            disabled={index > 0 && !permissions.includes(index - 1)}
-            onChange={() => handleToggle(index)}
-            label={`Permission ${index}`}
-          />
-        ))}
+      <div className="">
+        <PermissionsHeadText>
+          {t('permissions.sectionPermissions')}
+        </PermissionsHeadText>
+        <PermissionsDiv>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <Checkbox
+              key={index}
+              value={permissions.includes(index)}
+              disabled={index > 0 && !permissions.includes(index - 1)}
+              onChange={() => handleToggle(index)}
+              label={`Permission ${index}`}
+            />
+          ))}
+        </PermissionsDiv>
       </div>
+      <Button
+        text={t('permissions.updateButton')}
+        disabled={disabledCondition}
+        className={'mt-[32px] w-[100%]'}
+        onClick={() => {
+          console.log(id);
+          console.log(permissions);
+        }}
+      />
     </div>
   );
 };

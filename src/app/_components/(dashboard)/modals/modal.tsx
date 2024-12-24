@@ -12,6 +12,7 @@ export default function Modal({
   onClose,
   children,
   className,
+  innerClassName = '',
   noOutside,
   ...props
 }) {
@@ -46,11 +47,14 @@ export default function Modal({
       {...props}
       onClick={noOutside ? () => {} : handleOutsideClick}
       className={clsx(
-        'fixed inset-0 z-[9999999999999999] flex items-center justify-center bg-black bg-opacity-50',
+        'fixed inset-0 z-[9999999999999999] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm',
         className,
       )}>
       <div
-        className="bg-whiteBackground rounded-[16px] py-[36px] px-[50px] max-h-[98vh] overflow-y-auto w-[460px] relative"
+        className={clsx(
+          'bg-whiteBackground rounded-[16px] py-[36px] px-[50px] max-h-[98vh] overflow-y-auto w-[460px] relative',
+          innerClassName,
+        )}
         onClick={(e) => e.stopPropagation()}>
         {children}
         <CloseModalButton onClose={onClose} />

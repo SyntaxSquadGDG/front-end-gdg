@@ -17,9 +17,11 @@ const Input = ({
 
   return (
     <div className="flex flex-col gap-[16px] text-start">
-      <label className="text-textDark text-[18px]" htmlFor={inputId}>
-        {label}
-      </label>
+      {label && (
+        <label className="text-textDark text-[18px]" htmlFor={inputId}>
+          {label}
+        </label>
+      )}
 
       <div className="flex items-center gap-[8px] border-[1px] border-solid border-mainColor3 rounded-[8px] px-[16px]">
         {SVG && <SVG />}

@@ -4,13 +4,15 @@ import Modal from './modal';
 import { useModal } from '@app/_contexts/modal-provider';
 import { contentFont } from '@app/_utils/fonts';
 import { useTranslations } from 'use-intl';
-import HierarchicalView from './hir';
+import HierarchicalView from '../general/hierarchy';
 import SectionFormPermissions from '../permissions/section-form-permissions';
 import FolderFormPermissions from '../permissions/folder-form-permissions';
 import FileFormPermissions from '../permissions/file-form-permissions';
 import { extendSelect } from '@app/_utils/helper';
 import CustomSelect from '../general/select';
 import NormalSelect from '../general/normal-select';
+import clsx from 'clsx';
+import Button from '../general/button';
 
 const data = [
   {
@@ -70,7 +72,14 @@ const data = [
             id: 102,
             name: 'Folder 3-1',
             files: [{ id: 10, name: 'File 10' }],
-            folders: [], // No further subfolders
+            folders: [
+              {
+                id: 401,
+                name: 'Folder 3-1-1',
+                files: [{ id: 19, name: 'File 19' }],
+                folders: [], // No further subfolders
+              },
+            ], // No further subfolders
           },
         ],
       },
@@ -83,48 +92,12 @@ const AddEmployeePermissionModal = ({ id }) => {
   const t = useTranslations();
   const [selectedItem, setSelectedItem] = useState({ id: null, type: null });
   const [buttonView, setButtonView] = useState(0);
-  const initialRoles = [
-    {
-      id: 1,
-      name: 'HR',
-    },
-    {
-      id: 2,
-      name: 'PR',
-    },
-    {
-      id: 3,
-      name: 'FR',
-    },
-  ];
 
-  const roles = extendSelect(initialRoles, 'name', 'id');
-
-  const [selectedRoles, setSelectedRoles] = useState([]);
-  const [selectedRoleIds, setSelectedRoleIds] = useState([]); // Stores only the role ids
-
-  const [selectedNormal, setSelectedNormal] = useState(1);
-
-  const handleRoleChange = (role) => {
-    // First update selectedRoles and selectedRoleIds
-    const updatedRoles = selectedRoles.includes(role)
-      ? selectedRoles.filter((r) => r.id !== role.id)
-      : [...selectedRoles, role];
-
-    const updatedRoleIds = selectedRoleIds.includes(role.id)
-      ? selectedRoleIds.filter((id) => id !== role.id)
-      : [...selectedRoleIds, role.id];
-
-    // Update the state
-    setSelectedRoles(updatedRoles);
-    setSelectedRoleIds(updatedRoleIds);
-
-    // Then, update the form value with the latest selectedRoleIds
-    // setValue('roles', updatedRoleIds);
-  };
-  const availableRoles = roles.filter(
-    (role) => !selectedRoles.some((selected) => selected.id === role.id),
-  );
+  function onModalClose() {
+    closeModal();
+    setButtonView(0);
+    setSelectedItem({ id: null, type: null });
+  }
 
   useEffect(() => {
     setButtonView(0);
@@ -132,66 +105,48 @@ const AddEmployeePermissionModal = ({ id }) => {
   return (
     <Modal
       isOpen={modalStack.includes(`addEmployeePermission${id}`)}
-      onClose={closeModal}
-      className={contentFont.className}>
-      <h2 className="text-xl font-bold mb-[16px]">{t('folders.new')}</h2>
-      <HierarchicalView
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
-        data={data}
-      />
-      <button className="bg-green-400 p-[4px]" onClick={() => setButtonView(1)}>
-        ClickMe
-      </button>
-      {buttonView === 1 && (
-        <>
-          {selectedItem.type === 'section' && (
-            <SectionFormPermissions type="employee" id={id} />
-          )}
-          {selectedItem.type === 'folder' && (
-            <FolderFormPermissions type="employee" id={id} />
-          )}
-          {selectedItem.type === 'file' && (
-            <FileFormPermissions type="employee" id={id} />
-          )}
-        </>
-      )}
-
+      onClose={onModalClose}
+      innerClassName="w-[90vw]"
+      className={clsx(contentFont.className)}>
       <div>
-        <CustomSelect
-          label={t('employees.roleLabel')}
-          // error={errors.roles?.message}
-          options={availableRoles}
-          onChange={handleRoleChange}
-        />
-
-        <div className="mt-4">
-          {selectedRoles.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {selectedRoles.map((role, index) => (
-                <div
-                  key={index}
-                  className="flex items-center bg-blue-500 text-white p-2 rounded">
-                  {role.name}
-                  <button
-                    type="button"
-                    onClick={() => handleRoleChange(role)} // Deselect role
-                    className="ml-2 text-white font-bold">
-                    X
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+        <h2 className="font-medium text-[20px] text-mainColor1">
+          {t('permissions.addPermissionHead')}
+        </h2>
+        <div className="flex items-start justify-between mt-[16px] flex-col lg:flex-row gap-[32px]">
+          <div className="w-[100%]">
+            <HierarchicalView
+              selectedItem={selectedItem}
+              setSelectedItem={setSelectedItem}
+              data={data}
+            />
+            {buttonView === 0 && selectedItem.id && selectedItem.type && (
+              <Button
+                text={t('permissions.showPermissions')}
+                className="mt-[16px]"
+                onClick={() => setButtonView(1)}
+              />
+            )}
+          </div>
+          <div
+            className={clsx(
+              'flex flex-col justify-end w-[100%]',
+              buttonView === 0 && 'hidden',
+            )}>
+            {buttonView === 1 && (
+              <>
+                {selectedItem.type === 'section' && (
+                  <SectionFormPermissions type="employee" id={id} />
+                )}
+                {selectedItem.type === 'folder' && (
+                  <FolderFormPermissions type="employee" id={id} />
+                )}
+                {selectedItem.type === 'file' && (
+                  <FileFormPermissions type="employee" id={id} />
+                )}
+              </>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="">
-        <NormalSelect
-          options={roles}
-          onChange={setSelectedNormal}
-          label={'Select your item'}
-          value={selectedNormal}
-        />
       </div>
     </Modal>
   );

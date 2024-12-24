@@ -397,10 +397,14 @@
     "delete": "Delete",
     "cancel": "Cancel",
     "edit": "Edit",
+    "ok": "Ok",
     "permissions": "Permissions",
     "roles": "Roles",
     "employees": "Employees",
-    "activity": "Activity Log"
+    "activity": "Activity Log",
+    "move": "Move",
+    "copy": "Copy",
+    "to": "to"
   },
   "activity": {
     "activity": "Activity Log",
@@ -416,10 +420,21 @@
     "email": "Email",
     "permissions": "Permissions",
     "remove": "Remove Access",
+    "edit": "Edit",
     "addAnother": "Add Another Permission",
     "addPermission": "Add permission",
+    "addPermissionHead": "Add New Permission",
     "removePermissionFromEmployeeText": "Are You Sure You Want to Delete This Permission From the employee?",
-    "removePermissionFromRoleText": "Are You Sure You Want to Delete This Permission From the role?"
+    "removePermissionFromRoleText": "Are You Sure You Want to Delete This Permission From the role?",
+    "showPermissions": "Show Permissions",
+    "sectionPermissions": "Section",
+    "foldersPermissions": "Folder",
+    "subFoldersPermissions": "Sub Folders",
+    "filesPermissions": "Files",
+    "filePermissions": "File",
+    "updateButton": "Update",
+    "employees": "Employees",
+    "select": "Select an option"
   },
   "folders": {
     "name": "Folder Name",
@@ -611,6 +626,26 @@
   "notifications": {
     "head": "Notifications",
     "markAsReadButton": "Mark all as read"
+  },
+  "modals": {
+    "rename": "Rename",
+    "permittedEmployees": "View Permitted Employees",
+    "editPermissions": "Edit Permissions",
+    "delete": "Delete",
+    "move": "Move to",
+    "copy": "Make a copy",
+    "editMetadata": "Edit Metadata",
+    "moveButton": "Move",
+    "copyButton": "Copy",
+    "showVersions": "Show Versions",
+    "update": "Update",
+    "viewMetadata": "View Metadata"
+  },
+  "errors": {
+    "rename": "New Name can't be less than 2 characters"
+  },
+  "placeholders": {
+    "rename": "Rename your item"
   }
 }
 

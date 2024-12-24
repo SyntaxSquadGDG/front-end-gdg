@@ -15,46 +15,34 @@ import FileIcon from '../general/file-icon';
 import DeleteFileModal from '../modals/delete-file-modal';
 import ItemModal from '../modals/item-modal';
 import SettingsSVG from '@app/_components/svgs/general/settings';
+import DeleteModal from '../modals/delete-modal';
+import ItemModalItem from '../modals/item-modal-item';
+import EditPermissionsSVG from '@app/_components/svgs/modals/edit-permissions';
+import ItemPermissionsEditModal from '../modals/item-permissions-edit-modal';
+import EditSVG from '@app/_components/svgs/modals/edit';
+import RenameModal from '../modals/rename-modal';
+import ShowVersionSVG from '@app/_components/svgs/modals/show-version';
+import UpdateSVG from '@app/_components/svgs/modals/update';
+import MetadataSVG from '@app/_components/svgs/modals/metadata';
+import MoveModal from '../modals/move-modal';
+import MoveSVG from '@app/_components/svgs/modals/move';
+import CopySVG from '@app/_components/svgs/modals/copy';
+import RemoveSVG from '@app/_components/svgs/modals/remove';
+import FileSettings from './file-settings';
 
 const FileItem = ({ file }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const t = useTranslations();
   const { openModal, closeModal, modalStack } = useModal();
-  const [isDeleting, setIsDeleting] = useState(false);
 
   useClickOutside(containerRef, () => setIsOpen(false));
-
-  function handleDelete() {
-    try {
-      setIsDeleting(true);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setIsDeleting(false);
-    }
-  }
 
   return (
     <div
       ref={containerRef}
       className="rounded-[16px] border-[1px] border-solid border-blue3 p-[24px]">
-      <div className="relative flex justify-end">
-        <button onClick={() => setIsOpen(true)}>
-          <SettingsSVG />
-        </button>
-
-        <ItemModal
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          modalName={`deleteFileModal${file.id}`}
-        />
-        <DeleteFileModal
-          id={file.id}
-          parentId={file.parentFolderId}
-          redirect={false}
-        />
-      </div>
+      <FileSettings file={file} />
       <Link
         href={`/files/${file.id}`}
         className="mt-[8px] mb-[22px] flex items-center justify-center">
