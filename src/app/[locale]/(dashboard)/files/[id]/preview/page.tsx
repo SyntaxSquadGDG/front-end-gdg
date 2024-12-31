@@ -1,7 +1,7 @@
 import HeadBar from '@app/_components/(dashboard)/general/head-bar';
 import ImageViewer from '@app/_components/previewers/image-viewer';
 import MarkdownRenderer from '@app/_components/previewers/markdown-preview';
-import { fetcher } from '@app/_utils/fetch';
+import { fetcher } from '@app/_utils/fetch/fetch';
 import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import React from 'react';

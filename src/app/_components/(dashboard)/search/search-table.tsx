@@ -8,8 +8,9 @@ import Link from 'next/link';
 import ViewSVG from '@app/_components/svgs/employees/view';
 import FileIcon from '../general/file-icon';
 import ScoreText from '../general/score-text';
+import ShowMore from '../general/show-more';
 
-const SearchTable = ({ results }) => {
+const SearchTable = ({ results, hasNext, isFetching, fetchNext }) => {
   const t = useTranslations();
   return (
     <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
@@ -41,6 +42,7 @@ const SearchTable = ({ results }) => {
           })}
         </tbody>
       </table>
+      <ShowMore hasNext={hasNext} isFetching={isFetching} onClick={fetchNext} />
     </div>
   );
 };

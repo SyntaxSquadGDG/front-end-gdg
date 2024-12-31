@@ -47,7 +47,7 @@ export default function Modal({
       {...props}
       onClick={noOutside ? () => {} : handleOutsideClick}
       className={clsx(
-        'fixed inset-0 z-[9999999999999999] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm',
+        'fixed inset-0 z-[99999] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm',
         className,
       )}>
       <div

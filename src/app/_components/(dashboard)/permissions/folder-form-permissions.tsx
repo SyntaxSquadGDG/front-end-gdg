@@ -6,10 +6,13 @@ import PermissionsHeadText from './permissions-head-text';
 import { useTranslations } from 'next-intl';
 import PermissionsDiv from './permissions-div';
 
-const FolderFormPermissions = ({ type, id, multiple = false }) => {
-  const defaultFolderPermissions = [];
-  const defaultSubFolderPermissions = [];
-  const defaultFilePermissions = [];
+const FolderFormPermissions = ({
+  type,
+  id,
+  defaultFolderPermissions = [],
+  defaultSubFolderPermissions = [],
+  defaultFilePermissions = [],
+}) => {
   const t = useTranslations();
 
   const [folderPermissions, setFolderPermissions] = useState(

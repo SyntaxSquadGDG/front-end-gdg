@@ -100,8 +100,20 @@ body {
   @apply border-b-[1px] border-solid border-tableBorder;
 }
 
+.tableDiv {
+  @apply w-full rounded-[32px] shadow-tableShadow overflow-x-auto min-w-[700px];
+}
+
+.tableDiv > div {
+  @apply overflow-y-auto;
+}
+
 .table {
   @apply table-auto w-full min-w-[700px] border-collapse;
+}
+
+.table thead {
+  /* position: sticky to keep the header fixed */
 }
 
 .table tr td,
@@ -119,12 +131,25 @@ body {
   @apply border-b-[1px] border-solid border-tableBorder;
 }
 
+.table tbody tr:nth-of-type(even) {
+  background-color: #ecf0ff;
+}
+
 .table thead tr td {
   @apply text-blue1 font-bold;
 }
 
 .table tbody tr {
   @apply py-[40px] font-medium text-[18px] rounded-[32px];
+}
+
+.showMore {
+  @apply border-t-[1px] border-solid border-tableBorder;
+}
+
+.table-wrapper {
+  max-height: auto; /* Set a max-height for the scrollable container */
+  overflow-y: auto; /* Allow vertical scrolling */
 }
 
 input[type='submit'] {
@@ -261,6 +286,7 @@ li {
 input:disabled,
 button:disabled {
   cursor: not-allowed;
+  opacity: 50%;
 }
 
 .reset-to-native * {

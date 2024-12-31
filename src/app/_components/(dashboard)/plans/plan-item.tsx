@@ -6,6 +6,7 @@ import PlanItemFeature from './plan-item-feature';
 import Button from '../general/button';
 import { useTranslations } from 'next-intl';
 import { useModal } from '@app/_contexts/modal-provider';
+import SubscribeModal from './subscribe-modal';
 
 const PlanItem = ({
   head,
@@ -14,15 +15,22 @@ const PlanItem = ({
   featuresHead,
   features,
   active,
+  plan,
   setActivePage,
 }) => {
   const t = useTranslations();
   const { openModal, modalStack } = useModal();
 
   function handleSubscribeClick() {
-    openModal('subscribePlans');
+    openModal(`subscribePlans${plan}`);
     // setActivePage(2);
   }
+
+  function handleUnSubscribeClick() {
+    openModal(`unsubscribePlans${plan}`);
+    // setActivePage(2);
+  }
+
   return (
     <div
       className={clsx(
@@ -41,10 +49,14 @@ const PlanItem = ({
       <div className="mt-[32px] flex items-center justify-center w-[100%]">
         <Button
           variant={active ? 'outline' : 'fill'}
-          text={active ? t('plans.current') : t('plans.subscribe')}
-          onClick={() => handleSubscribeClick()}
+          text={active ? t('plans.cancel') : t('plans.subscribe')}
+          onClick={() =>
+            active ? handleUnSubscribeClick() : handleSubscribeClick()
+          }
         />
       </div>
+
+      <SubscribeModal plan={plan} />
     </div>
   );
 };

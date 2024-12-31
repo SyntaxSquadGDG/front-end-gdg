@@ -3,38 +3,15 @@ import React from 'react';
 import { ResponsiveBar } from '@nivo/bar';
 import { useTranslations } from 'next-intl';
 
-const data = [
-  {
-    month: 'Jan',
-    successful: 50,
-  },
-  {
-    month: 'Feb',
-    successful: 70,
-  },
-  {
-    month: 'Mar',
-    successful: 40,
-  },
-  {
-    month: 'Apr',
-    successful: 50,
-  },
-  {
-    month: 'May',
-    successful: 70,
-  },
-];
-
 // Normalize the data to percentages based on the maximum value
-const normalizedData = data.map((d) => ({
-  month: d.month,
-  successful: (d.successful / 100) * 100, // Convert to percentage
-}));
 
-const MyResponsiveBar = () => {
+const MyResponsiveBar = ({ data }) => {
   const t = useTranslations(); // Get translations using next-intl
 
+  const normalizedData = data.map((d) => ({
+    month: d.month,
+    successful: (d.successful / 100) * 100, // Convert to percentage
+  }));
   return (
     <>
       <div style={{ height: 400, width: '100%' }}>

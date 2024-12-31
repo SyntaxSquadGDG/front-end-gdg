@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useModal } from '@app/_contexts/modal-provider';
 import Modal from './modal';
 import toast from 'react-hot-toast';
-import { fetcher } from '@/app/_utils/fetch';
+import { fetcher } from '@app/_utils/fetch/fetch';
 import { revalidatePathAction } from '@/app/actions';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';

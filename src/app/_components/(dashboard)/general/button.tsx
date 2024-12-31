@@ -4,11 +4,14 @@ import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import Link from 'next/link';
 import React from 'react';
+import LoadingSpinner from './loader';
 
 const Button = ({
   variant = 'fill',
   SVG,
   text,
+  isPendingText,
+  isPending = false,
   onClick,
   disabled = false,
   className,
@@ -36,8 +39,14 @@ const Button = ({
     );
   }
   return (
-    <button onClick={onClick} disabled={disabled} className={commonClass}>
-      <span>{text}</span>
+    <button
+      onClick={onClick}
+      disabled={isPending || disabled}
+      className={commonClass}>
+      {(text || isPendingText) && (
+        <span>{isPending ? (isPendingText ? isPendingText : text) : text}</span>
+      )}
+      {/* {isPending && <LoadingSpinner full={false} alignStart={true} />} */}
       {SVG && <SVG />}
     </button>
   );

@@ -1,38 +1,65 @@
 import Activity from '@app/_components/(dashboard)/employees/activity';
-import Permissions from '@app/_components/(dashboard)/employees/permissions';
+import Permissions from '@app/_components/(dashboard)/permissions/permissions';
 import Roles from '@app/_components/(dashboard)/employees/roles';
 import UpdateEmployee from '@app/_components/(dashboard)/employees/update-employee';
 import HeadBar from '@app/_components/(dashboard)/general/head-bar';
+import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
+import TryLater from '@app/_components/(dashboard)/general/try-later';
 import RoleHead from '@app/_components/(dashboard)/roles/head';
 import EmployeesSVG from '@app/_components/svgs/employees/employees';
 import ViewSVG from '@app/_components/svgs/employees/view';
+import { fetchEmployee } from '@app/_utils/fetch/queries';
 import { getTranslations } from 'next-intl/server';
-import React from 'react';
+import React, { Suspense } from 'react';
+import AddPermissionButton from '@app/_components/(dashboard)/permissions/add-permission-button';
+import AddPermissionModal from '@app/_components/(dashboard)/modals/add-permission-modal';
+import AddTypeButton from '@app/_components/(dashboard)/employees-roles/add-type-button';
+import AddTypeToTypeModal from '@app/_components/(dashboard)/modals/add-type-to-type-modal';
 
 const page = async ({ params }) => {
   const id = (await params).id;
-  const employeeFirstName = 'Amr';
+  // const employeeFirstName = 'Amr';
   const t = await getTranslations();
-  const items = [
-    { text: t('employees.employees'), href: '/employees' },
-    {
-      text: `${employeeFirstName}${t('employees.profile')}`,
-      href: `/employees/${id}`,
-    },
-  ];
+
+  const EmployeeDataWrapper = async () => {
+    try {
+      const employee = await fetchEmployee(id);
+
+      const items = [
+        { text: t('employees.employees'), href: '/employees' },
+        {
+          text: `${employee.firstName} ${employee.lastName}`,
+          href: `/employees/${id}`,
+        },
+      ];
+
+      return (
+        <>
+          <HeadBar items={items} SVG={EmployeesSVG} />
+          <UpdateEmployee employee={employee} />
+        </>
+      );
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+      return <TryLater>{t('zero.employee')}</TryLater>;
+    }
+  };
 
   return (
     <div>
-      <HeadBar items={items} SVG={EmployeesSVG} />
-      <UpdateEmployee id={id} />
+      <Suspense fallback={<LoadingSpinner full={false} />}>
+        <EmployeeDataWrapper />
+      </Suspense>
       <div className="my-[32px]">
         <RoleHead
           text={t('general.permissions')}
           SVG={ViewSVG}
-          href={`/employees/${id}/permissions`}
-        />
+          href={`/employees/${id}/permissions`}>
+          <AddPermissionButton type={'employee'} id={id} full={false} />
+          <AddPermissionModal type={'employee'} id={id} />
+        </RoleHead>
 
-        <Permissions />
+        <Permissions id={id} type="employee" />
       </div>
 
       <div className="my-[32px]">
@@ -42,17 +69,28 @@ const page = async ({ params }) => {
           href={`/employees/${id}/activity`}
         />
 
-        <Activity />
+        <Activity id={id} type={'employee'} />
       </div>
 
       <div className="my-[32px]">
         <RoleHead
           text={t('general.roles')}
           SVG={ViewSVG}
-          href={`/employees/${id}/roles`}
-        />
+          href={`/employees/${id}/roles`}>
+          <AddTypeButton
+            addingType={'role'}
+            fromType={'employee'}
+            typeId={id}
+            full={false}
+          />
+          <AddTypeToTypeModal
+            addingType={'role'}
+            fromType={'employee'}
+            fromId={id}
+          />
+        </RoleHead>
 
-        <Roles />
+        <Roles id={id} />
       </div>
     </div>
   );

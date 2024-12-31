@@ -6,8 +6,7 @@ import { useTranslations } from 'use-intl';
 import PermissionsHeadText from './permissions-head-text';
 import PermissionsDiv from './permissions-div';
 
-const FileFormPermissions = ({ type, id }) => {
-  const defaultPermissions = [];
+const FileFormPermissions = ({ type, id, defaultPermissions = [] }) => {
   const [permissions, setPermissions] = useState(defaultPermissions); // Stores selected permissions
   const disabledCondition = permissions.length === 0;
   const t = useTranslations();

@@ -404,14 +404,38 @@
     "activity": "Activity Log",
     "move": "Move",
     "copy": "Copy",
-    "to": "to"
+    "to": "to",
+    "more": "Show More",
+    "loading": "Loading...",
+    "deleting": "Deleting...",
+    "adding": "Adding...",
+    "updating": "Updating...",
+    "add": "Add",
+    "successfully": "Successfully"
+  },
+  "zero": {
+    "thereNo": "There's no",
+    "toShow": "to Show",
+    "employees": "employees",
+    "employee": "this employee",
+    "roles": "roles",
+    "role": "this role",
+    "loadFail": "Failed to load",
+    "tryLater": "Please try again later",
+    "permissions": "permissions",
+    "activities": "activities",
+    "managers": "managers",
+    "manager": "this manager",
+    "plans": "plans",
+    "profile": "your data"
   },
   "activity": {
     "activity": "Activity Log",
     "item": "Item",
     "action": "Action",
     "lastModified": "Last Modified",
-    "employeeName": "Employee Name"
+    "employeeName": "Employee Name",
+    "ACTIVITY_LOAD_ERROR": "Couldn't load activities"
   },
   "permissions": {
     "id": "ID",
@@ -434,6 +458,7 @@
     "filePermissions": "File",
     "updateButton": "Update",
     "employees": "Employees",
+
     "select": "Select an option"
   },
   "folders": {
@@ -479,7 +504,14 @@
     "setupButton": "Smart File Setup",
     "accuracy": "Categorization Accuracy",
     "available": "Available",
-    "used": "Used"
+    "used": "Used",
+    "FILE_TYPE_RESULTS_ERROR": "couldn't load file type results",
+    "STORAGE_RESULTS_ERROR": "couldn't load file type results",
+    "CATEGORIZATION_RESULTS_ERROR": "couldn't load categorization results",
+    "trainModalHead": "Are you sure you want to start training your models?",
+    "trainSuccess": "Trained Successfully!",
+    "training": "Training...",
+    "errors": {}
   },
   "types": {
     "pdf": "PDF",
@@ -490,6 +522,8 @@
   "employees": {
     "employees": "Employees",
     "add": "Add New Employee",
+    "adding": "Adding new employee...",
+    "updating": "Updaing employee...",
     "addButton": "Add New Employee",
     "viewAll": "View All Employees",
     "id": "ID",
@@ -526,6 +560,8 @@
     "id": "ID",
     "name": "Name",
     "addAnother": "Add Another Role",
+    "adding": "Adding new role...",
+    "updating": "Updaing role...",
     "members": "Members",
     "addButton": "Add New Role",
     "nameLabel": "Name",
@@ -543,11 +579,48 @@
     "removeRoleText": "Are You Sure You Want to Delete This Role?",
     "removeRoleFromEmployeeText": "Are You Sure You Want to Delete This Role? from this employee"
   },
+  "managers": {
+    "managers": "Managers",
+    "addButton": "Add New Manager",
+    "add": "Add New Manager",
+    "addManagerButton": "Add New Manager",
+    "updateManagerButton": "UpdateManager",
+    "id": "Id",
+    "name": "Name",
+    "email": "Email",
+    "removeManagerText": "Are You Sure You Want to Delete This Manager",
+    "editManager": "Edit Manager",
+    "removeManager": "Delete",
+    "firstNameError": "Error in first name",
+    "lastNameError": "Error in last name",
+    "emailError": "Error in Email",
+    "passwordError": "Error in Password",
+    "firstNameLabel": "First Name",
+    "lastNameLabel": "Last Name",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "firstNamePlaceholder": "First Name",
+    "lastNamePlaceholder": "Last Name",
+    "emailPlaceholder": "Enter Email",
+    "passwordPlaceholder": "Enter Password",
+    "idLabel": "Id",
+    "adding": "Adding...",
+    "updating": "Updating..."
+  },
   "profile": {
     "profile": "Profile",
+    "updatedDataSuccessfully": "Your data has been updated successfully!",
+    "updatedPasswordSuccessfully": "Your password has been updated successfully!",
     "image": {
+      "new": "New Picture",
+      "confirm": "Confirm",
       "upload": "Upload Picture",
-      "delete": "Delete"
+      "uploading": "Uploading...",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "noUploaded": "No Image Uploaded yet.",
+      "updatedSuccessfully": "Image updated successfully",
+      "deletedSuccessfully": "Image deleted successfully"
     },
     "personalInfo": {
       "head": "Personal Info",
@@ -577,8 +650,15 @@
     "head": "Plans",
     "current": "Current",
     "subscribe": "Subscribe now",
+    "subscribing": "Sending...",
+    "cancel": "Cancel",
     "info": "Your current plan is set to auto-renew on a regular basis.",
     "cancelButton": "Cancel your subscription",
+    "subscribedSuccessfully": "Subscribed to plan",
+    "unsubscribedSuccessfully": "Unsubscribed from plan",
+    "basic": "Basic",
+    "pro": "Pro",
+    "enterprise": "Enterprise",
     "payment": {
       "holderLabel": "Cardholder's Name",
       "holderPlaceholder": "Enter Name",
@@ -606,7 +686,8 @@
       "emailLabel": "Email",
       "emailPlaceholder": "Enter Your Email",
       "emailError": "Invalid Email",
-      "subscribeButton": "Send"
+      "subscribeButton": "Send",
+      "unsubscribing": "unsubscribing..."
     }
   },
   "search": {
@@ -642,7 +723,22 @@
     "viewMetadata": "View Metadata"
   },
   "errors": {
+    "somethingWrong": "Something went wrong please try again later!",
+    "fetchNotFound": "Check the url of the fetch!",
     "rename": "New Name can't be less than 2 characters"
+  },
+  "responseErrors": {
+    "plans": {
+      "NO PLAN": "There's no active plans",
+      "SUBSCRIBE": "There was an error when subscribing to the plan",
+      "UNSUBSCRIBE": "There was an error when unsubscribing from the plan"
+    },
+    "personal": {
+      "UPDATE": "Error updaing user"
+    },
+    "general": {
+      "UNEXPECTED": "An unexpected error occurred. Please contact support."
+    }
   },
   "placeholders": {
     "rename": "Rename your item"

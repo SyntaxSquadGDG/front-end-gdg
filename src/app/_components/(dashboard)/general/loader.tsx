@@ -1,6 +1,13 @@
-export default function LoadingSpinner() {
+import clsx from 'clsx';
+
+export default function LoadingSpinner({ full = false, alignStart = false }) {
   return (
-    <div className="flex items-center justify-center h-[calc(100vh-136px)]">
+    <div
+      className={clsx(
+        'flex items-center my-[16px]',
+        alignStart ? 'justify-start' : 'justify-center',
+        full ? 'h-[calc(100vh-var(--horizontalNavHeight))]' : '',
+      )}>
       <div className="w-12 h-12 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
     </div>
   );

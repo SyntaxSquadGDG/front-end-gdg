@@ -9,7 +9,7 @@ export const useNewEmployeeSchema = () => {
     lastName: z.string().min(6, t('employees.lastNameError')),
     email: z.string().email(t('employees.emailError')),
     password: z.string().min(6, t('employees.passwordError')),
-    roles: z.array(z.number()),
+    roles: z.array(z.number()).optional(),
   });
 
   return newEmployeeSchema;

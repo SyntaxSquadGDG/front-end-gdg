@@ -9,6 +9,8 @@ import NextTopLoader from 'nextjs-toploader';
 import { ModalProvider } from '../../_contexts/modal-provider';
 import { Toaster } from 'react-hot-toast';
 import { getLangDir } from 'rtl-detect';
+import QueryClientWrapper from '@app/_contexts/react-query-provider';
+import { SocketProvider } from '@app/_contexts/socket-context';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -38,13 +40,21 @@ export default async function RootLayout({
           } `,
         )}>
         <NextTopLoader />
-        <Toaster position="top-center" reverseOrder={false} />
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          containerStyle={{ zIndex: 99999999999999 }}
+        />
 
         <NextIntlClientProvider messages={messages}>
           <VerticalNavbar />
           <HorizontalNavbar />
           <ModalProvider>
-            <main className="relative z-50">{children}</main>
+            <QueryClientWrapper>
+              <SocketProvider>
+                <main className="relative z-50">{children}</main>
+              </SocketProvider>
+            </QueryClientWrapper>
           </ModalProvider>
         </NextIntlClientProvider>
       </body>

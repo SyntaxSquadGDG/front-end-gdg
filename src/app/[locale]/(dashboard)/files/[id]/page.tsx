@@ -18,7 +18,7 @@ import { getLangDir } from 'rtl-detect';
 import Link from 'next/link';
 import { redirect, useParams } from 'next/navigation';
 import FileIcon from '@app/_components/(dashboard)/general/file-icon';
-import { fetcher } from '@app/_utils/fetch';
+import { fetcher } from '@app/_utils/fetch/fetch';
 import toast from 'react-hot-toast';
 import { revalidatePathAction } from '@app/actions';
 import { useModal } from '@app/_contexts/modal-provider';

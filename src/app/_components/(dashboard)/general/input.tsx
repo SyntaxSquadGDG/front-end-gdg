@@ -10,6 +10,7 @@ const Input = ({
   placeHolder,
   type = 'text',
   error,
+  isPending = false,
   SVG,
   ...rest
 }) => {
@@ -30,6 +31,7 @@ const Input = ({
           defaultValue={value}
           readOnly={readOnly}
           id={inputId}
+          disabled={isPending}
           placeholder={placeHolder}
           className={clsx(
             readOnly && 'read-only',

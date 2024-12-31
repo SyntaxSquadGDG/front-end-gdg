@@ -6,9 +6,8 @@ import { useTranslations } from 'next-intl';
 import Button from '../general/button';
 import PermissionsDiv from './permissions-div';
 
-const SectionFormPermissions = ({ type, id }) => {
-  const defaultPermissions = [];
-  const [permissions, setPermissions] = useState(defaultPermissions); // Stores selected permissions
+const SectionFormPermissions = ({ type, id, defaultPermissions }) => {
+  const [permissions, setPermissions] = useState(defaultPermissions || []); // Stores selected permissions
   const t = useTranslations();
   const disabledCondition = permissions.length === 0;
 

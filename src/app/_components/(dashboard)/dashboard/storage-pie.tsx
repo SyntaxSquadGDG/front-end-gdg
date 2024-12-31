@@ -2,22 +2,22 @@
 
 import { ResponsivePie } from '@nivo/pie';
 
-const data = [
-  {
-    id: 'Available',
-    label: 'Available',
-    value: 75,
-    color: 'var(--mainColor1)',
-  },
-  {
-    id: 'Used',
-    label: 'Used',
-    value: 25,
-    color: 'var(--mainColorPie)',
-  },
-];
+// const data = [
+//   {
+//     id: 'Available',
+//     label: 'Available',
+//     value: 75,
+//     color: 'var(--mainColor1)',
+//   },
+//   {
+//     id: 'Used',
+//     label: 'Used',
+//     value: 25,
+//     color: 'var(--mainColorPie)',
+//   },
+// ];
 
-const PieChartPage = () => {
+const PieChartPage = ({ data }) => {
   return (
     <div className="h-[100px] sm:h-[200px] w-[100%]">
       <ResponsivePie

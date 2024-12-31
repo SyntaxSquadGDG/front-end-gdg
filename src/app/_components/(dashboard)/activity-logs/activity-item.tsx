@@ -2,7 +2,7 @@ import { contentFont } from '@/app/_utils/fonts';
 import clsx from 'clsx';
 import React from 'react';
 
-const ActivityItem = () => {
+const ActivityItem = ({ item }) => {
   return (
     <div className="flex gap-[16px] items-start">
       <div className="overflow-hidden shrink-0">
@@ -13,10 +13,8 @@ const ActivityItem = () => {
         />
       </div>
       <div className={clsx(contentFont.className, 'flex flex-col gap-[10px]')}>
-        <p className="text-[16px]">
-          Ahmed add 4 files in folder (folder name) lorem ipsum dolor set amet
-        </p>
-        <p className="text-textGray2 text-[12px]">{'2024-1-1 2:30 P.M'}</p>
+        <p className="text-[16px]">{item.text}</p>
+        <p className="text-textGray2 text-[12px]">{item.time}</p>
       </div>
     </div>
   );

@@ -66,7 +66,7 @@ const VerticalNavbar = () => {
       svg: RolesSVG,
     },
     {
-      path: '/activity',
+      path: '/activities',
       text: t('navbar.activity'),
       svg: ActivitySVG,
     },

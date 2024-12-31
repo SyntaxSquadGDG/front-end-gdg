@@ -5,6 +5,7 @@ import { contentFont } from '@app/_utils/fonts';
 import TrainButton from './train-button';
 import Image from 'next/image';
 import clsx from 'clsx';
+import TrainModal from './train-modal';
 
 const AiTrain = async () => {
   const t = await getTranslations();
@@ -22,6 +23,7 @@ const AiTrain = async () => {
           <img src="/images/dashboard/ai-hand.png" className="" alt="" />
         </div>
       </div>
+      <TrainModal />
     </Card>
   );
 };

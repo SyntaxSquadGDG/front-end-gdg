@@ -2,7 +2,7 @@ import ActivitySection from '@app/_components/(dashboard)/activity-logs/activity
 import FileItem from '@app/_components/(dashboard)/files/file-item';
 import Files from '@app/_components/(dashboard)/files/files';
 import FoldersPage from '@app/_components/(dashboard)/folders-page/folders-page';
-import { fetcher } from '@/app/_utils/fetch';
+import { fetcher } from '@app/_utils/fetch/fetch';
 import React from 'react';
 
 const page = async ({ params }) => {

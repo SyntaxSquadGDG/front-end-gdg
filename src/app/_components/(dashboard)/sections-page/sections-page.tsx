@@ -15,6 +15,7 @@ import { useModal } from '@app/_contexts/modal-provider';
 import DeleteSectionModal from '../modals/delete-section-modal';
 import ItemModal from '../modals/item-modal';
 import SectionListItem from './section-list-item';
+import ErrorBoundaryWrapper from '../general/error-boundary-wrapper';
 
 const SectionsPage = ({ sections }) => {
   const t = useTranslations();
@@ -38,7 +39,9 @@ const SectionsPage = ({ sections }) => {
       {sections && view === 'grid' && (
         <div className={'flex flex-col gap-[32px]'}>
           <Sections sections={sections} />
-          <ActivitySection />
+          <ErrorBoundaryWrapper>
+            <ActivitySection />
+          </ErrorBoundaryWrapper>
         </div>
       )}
 

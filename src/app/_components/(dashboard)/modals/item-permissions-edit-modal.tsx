@@ -42,7 +42,7 @@ const ItemPermissionsEditModal = ({ id, type }) => {
     },
   ];
 
-  const roles = extendSelect(initialRoles, 'name', 'id');
+  const roles = extendSelect(initialRoles, ['name'], 'id');
 
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [selectedRoleIds, setSelectedRoleIds] = useState([]); // Stores only the role ids
@@ -89,10 +89,9 @@ const ItemPermissionsEditModal = ({ id, type }) => {
     },
   ];
 
-  const employees = extendCustomSelect(
+  const employees = extendSelect(
     initialEmployees,
-    'firstName',
-    'lastName',
+    ['firstName', 'lastName'],
     'id',
   );
 

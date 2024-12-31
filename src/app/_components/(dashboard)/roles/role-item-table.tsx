@@ -10,14 +10,45 @@ import { useTranslations } from 'use-intl';
 import RemoveSVG from '@app/_components/svgs/modals/remove';
 import DeleteRoleModal from '../modals/remove-role-modal';
 import { useModal } from '@app/_contexts/modal-provider';
+import DeleteModal from '../modals/delete-modal';
+import { DeleteRoleFetch } from '@app/_utils/fetch/deletes';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'nextjs-toploader/app';
 
 const RoleItemTable = ({ role }) => {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations();
-  const { openModal } = useModal();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [errorDeleting, setErrorDeleting] = useState(null);
+  const { openModal, closeModal } = useModal();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const handleRowClick = (e) => {
+    // Prevent navigation if a button or link was clicked
+    if (e.target.tagName === 'BUTTON' || e.target.closest('a, button')) {
+      return;
+    }
+    router.push(`/roles/${role.id}`);
+  };
+
+  async function handleDelete() {
+    await DeleteRoleFetch(
+      role.id,
+      setIsDeleting,
+      setErrorDeleting,
+      onDeleteSuccess,
+    );
+  }
+
+  async function onDeleteSuccess() {
+    closeModal();
+    queryClient.invalidateQueries(['roles']);
+  }
+
   return (
-    <tr className="rounded-[32px] overflow-hidden">
-      <td className="rounded-[32px]">
+    <tr className="cursor-pointer" onClick={handleRowClick}>
+      <td>
         <div className="w-[36px] h-[36px] shrink-0">
           <img src="/images/defaults/user.png" alt="" />
         </div>
@@ -55,7 +86,13 @@ const RoleItemTable = ({ role }) => {
                 onClick={() => openModal(`deleteRoleModal${role.id}`)}
               />
             </ItemModal>
-            <DeleteRoleModal id={role.id} />
+            <DeleteModal
+              modalName={`deleteRoleModal${role.id}`}
+              head={t('roles.removeRoleText')}
+              isDeleting={isDeleting}
+              error={errorDeleting}
+              onClick={handleDelete}
+            />
             {/* <DeleteFolderModal id={folder.id} /> */}
           </div>
         </div>

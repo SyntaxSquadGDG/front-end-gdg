@@ -8,33 +8,52 @@ import { useTranslations } from 'next-intl';
 import Input from '../general/input';
 import CustomSelect from '../general/select';
 import { useUpdateEmployeeSchema } from '@app/_schemas/update-employee';
+import { useRouter } from 'nextjs-toploader/app';
+import { revalidatePathAction } from '@app/actions';
+import { UpdateEmployeeFetch } from '@app/_utils/fetch/updates';
 
-const UpdateEmployee = ({ id }) => {
+const UpdateEmployee = ({ employee }) => {
   const t = useTranslations();
   const updateEmployeeSchema = useUpdateEmployeeSchema();
-
-  const values = {
-    firstName: 'Amr',
-    lastName: 'Shoukry',
-    email: 'amr@gmail.com',
-  };
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const router = useRouter();
 
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: zodResolver(updateEmployeeSchema),
     defaultValues: {
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      email: employee.email,
     },
   });
 
-  function onSuccess(data) {
+  async function onSuccessHandler() {
+    reset();
+    await revalidatePathAction('/employees');
+    router.push('/employees');
+  }
+
+  async function onSuccessUpdate(data) {
     console.log(data);
+    const res = await UpdateEmployeeFetch(
+      employee.id,
+      data,
+      setIsLoading,
+      setError,
+      onSuccessHandler,
+    );
+  }
+
+  async function onSuccess(data) {
+    console.log(data);
+    const res = await onSuccessUpdate(data);
   }
 
   function onError() {}
@@ -49,6 +68,7 @@ const UpdateEmployee = ({ id }) => {
               placeHolder={t('employees.firstNamePlaceholder')}
               type={'text'}
               {...register('firstName')}
+              isPending={isLoading}
               error={errors.firstName?.message}
             />
             <Input
@@ -56,6 +76,7 @@ const UpdateEmployee = ({ id }) => {
               placeHolder={t('employees.lastNamePlaceholder')}
               type={'text'}
               {...register('lastName')}
+              isPending={isLoading}
               error={errors.lastName?.message}
             />
             <Input
@@ -63,19 +84,27 @@ const UpdateEmployee = ({ id }) => {
               placeHolder={t('employees.emailPlaceholder')}
               type={'text'}
               {...register('email')}
+              isPending={isLoading}
               error={errors.email?.message}
             />
 
-            <Input label={t('employees.idLabel')} readOnly={true} value={id} />
+            <Input
+              label={t('employees.idLabel')}
+              readOnly={true}
+              value={employee.id}
+            />
           </div>
           <div className="flex items-center justify-start">
             <Button
               className={'w-[100%] lg:w-[400px] mt-[50px]'}
               text={t('employees.updateEmployeeButton')}
+              isPending={isLoading}
+              isPendingText={t('employees.updating')}
             />
           </div>
         </div>
       </form>
+      {error && <p>{error}</p>}
     </div>
   );
 };

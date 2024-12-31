@@ -4,34 +4,34 @@ import clsx from 'clsx';
 import { getTranslations } from 'next-intl/server';
 import PieChartPage from './storage-pie';
 import { contentFont } from '@app/_utils/fonts';
+import { fetchStoragePercentages } from './data/queries';
+import LoadError from '../general/load-error';
 
 const Storage = async () => {
   const t = await getTranslations();
+
+  let data;
+
+  try {
+    data = await fetchStoragePercentages();
+  } catch (error) {
+    return <LoadError>{t('dashboard.STORAGE_RESULTS_ERROR')}</LoadError>;
+  }
+
   return (
-    <Card>
-      <div className="">
-        <h3
-          className={clsx(
-            'text-[20px] font-medium mb-[18px]',
-            contentFont.className,
-          )}>
-          {t('dashboard.availableStorage')}
-        </h3>
-        <div className="flex items-center justify-between gap-[32px] md:flex-row flex-col">
-          <PieChartPage />
-          <div className="flex flex-col gap-[8px] text-[14px]">
-            <div className="flex items-center gap-[8px]">
-              <div className="w-[14px] h-[14px] bg-mainColorPie rounded-full" />
-              <p>{t('dashboard.available')}</p>
-            </div>
-            <div className="flex items-center gap-[8px]">
-              <div className="w-[14px] h-[14px] bg-mainColor1 rounded-full" />
-              <p>{t('dashboard.used')}</p>
-            </div>
-          </div>
+    <div className="flex items-center justify-between gap-[32px] md:flex-row flex-col">
+      <PieChartPage data={data} />
+      <div className="flex flex-col gap-[8px] text-[14px]">
+        <div className="flex items-center gap-[8px]">
+          <div className="w-[14px] h-[14px] bg-mainColorPie rounded-full" />
+          <p>{t('dashboard.available')}</p>
+        </div>
+        <div className="flex items-center gap-[8px]">
+          <div className="w-[14px] h-[14px] bg-mainColor1 rounded-full" />
+          <p>{t('dashboard.used')}</p>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

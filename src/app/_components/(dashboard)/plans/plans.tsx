@@ -10,9 +10,10 @@ import { useModal } from '@app/_contexts/modal-provider';
 import UnsubscribeModal from './unsubscribe-modal';
 import SubscribeModal from './subscribe-modal';
 
-const Plans = () => {
+const Plans = ({ activePlan }) => {
   const t = useTranslations();
   const { modalStack, openModal } = useModal();
+  const isActivePlan = ['basic', 'pro', 'enterprise'].includes(activePlan);
 
   const [activePage, setActivePage] = useState(1);
   const plan1Features = [
@@ -44,8 +45,9 @@ const Plans = () => {
             featuresHead={t('pricing.plans.plan1.featuresHead')}
             price={t('pricing.plans.plan1.price')}
             features={plan1Features}
-            active={true}
+            active={activePlan === 'basic'}
             setActivePage={setActivePage}
+            plan={'basic'}
           />
           <PlanItem
             head={t('pricing.plans.plan2.head')}
@@ -53,8 +55,9 @@ const Plans = () => {
             featuresHead={t('pricing.plans.plan2.featuresHead')}
             price={t('pricing.plans.plan2.price')}
             features={plan2Features}
-            active={false}
+            active={activePlan === 'pro'}
             setActivePage={setActivePage}
+            plan={'pro'}
           />
           <PlanItem
             head={t('pricing.plans.plan3.head')}
@@ -62,20 +65,22 @@ const Plans = () => {
             featuresHead={t('pricing.plans.plan3.featuresHead')}
             price={t('pricing.plans.plan3.price')}
             features={plan3Features}
-            active={false}
+            active={activePlan === 'enterprise'}
             setActivePage={setActivePage}
+            plan={'enterprise'}
           />
         </div>
-        <div className="flex justify-between items-start lg:items-center mt-[48px] lg:flex-row flex-col gap-[24px]">
-          <h2 className={'text-[24px] font-medium'}>{t('plans.info')}</h2>
-          <button
-            className="text-[20px] font-bold p-[14px] rounded-[8px] border-[1px] border-solid border-black"
-            onClick={() => openModal('unsubscribePlans')}>
-            {t('plans.cancelButton')}
-          </button>
-        </div>
-        <UnsubscribeModal />
-        <SubscribeModal />
+        {isActivePlan && (
+          <div className="flex justify-between items-start lg:items-center mt-[48px] lg:flex-row flex-col gap-[24px]">
+            <h2 className={'text-[24px] font-medium'}>{t('plans.info')}</h2>
+            <button
+              className="text-[20px] font-bold p-[14px] rounded-[8px] border-[1px] border-solid border-black"
+              onClick={() => openModal(`unsubscribePlans${activePlan}`)}>
+              {t('plans.cancelButton')}
+            </button>
+          </div>
+        )}
+        <UnsubscribeModal plan={activePlan} />
       </section>
     );
   }

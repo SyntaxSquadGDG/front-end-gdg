@@ -6,7 +6,7 @@ import React from 'react';
 import Modal from './modal';
 import Button from '../general/button';
 
-const DeleteModal = ({ modalName, head, onClick, isDeleting }) => {
+const DeleteModal = ({ modalName, head, onClick, isDeleting, error }) => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
   return (
@@ -25,9 +25,14 @@ const DeleteModal = ({ modalName, head, onClick, isDeleting }) => {
           <Button
             onClick={onClick}
             text={t('general.delete')}
+            isPending={isDeleting}
+            isPendingText={t('general.deleting')}
             disabled={isDeleting}
           />
         </div>
+        {error && (
+          <p className="text-[16px] font-medium text-red-500">* {error}</p>
+        )}
       </div>
     </Modal>
   );

@@ -8,32 +8,57 @@ import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 import ActivityItem from './activity-item';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import LoadingSpinner from '../general/loader';
+import NoToShow from '../general/no-to-show';
+import TryLater from '../general/try-later';
+import { fetchTypeActivities } from '@app/_utils/fetch/queries';
+import ShowMore from '../general/show-more';
 
-const Activity = () => {
+const Activity = ({ type, id, full = false }) => {
   const t = useTranslations();
-  const logs = [
-    {
-      type: 'folder',
-      name: 'folderName',
-      id: 1,
-      action: 'upload',
-      lastModified: '2024',
+
+  const {
+    data: activitiesData,
+    isLoading: isLoadingActivities,
+    isFetching: isFetchingActivities,
+    isError: isActivitiesError,
+    fetchNextPage: fetchNextActivities,
+    hasNextPage: hasNextActivities,
+  } = useInfiniteQuery({
+    queryKey: ['activities'],
+    refetchOnWindowFocus: false,
+    queryFn: ({ pageParam = 1 }) => {
+      return fetchTypeActivities(pageParam, 5, type, id); // Return initial data if provided
     },
-    {
-      type: 'section',
-      name: 'sectionName',
-      id: 2,
-      action: 'upload',
-      lastModified: '2024',
+    getNextPageParam: (lastPage, pages) => {
+      const hasData = lastPage.length > 0;
+
+      const isLastPage = !hasData || lastPage.length < 5; // Adjust length based on how many items are expected per page
+
+      return hasData && !isLastPage ? pages.length + 1 : undefined;
     },
-    {
-      type: 'folder',
-      name: 'folderName2',
-      id: 3,
-      action: 'upload',
-      lastModified: '2024',
-    },
-  ];
+  });
+
+  let activities = activitiesData?.pages?.flat() || []; // Flatten the pages to get all activities in one array
+
+  if (!full) {
+    activities = activities.slice(0, 5);
+  }
+
+  if (isLoadingActivities) {
+    return <LoadingSpinner full={false} />;
+  }
+
+  if (isActivitiesError) {
+    return <TryLater>{t('zero.activities')}</TryLater>;
+  }
+
+  console.log(activitiesData);
+
+  if (activities.length === 0) {
+    return <NoToShow>{t('zero.activities')}</NoToShow>;
+  }
 
   return (
     <div className="rounded-[16px] overflow-x-auto border-[1px] border-solid border-black">
@@ -46,11 +71,18 @@ const Activity = () => {
           </tr>
         </thead>
         <tbody>
-          {logs.map((item) => {
+          {activities.map((item) => {
             return <ActivityItem item={item} key={item.id} />;
           })}
         </tbody>
       </table>
+      {full && (
+        <ShowMore
+          hasNext={hasNextActivities}
+          isFetching={isFetchingActivities}
+          onClick={fetchNextActivities}
+        />
+      )}
     </div>
   );
 };

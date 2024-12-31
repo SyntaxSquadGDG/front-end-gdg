@@ -1,5 +1,5 @@
 import SectionPage from '@/app/_components/(dashboard)/section-page/section-page';
-import { fetcher } from '@/app/_utils/fetch';
+import { fetcher } from '@app/_utils/fetch/fetch';
 import React from 'react';
 
 const page = async ({ params }) => {

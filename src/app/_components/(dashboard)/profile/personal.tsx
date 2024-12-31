@@ -1,23 +1,23 @@
 'use client';
-import { usePersonalInfoSchema } from '@app/_schemas/personal-info';
 import { contentFont } from '@app/_utils/fonts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Input from '../general/input';
 import Button from '../general/button';
+import { usePersonalInfoSchema } from './schema/personal-info';
+import { UpdatePersonalInfo } from './data/updates';
+import toast from 'react-hot-toast';
+import { revalidatePathAction } from '@app/actions';
+import ErrorAction from '../general/error-action';
 
-const PersonalInfo = () => {
+const PersonalInfo = ({ data }) => {
   const t = useTranslations();
   const personalInfoSchema = usePersonalInfoSchema();
-
-  const values = {
-    firstName: 'Amr',
-    lastName: 'Shoukry',
-    email: 'amr@gmail.com',
-  };
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const {
     register,
@@ -27,14 +27,27 @@ const PersonalInfo = () => {
   } = useForm({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
     },
   });
 
-  function onSuccess(data) {
+  async function onSuccessHandler() {
+    await revalidatePathAction('/profile');
+    toast.success(t('profile.updatedDataSuccessfully'));
+  }
+
+  async function onSuccess(data) {
     console.log(data);
+    await UpdatePersonalInfo(
+      data,
+      setIsLoading,
+      setError,
+      onSuccessHandler,
+      toast,
+      t,
+    );
   }
 
   function onError() {}
@@ -55,6 +68,7 @@ const PersonalInfo = () => {
             label={t('profile.personalInfo.firstNameLabel')}
             placeHolder={t('profile.personalInfo.firstNamePlaceholder')}
             type={'text'}
+            isPending={isLoading}
             {...register('firstName')}
             error={errors.firstName?.message}
           />
@@ -62,6 +76,7 @@ const PersonalInfo = () => {
             label={t('profile.personalInfo.lastNameLabel')}
             placeHolder={t('profile.personalInfo.lastNamePlaceholder')}
             type={'text'}
+            isPending={isLoading}
             {...register('lastName')}
             error={errors.lastName?.message}
           />
@@ -69,15 +84,19 @@ const PersonalInfo = () => {
             label={t('profile.personalInfo.emailLabel')}
             placeHolder={t('profile.personalInfo.emailPlaceholder')}
             type={'text'}
+            isPending={isLoading}
             {...register('email')}
             error={errors.email?.message}
           />
         </div>
-        <div className="flex items-center justify-start">
+        <div className="flex items-start justify-start flex-col gap-[16px]">
           <Button
             className={'w-[100%] lg:w-fit lg:px-[77px] lg:py-[14px] mt-[32px]'}
             text={t('profile.personalInfo.updateButton')}
+            isPending={isLoading}
+            isPendingText={t('general.updating')}
           />
+          <ErrorAction>{error}</ErrorAction>
         </div>
       </form>
     </div>
