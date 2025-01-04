@@ -12,6 +12,7 @@ const Input = ({
   error,
   isPending = false,
   SVG,
+  onChange = () => {},
   ...rest
 }) => {
   const inputId = useId();
@@ -33,6 +34,7 @@ const Input = ({
           id={inputId}
           disabled={isPending}
           placeholder={placeHolder}
+          onChange={onChange}
           className={clsx(
             readOnly && 'read-only',
             'rounded-[8px] py-[16px] text-[16px] font-normal text-black w-[100%] outline-none',

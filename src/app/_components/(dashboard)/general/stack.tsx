@@ -1,5 +1,6 @@
 'use client';
 import { contentFont } from '@/app/_utils/fonts';
+import SettingsSVG from '@app/_components/svgs/general/settings';
 import clsx from 'clsx';
 import React from 'react';
 
@@ -9,6 +10,8 @@ const StackUsers = ({ employeesCount }) => {
 
   return (
     <div className={clsx('flex items-center w-fit', contentFont.className)}>
+      {/* <img src="/images/defaults/employee.png" /> */}
+
       {/* Render avatars based on the number of employees */}
       {Array.from({ length: avatarsToDisplay }).map((_, index) => (
         <img

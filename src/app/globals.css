@@ -104,9 +104,9 @@ body {
   @apply w-full rounded-[32px] shadow-tableShadow overflow-x-auto min-w-[700px];
 }
 
-.tableDiv > div {
+/* .tableDiv > div {
   @apply overflow-y-auto;
-}
+} */
 
 .table {
   @apply table-auto w-full min-w-[700px] border-collapse;

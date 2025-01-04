@@ -9,7 +9,7 @@ import DeleteFileModal from '../modals/delete-file-modal';
 import StackUsers from '../general/stack';
 import FileSettings from './file-settings';
 
-const FileListItem = ({ file, path }) => {
+const FilesTableItem = ({ file, folderName, folderNameRequired }) => {
   const [isFileOpen, setIsFileOpen] = useState(false);
   return (
     <tr
@@ -23,7 +23,7 @@ const FileListItem = ({ file, path }) => {
       <td>
         <Link href={`/files/${file.id}`}>{file.name}</Link>
       </td>
-      <td>{path[0].name}</td>
+      {folderNameRequired && folderName && <td>{folderName}</td>}
       <td>{file.uploadedAt}</td>
       <td>{file.size}</td>
       <td>
@@ -33,12 +33,12 @@ const FileListItem = ({ file, path }) => {
       </td>
       <td>
         <div className="relative">
-          <FileSettings file={file} />
+          <FileSettings id={file.id} />
         </div>
       </td>
     </tr>
   );
 };
 
-export default FileListItem;
+export default FilesTableItem;
 

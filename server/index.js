@@ -408,6 +408,118 @@ const searchData = [
   },
 ];
 
+const versions = [
+  {
+    id: 1,
+    uploaded: '28/10/2024',
+    type: 'pdf',
+    name: 'myFileOld',
+  },
+  {
+    id: 2,
+    uploaded: '28/11/2024',
+    type: 'pdf',
+    name: 'myFileOld2',
+  },
+  {
+    id: 3,
+    uploaded: '28/12/2024',
+    type: 'pdf',
+    name: 'myFileOld3',
+  },
+  {
+    id: 4,
+    uploaded: '28/12/2024',
+    type: 'pdf',
+    name: 'myFileOld4',
+  },
+  {
+    id: 5,
+    uploaded: '28/12/2024',
+    type: 'pdf',
+    name: 'myFileOld5',
+  },
+  {
+    id: 6,
+    uploaded: '28/12/2024',
+    type: 'pdf',
+    name: 'myFileOld6',
+  },
+];
+
+const moveData = [
+  {
+    id: 1,
+    name: 'Section 1',
+    folders: [
+      {
+        id: 1,
+        name: 'Folder 1',
+        files: [
+          { id: 1, name: 'File 1' },
+          { id: 2, name: 'File 2' },
+        ],
+        folders: [
+          {
+            id: 101,
+            name: 'Folder 1-1',
+            files: [
+              { id: 7, name: 'File 7' },
+              { id: 8, name: 'File 8' },
+            ],
+            folders: [
+              {
+                id: 201,
+                name: 'Folder 1-1-1',
+                files: [{ id: 9, name: 'File 9' }],
+                folders: [], // No further subfolders
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 2,
+        name: 'Folder 2',
+        files: [
+          { id: 3, name: 'File 3' },
+          { id: 4, name: 'File 4' },
+        ],
+        folders: [], // No subfolders
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: 'Section 2',
+    folders: [
+      {
+        id: 3,
+        name: 'Folder 3',
+        files: [
+          { id: 5, name: 'File 5' },
+          { id: 6, name: 'File 6' },
+        ],
+        folders: [
+          {
+            id: 102,
+            name: 'Folder 3-1',
+            files: [{ id: 10, name: 'File 10' }],
+            folders: [
+              {
+                id: 401,
+                name: 'Folder 3-1-1',
+                files: [{ id: 19, name: 'File 19' }],
+                folders: [], // No further subfolders
+              },
+            ], // No further subfolders
+          },
+        ],
+      },
+    ],
+  },
+];
+
 app.get('/api/messages', async (req, res) => {
   const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
   const pageSize = parseInt(req.query.pageSize) || 5; // Default to 5 items per page if not provided
@@ -482,5 +594,123 @@ app.get('/api/search', async (req, res) => {
   const paginatedMessages = searchData.slice(startIndex, endIndex);
 
   return res.status(200).json(paginatedMessages);
+});
+
+app.get('/api/versions', async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+  const pageSize = parseInt(req.query.pageSize) || 5; // Default to 5 items per page if not provided
+
+  // Calculate the starting index and ending index for pagination
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = page * pageSize;
+
+  // Slice the reversed array based on the pagination indices
+  const paginatedMessages = versions.slice(startIndex, endIndex);
+
+  return res.status(200).json(paginatedMessages);
+});
+
+app.delete('/api/versions/:id', async (req, res) => {
+  const id = Number(req.params.id); // Get the ID from the URL parameters
+
+  console.log(id);
+
+  // Find the index of the version to be deleted
+  console.log(versions);
+  const index = versions.findIndex((version) => version.id === id);
+
+  console.log(index);
+
+  if (index === -1) {
+    // If the version with the specified ID is not found
+    return res.status(404).json({ error: 'Version not found' });
+  }
+
+  // Remove the version from the array
+  const [deletedVersion] = versions.splice(index, 1); // Removes the version at the index
+
+  // Return the deleted version as the response
+  return res.status(200).json({
+    message: 'Version deleted successfully',
+    deletedVersion,
+  });
+});
+
+app.get('/api/structure', async (req, res) => {
+  return res.status(200).json(moveData);
+});
+
+app.get('/api/section-settings/:id', async (req, res) => {
+  return res.status(200).json({ message: 'success' });
+});
+
+app.get('/api/folder-settings/:id', async (req, res) => {
+  return res.status(200).json({ message: 'success' });
+});
+
+app.get('/api/file-settings/:id', async (req, res) => {
+  return res.status(200).json({ message: 'success' });
+});
+
+let metadata = [];
+let fileMetadata = [];
+
+app.get('/api/metadata/:id', async (req, res) => {
+  return res.status(200).json(metadata);
+});
+
+app.get('/api/file-metadata/:id', async (req, res) => {
+  return res.status(200).json(fileMetadata);
+});
+
+app.post('/api/metadata', (req, res) => {
+  const { folderId, fields } = req.body;
+  console.log(req.body);
+  console.log(folderId, fields);
+
+  if (!folderId || !Array.isArray(fields)) {
+    return res
+      .status(400)
+      .json({ success: false, error: 'Folder ID and fields are required.' });
+  }
+
+  // Check if metadata already exists for this folder
+  const existingIndex = metadata.findIndex(
+    (item) => item.folderId === folderId,
+  );
+  if (existingIndex !== -1) {
+    return res.status(400).json({
+      success: false,
+      error: 'Metadata already exists. Use PUT to update.',
+    });
+  }
+
+  // Add new metadata
+  metadata = fields;
+
+  return res.status(201).json({ success: true, metadata });
+});
+
+app.put('/api/metadata', (req, res) => {
+  const { id, fields } = req.body;
+
+  // if (!Array.isArray(fields)) {
+  //   return res
+  //     .status(400)
+  //     .json({ success: false, error: 'Fields are required.' });
+  // }
+
+  // Find existing metadata
+  // const index = metadata.findIndex((item) => item.folderId === id);
+  // if (index === -1) {
+  //   return res
+  //     .status(404)
+  //     .json({ success: false, error: 'Metadata not found.' });
+  // }
+
+  // Update metadata fields
+  metadata = fields;
+
+  return res.status(200).json({ success: true, metadata: metadata });
 });
 

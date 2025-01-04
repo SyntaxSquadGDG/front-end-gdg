@@ -17,11 +17,14 @@ import {
 import LoadError from '../general/load-error';
 import LoadingSpinner from '../general/loader';
 import ErrorBoundaryWrapper from '../general/error-boundary-wrapper';
+import { useHeightContext } from '@app/_contexts/toolbar-height-provider';
 
 const ActivitySection = ({ type, id, fixed = true }) => {
   const t = useTranslations();
   const locale = useLocale();
   const direction = getLangDir(locale);
+  // const { height } = useHeightContext();
+  // console.log(height);
   let hrefValue;
 
   switch (type) {
@@ -72,14 +75,15 @@ const ActivitySection = ({ type, id, fixed = true }) => {
   return (
     <div
       className={clsx(
-        'w-[100%] rounded-tl-[24px] rounded-br-[24px] shadow-activityLog p-[24px] shrink-0',
-        fixed &&
-          'xl:fixed xl:top-[230px] xl:h-[calc(100vh-230px-32px)] overflow-y-auto xl:w-[400px]',
+        'w-[100%] rounded-tl-[24px] rounded-br-[24px] shadow-activityLog p-[24px]',
+        fixed && 'xl:fixed overflow-y-auto xl:w-[400px]',
         !fixed && 'w-[100%] xl:w-[400px]',
         direction === 'ltr'
           ? fixed && 'xl:right-[32px]'
           : fixed && 'xl:left-[32px]',
-      )}>
+      )}
+      // style={{ height: `${height}px` }}
+    >
       <div className="flex justify-between items-center mb-[24px]">
         <p className={clsx(headFont.className, 'text-[22px] font-medium')}>
           {t('activity.activity')}

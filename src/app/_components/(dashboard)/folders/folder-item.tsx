@@ -27,8 +27,10 @@ import CopySVG from '@app/_components/svgs/modals/copy';
 import MetadataSVG from '@app/_components/svgs/modals/metadata';
 import RemoveSVG from '@app/_components/svgs/modals/remove';
 import FolderSettings from './folder-settings';
+import FolderMetadataModal from './metadata-modal';
+import FolderSettingsModals from './folder-settings-modals';
 
-const FolderItem = ({ folder, sectionName }) => {
+const FolderItem = ({ folder, sectionName, sectionNameRequired }) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -38,6 +40,29 @@ const FolderItem = ({ folder, sectionName }) => {
   const path = usePathname();
 
   useClickOutside(containerRef, () => setIsOpen(false));
+
+  async function handleDelete() {
+    try {
+      setIsDeleting(true);
+      const res = await fetch(
+        `http://syntaxsquad.runasp.net/api/Folders/deletefolderbyid?id=${folder.id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+      if (!res.ok) {
+        throw new Error('error');
+      }
+      console.log(res);
+      closeModal();
+      toast.success('Deleted Successfully');
+      await revalidatePathAction(path);
+    } catch (e) {
+      toast.error('Error while deleting section');
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <>
@@ -57,12 +82,16 @@ const FolderItem = ({ folder, sectionName }) => {
 
             <div className="flex flex-col gap-[8px]">
               <div className="flex gap-[12px] items-center">
-                <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
-                  {sectionName}
-                </p>
-                <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
-                  |
-                </p>
+                {sectionNameRequired && sectionName && (
+                  <>
+                    <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
+                      {sectionName}
+                    </p>
+                    <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
+                      |
+                    </p>
+                  </>
+                )}
 
                 <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
                   {folder.numberOfFiles} files
@@ -74,7 +103,7 @@ const FolderItem = ({ folder, sectionName }) => {
             </div>
           </Link>
 
-          <FolderSettings folder={folder} />
+          <FolderSettings id={folder.id} />
         </div>
 
         {/* Footer */}
@@ -100,6 +129,8 @@ const FolderItem = ({ folder, sectionName }) => {
           </div>
         </div>
       </div>
+
+      <FolderSettingsModals id={folder.id} name={folder.name} />
     </>
   );
 };

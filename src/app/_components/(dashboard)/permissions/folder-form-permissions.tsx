@@ -113,7 +113,7 @@ const FolderFormPermissions = ({
 
       <Button
         text={t('permissions.updateButton')}
-        disabled={disabledCondition}
+        disabled={disabledCondition || id.length === 0}
         className={'mt-[32px] w-[100%]'}
         onClick={() => {
           console.log(id);

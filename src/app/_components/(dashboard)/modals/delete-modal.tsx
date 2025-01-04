@@ -6,13 +6,26 @@ import React from 'react';
 import Modal from './modal';
 import Button from '../general/button';
 
-const DeleteModal = ({ modalName, head, onClick, isDeleting, error }) => {
+const DeleteModal = ({
+  modalName,
+  head,
+  onClick,
+  isDeleting,
+  error,
+  onClose = () => {},
+}) => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
+
+  function handleClose() {
+    onClose();
+    closeModal();
+  }
+
   return (
     <Modal
       isOpen={modalStack.includes(modalName)}
-      onClose={closeModal}
+      onClose={handleClose}
       className={contentFont.className}>
       <div className="flex flex-col gap-[24px] text-center items-center">
         <p className="text-[20px] font-medium">{head}</p>
@@ -20,6 +33,7 @@ const DeleteModal = ({ modalName, head, onClick, isDeleting, error }) => {
           <Button
             onClick={() => closeModal()}
             text={t('general.cancel')}
+            isPending={isDeleting}
             variant="solid"
           />
           <Button

@@ -7,35 +7,42 @@ import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import FileIcon from '../general/file-icon';
+import EditPathModal from '../modals/edit-path-modal';
+import FileAiResultsItem from './file-ai-results-item';
 
-const FileAIResults = ({ file, data, setFile, setFileData }) => {
+const FileAIResults = ({ files, data, setFiles, setFilesData }) => {
   const { closeModal } = useModal();
   const t = useTranslations();
   const pathName = usePathname();
   const [isLoading, setIsLoading] = useState(false);
-  console.log(data);
 
-  const handleClick = () => {
-    if (file) {
-      const imageURL = URL.createObjectURL(file); // Create a temporary URL for the file
-      window.open(imageURL, '_blank'); // Open the image in a new tab
-      // Optional: Revoke the object URL after opening to free memory
-      setTimeout(() => URL.revokeObjectURL(imageURL), 1000);
-    }
-  };
+  console.log(files);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  function handleModalClose() {
+    closeModal();
+    setFiles(null);
+    setFilesData(null);
+  }
 
   async function handleConfirm() {
-    // // REQUEST
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append('files', file);
-      formData.append('path', data.path);
+      files.forEach((file, index) => {
+        formData.append(`files[${index}]`, file);
+      });
+      formData.append('path', data[0]?.path || ''); // Example: Assuming all files share the same path.
       const response = await fetch(
-        `http://syntaxsquad.runasp.net/api/SFiles/upload?folderid=${data.folderId}`,
+        `http://syntaxsquad.runasp.net/api/SFiles/upload?folderid=${
+          data[0]?.folderId || ''
+        }`,
         {
           method: 'POST',
           body: formData,
@@ -43,11 +50,13 @@ const FileAIResults = ({ file, data, setFile, setFileData }) => {
       );
 
       closeModal();
-      setFile(null);
-      setFileData(null);
+      setFiles([]);
+      setFilesData([]);
       await revalidatePathAction(pathName);
       toast.success('Classified successfully');
     } catch (e) {
+      console.error('Error uploading files:', e);
+      toast.error('Failed to classify files.');
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +78,7 @@ const FileAIResults = ({ file, data, setFile, setFileData }) => {
           </button>
           <button
             className="px-[32px] py-[10px] rounded-[10px] bg-red-600 text-white"
-            onClick={() => closeModal()}>
+            onClick={() => handleModalClose()}>
             Cancel
           </button>
         </div>
@@ -90,31 +99,21 @@ const FileAIResults = ({ file, data, setFile, setFileData }) => {
               <td>Path</td>
             </tr>
           </thead>
-          <tbody className="">
-            <tr className="py-[40px] font-medium text-[18px] rounded-[32px]">
-              <td>
-                <div className="flex items-center justify-center">
-                  <AccuracyLevel accuracy={data.accuracy || 0} />
-                </div>
-              </td>
-              <td>
-                <button onClick={handleClick}>
-                  <FileIcon type={file.type} />
-                </button>
-              </td>
-              <td>{file.name}</td>
-              <td
-                className={clsx(
-                  data.accuracy
-                    ? data.accuracy < 50
-                      ? 'text-lowColor'
-                      : 'text-highColor'
-                    : 'text-lowColor',
-                )}>
-                {data.accuracy || 0}%
-              </td>
-              <td>{data.path}</td>
-            </tr>
+          <tbody>
+            {files &&
+              Array.from(files).map((file, index) => {
+                const metadata = data[index] || {}; // Match file with metadata or fallback to empty object
+                return (
+                  <FileAiResultsItem
+                    key={`${file.name}-${file.lastModified}`}
+                    file={file}
+                    id={index}
+                    setFiles={setFiles}
+                    setFilesData={setFilesData}
+                    metadata={metadata}
+                  />
+                );
+              })}
           </tbody>
         </table>
       </div>

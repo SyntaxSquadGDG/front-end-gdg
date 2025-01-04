@@ -3,7 +3,12 @@ import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-const HierarchicalView = ({ data, selectedItem, setSelectedItem }) => {
+const HierarchicalView = ({
+  data,
+  selectedItem,
+  setSelectedItem,
+  setSelectedPath = () => {},
+}) => {
   const [expandedSections, setExpandedSections] = useState({});
   const [expandedFolders, setExpandedFolders] = useState({});
   const baseSpacing = 8;
@@ -27,6 +32,11 @@ const HierarchicalView = ({ data, selectedItem, setSelectedItem }) => {
 
   const handleSelect = (id, type) => {
     setSelectedItem({ id, type }); // Update selected item with id and type
+    const newPath = findPath(data, id, type); // Find the path for the new selection
+    console.log(`NEW PATH IS ${newPath.join('/')}`);
+    if (setSelectedPath) {
+      setSelectedPath(newPath.join('/')); // Update the selected path
+    }
   };
 
   const findPath = (data, id, type, currentPath = []) => {

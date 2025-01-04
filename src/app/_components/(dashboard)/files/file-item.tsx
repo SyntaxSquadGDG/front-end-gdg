@@ -29,6 +29,10 @@ import MoveSVG from '@app/_components/svgs/modals/move';
 import CopySVG from '@app/_components/svgs/modals/copy';
 import RemoveSVG from '@app/_components/svgs/modals/remove';
 import FileSettings from './file-settings';
+import ShowVersionsModal from './show-versions-modal';
+import UploadNewVersionModal from './upload-new-version-modal';
+import FileMetadataModal from './file-metadata-modal';
+import FileSettingsModals from './file-settings-modals';
 
 const FileItem = ({ file }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,27 +40,30 @@ const FileItem = ({ file }) => {
   const t = useTranslations();
   const { openModal, closeModal, modalStack } = useModal();
 
+  console.log(file);
+
   useClickOutside(containerRef, () => setIsOpen(false));
 
   return (
     <div
       ref={containerRef}
       className="rounded-[16px] border-[1px] border-solid border-blue3 p-[24px]">
-      <FileSettings file={file} />
+      <FileSettings id={file.id} />
       <Link
         href={`/files/${file.id}`}
         className="mt-[8px] mb-[22px] flex items-center justify-center">
-        {/* {file.type === 'image' && <ImageSVG />}
-        {file.type === 'word' && <WordSVG />}
-        {file.type === 'pdf' && <PdfSVG />}
-        {file.type === 'excel' && <ExcelSVG />} */}
-        {/* <ImageSVG /> */}
         <FileIcon type={file.type} />
       </Link>
       <div className={clsx(contentFont.className, 'flex flex-col gap-[10px]')}>
         <p className="text-[18px] font-medium">{file.name}</p>
         <p className="text-[14px] font-medium text-textGray">{file.size}</p>
       </div>
+
+      <FileSettingsModals
+        id={file.id}
+        parentFolderId={file.parentFolderId}
+        name={file.name}
+      />
     </div>
   );
 };

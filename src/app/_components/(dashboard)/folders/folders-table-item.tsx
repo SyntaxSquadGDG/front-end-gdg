@@ -7,7 +7,7 @@ import Link from 'next/link';
 import StackUsers from '../general/stack';
 import FolderSettings from './folder-settings';
 
-const FolderListItem = ({ folder, sectionName }) => {
+const FoldersTableItem = ({ folder, sectionName, sectionNameRequired }) => {
   const [isFolderOpen, setIsFolderOpen] = useState(false);
   return (
     <tr
@@ -16,7 +16,7 @@ const FolderListItem = ({ folder, sectionName }) => {
       <td>
         <Link href={`/folders/${folder.id}`}>{folder.name}</Link>
       </td>
-      <td>{sectionName}</td>
+      {sectionNameRequired && sectionName && <td>{sectionName}</td>}
       <td>{folder.numberOfFiles}</td>
       <td>{folder.lastModified}</td>
       <td>{folder.size}</td>
@@ -26,11 +26,13 @@ const FolderListItem = ({ folder, sectionName }) => {
         </div>
       </td>
       <td>
-        <FolderSettings folder={folder} />
+        <div className="bg-yellow-300">
+          <FolderSettings id={folder.id} />
+        </div>
       </td>
     </tr>
   );
 };
 
-export default FolderListItem;
+export default FoldersTableItem;
 

@@ -374,7 +374,10 @@
     "employees": "Employees",
     "new": "Create A new section",
     "delete": "Delete a Section",
-    "deleteDescription": "Are you sure you want to delete this Section?"
+    "deleteDescription": "Are you sure you want to delete this Section?",
+    "errors": {
+      "SECTION_SETTINGS_ERROR": "Couldn't load settings"
+    }
   },
   "general": {
     "storage": "Storage",
@@ -411,7 +414,12 @@
     "adding": "Adding...",
     "updating": "Updating...",
     "add": "Add",
-    "successfully": "Successfully"
+    "successfully": "Successfully",
+    "deleted": "Deleted Successfully!",
+    "create": "Create",
+    "creating": "Creating...",
+    "update": "Update",
+    "required": "Required"
   },
   "zero": {
     "thereNo": "There's no",
@@ -472,7 +480,21 @@
     "new": "Create A new folder",
     "folders": "Folders",
     "delete": "Delete a Folder",
-    "deleteDescription": "Are you sure you want to delete this folder?"
+    "deleteDescription": "Are you sure you want to delete this folder?",
+    "metadataFieldNamePlaceholder": "Field Name",
+    "metadataAddField": "Add Field",
+    "errors": {
+      "FOLDER_SETTINGS_ERROR": "Couldn't load settings",
+      "FOLDER_METADATA_ERROR": "Couldn't load metadata",
+      "CREATE_METADATA_ERROR": "Couldn't Create metadata",
+      "UPDATE_METADATA_ERROR": "Couldn't Update metadata",
+      "METADATA_KEY_EMPTY": "You Must fill all the fields before saving!",
+      "METADATA_KEY_DUPLICATE": "You can't have duplicate keys!"
+    },
+    "success": {
+      "METADATA_UPDATE": "Metadata updated successfully!",
+      "METADATA_CREATE": "Metadata created successfully!"
+    }
   },
   "files": {
     "addAI": "Add files with AI",
@@ -481,8 +503,19 @@
     "uploadNewVersion": "Upload New Version",
     "delete": "Delete a File",
     "deleteDescription": "Are you sure you want to delete this file?",
+    "deleteVersionDescription": "Are you sure you want to delete this version?",
+    "restoreFileDescription": "Are you sure you want to restore this file?",
+    "lockFileDescription": "Are you sure you want to lock this file?",
+    "unlockFileDescription": "Are you sure you want to unlock this file?",
+    "restoring": "Restoring...",
+    "restored": "File Restored Successfully!",
+    "locked": "File Locked Successfully!",
+    "unlocked": "File Unlocked Successfully!",
     "lock": "Lock File",
     "lockButton": "Lock",
+    "unlockButton": "Unlock",
+    "locking": "locking...",
+    "unlocking": "Unlocking...",
     "documentId": "Document ID",
     "ocrLanguage": "OCR Language",
     "otherVersions": "Other Versions",
@@ -494,7 +527,20 @@
     "folderName": "Folder Name",
     "lastModified": "Last Modified",
     "size": "File Size",
-    "permissions": "Permissions"
+    "permissions": "Permissions",
+    "versionUpdated": "Version Updated Successfully",
+    "errors": {
+      "DELETE": "Error Deleting File!",
+      "VERSION_DELETE": "Error Deleting Version!",
+      "RESTORE_ERROR": "Error Restoring File Version!",
+      "VERSION_FETCH_ERROR": "Error Fetcing Version!",
+      "VERSION_NEW_ERROR": "Error Setting New Version!",
+      "LOCK_ERROR": "Error locking file",
+      "UNLOCK_ERROR": "Error Unlocking file",
+      "FILE_SETTINGS_ERROR": "Couldn't load settings",
+      "FILE_METADATA_FETCH_ERROR": "Couldn't load file metadata",
+      "FILE_METADATA_UPDATE_ERROR": "Couldn't update file metadata"
+    }
   },
   "dashboard": {
     "latestResults": "Latest Results",
@@ -517,7 +563,12 @@
     "pdf": "PDF",
     "excel": "Excel",
     "word": "Word",
-    "image": "Image"
+    "image": "Image",
+
+    "text": "Text",
+    "number": "Number",
+    "boolean": "Boolean",
+    "date": "Date"
   },
   "employees": {
     "employees": "Employees",

@@ -7,54 +7,88 @@ import { revalidatePath } from 'next/cache';
 import { usePathname } from 'next/navigation';
 import { revalidatePathAction } from '@/app/actions';
 import { extractPath } from '@app/_utils/helper';
+import { UploadNewVersion } from './data/posts';
+import { useTranslations } from 'next-intl';
 
-const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
+const DragAndDropInput = ({
+  type,
+  parentId,
+  setFiles = () => {},
+  files,
+  setFilesData = () => {},
+  file,
+  setFile,
+}) => {
   const [dragActive, setDragActive] = useState(false);
-  const [files, setFiles] = useState(null);
   const { modalStack, setModal, openModal, closeModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const pathName = usePathname();
+  const t = useTranslations();
 
   useEffect(() => {
     console.log(`Modal stack is: ${modalStack}`);
   }, [modalStack]);
 
   const handleChange = () => {
-    setFile(null);
     setFiles(null);
+    setFile(null);
   };
 
   const handleConfirmAI = async () => {
     try {
       setIsLoading(true);
 
-      const formData = new FormData();
-      formData.append('files', file);
-      formData.append('folderId', null);
+      // const formData = new FormData();
+      // formData.append('files', file);
+      // formData.append('folderId', null);
 
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-      }
-      const response = await fetch(
-        `http://syntaxsquad.runasp.net/api/Sfiles/uploadbyai`,
+      // for (let pair of formData.entries()) {
+      //   console.log(pair[0] + ': ' + pair[1]);
+      // }
+      // const response = await fetch(
+      //   `http://syntaxsquad.runasp.net/api/Sfiles/uploadbyai`,
+      //   {
+      //     method: 'POST',
+      //     body: formData,
+      //   },
+      // );
+      // const data = await response.json();
+      // console.log('SENT?');
+      // console.log(data);
+      // const myPath = extractPath(data.path);
+      // console.log(myPath);
+      // console.log('OP?');
+      setFilesData([
         {
-          method: 'POST',
-          body: formData,
+          accuracy: 95,
+          path: 'myPath',
+          name: 'file name',
+          type: 'type',
+          folderId: 111111,
         },
-      );
-      const data = await response.json();
-      console.log('SENT?');
-      console.log(data);
-      const myPath = extractPath(data.path);
-      console.log(myPath);
-      console.log('OP?');
-      setFileData({
-        accuracy: data.accuracy,
-        path: extractPath(data.path),
-        name: data.fileName,
-        type: data.type,
-        folderId: data.folderid,
-      });
+        {
+          accuracy: 65,
+          path: 'myPath',
+          name: 'file name',
+          type: 'type',
+          folderId: 2222222,
+        },
+        {
+          accuracy: 75,
+          path: 'myPath',
+          name: 'file name',
+          type: 'type',
+          folderId: 3333333,
+        },
+        {
+          accuracy: 15,
+          path: 'myPath',
+          name: 'file name',
+          type: 'type',
+          folderId: 444444,
+        },
+      ]);
       setModal('AIResults');
       await revalidatePathAction(pathName);
     } catch (e) {
@@ -93,8 +127,7 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
       toast.success('Files uploaded successfully!');
       closeModal();
       setFiles(null);
-      setFileData(null);
-      setFile(null);
+      setFilesData(null);
       await revalidatePathAction(pathName);
     } catch (error) {
       toast.error('Error while uploading the files');
@@ -113,9 +146,9 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-
     const droppedFiles = e.dataTransfer.files;
-    if (type === 'AI') {
+
+    if (type === 'version') {
       setFile(droppedFiles[0]);
     } else {
       setFiles(droppedFiles);
@@ -124,18 +157,73 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
 
   const handleFilesChange = (e) => {
     const selectedFiles = e.target.files;
-    if (type === 'AI') {
-      setFile(selectedFiles[0]);
-    } else {
-      setFiles(selectedFiles);
+    setFiles(selectedFiles);
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
+
+  const handleClick = (file) => {
+    if (file) {
+      const imageURL = URL.createObjectURL(file); // Create a temporary URL for the file
+      window.open(imageURL, '_blank'); // Open the image in a new tab
+      // Optional: Revoke the object URL after opening to free memory
+      setTimeout(() => URL.revokeObjectURL(imageURL), 1000);
     }
   };
+
+  async function onVersionSuccess() {
+    await revalidatePathAction(`/files/${parentId}`);
+    toast.success(t('files.versionUpdated'));
+    setFile(null);
+    closeModal();
+  }
+
+  async function handleConfirmVersion() {
+    // try {
+    //   setIsLoading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // formData.append('file', 'file');
+
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0] + ': ' + pair[1]);
+    // }
+    const response = await UploadNewVersion(
+      parentId,
+      setIsLoading,
+      setError,
+      onVersionSuccess,
+      t,
+      toast,
+    );
+
+    console.log('??');
+
+    // console.log(response);
+    // console.log(res);
+
+    // if (response.status === 404) throw new Error('Error');
+    // toast.success('Files uploaded successfully!');
+    // closeModal();
+    // setFiles(null);
+    // setFilesData(null);
+    // await revalidatePathAction(pathName);
+    // } catch (error) {
+    //   toast.error('Error while uploading the files');
+    // } finally {
+    //   setIsLoading(false);
+    // }
+  }
 
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
-  if (type === 'AI') {
+  if (type === 'version') {
     return (
       <div>
         {!file && (
@@ -153,23 +241,27 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
             <label
               htmlFor="file-input"
               className="cursor-pointer text-blue-600 underline hover:text-blue-800">
-              click to select a file
+              click to select file
             </label>
             <input
               id="file-input"
               type="file"
               hidden
-              accept="image/*"
-              onChange={handleFilesChange}
+              onChange={handleFileChange}
             />
           </div>
         )}
 
         {file && (
           <div>
-            <p className="mb-6">Your selected file:</p>
+            <p className="mb-6">Your selected files:</p>
             <div className="flex flex-col gap-2">
-              <h1 key={file.name}>{file.name}</h1>
+              <h3
+                key={file.name}
+                onClick={() => handleClick(file)}
+                className="underline cursor-pointer">
+                {file.name}
+              </h3>
             </div>
 
             <div className="flex gap-4 mt-6">
@@ -179,7 +271,7 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
                 Change
               </button>
               <button
-                onClick={handleConfirmAI}
+                onClick={handleConfirmVersion}
                 className="bg-gradient-to-r from-blue-600 to-blue-400 px-6 py-2 rounded-lg text-white text-lg font-medium">
                 Confirm
               </button>
@@ -224,7 +316,12 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
           <p className="mb-6">Your selected files:</p>
           <div className="flex flex-col gap-2">
             {Array.from(files).map((file) => (
-              <h1 key={file.name}>{file.name}</h1>
+              <h3
+                key={file.name}
+                onClick={() => handleClick(file)}
+                className="underline cursor-pointer">
+                {file.name}
+              </h3>
             ))}
           </div>
 
@@ -235,7 +332,11 @@ const DragAndDropInput = ({ type, parentId, setFile, file, setFileData }) => {
               Change
             </button>
             <button
-              onClick={handleConfirmFiles}
+              onClick={
+                type === 'AI'
+                  ? () => handleConfirmAI()
+                  : () => handleConfirmFiles()
+              }
               className="bg-gradient-to-r from-blue-600 to-blue-400 px-6 py-2 rounded-lg text-white text-lg font-medium">
               Confirm
             </button>

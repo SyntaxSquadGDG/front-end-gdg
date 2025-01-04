@@ -10,11 +10,15 @@ import SelectedSelect from '../general/selected-select';
 import SectionFormPermissions from '../permissions/section-form-permissions';
 import FolderFormPermissions from '../permissions/folder-form-permissions';
 import FileFormPermissions from '../permissions/file-form-permissions';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { fetchEmployeesClient } from '@app/_utils/fetch/queries';
 
 const ItemPermissionsEditModal = ({ id, type }) => {
   const t = useTranslations();
   const { modalStack, closeModal } = useModal();
   const [selectedNormal, setSelectedNormal] = useState(1);
+  const isEmployees = selectedNormal === 1;
+  const isOpen = modalStack.includes(`ItemPermissionsEdit${type}${id}`);
 
   const options = [
     {
@@ -27,20 +31,26 @@ const ItemPermissionsEditModal = ({ id, type }) => {
     },
   ];
 
-  const initialRoles = [
-    {
-      id: 1,
-      name: 'HR',
+  const {
+    data: rolesData,
+    isLoading: isLoadingRoles,
+    isFetching: isFetchingRoles,
+    isError: isErrorRoles,
+    fetchNextPage: fetchNextRoles,
+    hasNextPage: hasNextRoles,
+  } = useInfiniteQuery({
+    queryKey: ['roles'],
+    queryFn: ({ pageParam = 1 }) => fetchEmployeesClient(pageParam, 5),
+    getNextPageParam: (lastPage, pages) => {
+      const hasData = lastPage.length > 0;
+      const isLastPage = lastPage.length < 5; // Assuming you're fetching 5 employees per page
+      return hasData && !isLastPage ? pages.length + 1 : undefined;
     },
-    {
-      id: 2,
-      name: 'PR',
-    },
-    {
-      id: 3,
-      name: 'FR',
-    },
-  ];
+    enabled: isOpen && !isEmployees,
+    refetchOnWindowFocus: false,
+  });
+
+  const initialRoles = rolesData?.pages?.flat() || []; // Flatten the pages to get all employees in one array
 
   const roles = extendSelect(initialRoles, ['name'], 'id');
 
@@ -68,32 +78,34 @@ const ItemPermissionsEditModal = ({ id, type }) => {
     (role) => !selectedRoles.some((selected) => selected.id === role.id),
   );
 
-  const initialEmployees = [
-    {
-      id: 1,
-      firstName: 'Amr',
-      lastName: 'Shoukry',
-      email: 'amr@gmail.com',
+  const {
+    data: employeesData,
+    isLoading: isLoadingEmployees,
+    isFetching: isFetchingEmployees,
+    isError: isEmployeesError,
+    fetchNextPage: fetchNextEmployees,
+    hasNextPage: hasNextEmployees,
+  } = useInfiniteQuery({
+    queryKey: ['employees'],
+    queryFn: ({ pageParam = 1 }) => fetchEmployeesClient(pageParam, 5), // Adjust the API call to paginate
+    getNextPageParam: (lastPage, pages) => {
+      const hasData = lastPage.length > 0;
+      const isLastPage = lastPage.length < 5; // Assuming you're fetching 5 employees per page
+      return hasData && !isLastPage ? pages.length + 1 : undefined;
     },
-    {
-      id: 2,
-      firstName: 'Ahmed',
-      lastName: 'Wael',
-      email: 'ahmed@gmail.com',
-    },
-    {
-      id: 3,
-      firstName: 'Mohamed',
-      lastName: 'Ayman',
-      email: 'mo@gmail.com',
-    },
-  ];
+    enabled: isOpen && isEmployees,
+    refetchOnWindowFocus: false,
+  });
+
+  const initialEmployees = employeesData?.pages?.flat() || []; // Flatten the pages to get all employees in one array
 
   const employees = extendSelect(
     initialEmployees,
     ['firstName', 'lastName'],
     'id',
   );
+
+  console.log(employees);
 
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState([]); // Stores only the employee ids
@@ -124,10 +136,19 @@ const ItemPermissionsEditModal = ({ id, type }) => {
     setSelectedRoleIds([]);
   }, [selectedNormal]);
 
+  function handleClose() {
+    setSelectedEmployees([]);
+    setSelectedEmployeeIds([]);
+    setSelectedRoles([]);
+    setSelectedRoleIds([]);
+    setSelectedNormal(1);
+    closeModal();
+  }
+
   return (
     <Modal
       isOpen={modalStack.includes(`ItemPermissionsEdit${type}${id}`)}
-      onClose={closeModal}
+      onClose={handleClose}
       innerClassName="w-[800px]"
       className={contentFont.className}>
       <div className="mb-[32px]">
@@ -142,32 +163,46 @@ const ItemPermissionsEditModal = ({ id, type }) => {
       <div>
         <CustomSelect
           label={
-            selectedNormal === 1
-              ? t('permissions.employees')
-              : t('permissions.roles')
+            isEmployees ? t('permissions.employees') : t('permissions.roles')
           }
-          options={selectedNormal === 1 ? availableEmployees : availableRoles}
-          onChange={
-            selectedNormal === 1 ? handleEmployeeChange : handleRoleChange
-          }
+          // error={errors.roles?.message}
+          options={isEmployees ? availableEmployees : availableRoles}
+          onChange={isEmployees ? handleEmployeeChange : handleRoleChange}
+          // onScroll={handleScroll}
+          endPoint={isEmployees ? '/search/employees' : '/search/roles'}
+          dataToExtend={isEmployees ? ['firstName', 'lastName'] : ['name']}
+          isFetchingData={isEmployees ? isFetchingEmployees : isFetchingRoles}
+          isLoadingData={isEmployees ? isLoadingEmployees : isLoadingRoles}
+          selectedItems={isEmployees ? selectedEmployeeIds : selectedRoleIds}
+          hasNextData={isEmployees ? hasNextEmployees : hasNextRoles}
+          fetchNextData={isEmployees ? fetchNextEmployees : fetchNextRoles}
+          // disabled={isLoadingCreate}
         />
         <SelectedSelect
-          items={selectedEmployees}
-          handleChange={handleEmployeeChange}
-          keys={['firstName', 'lastName']}
-          condition={selectedNormal === 1}
-        />
-        <SelectedSelect
-          items={selectedRoles}
-          handleChange={handleRoleChange}
-          keys={['name']}
-          condition={selectedNormal === 2}
+          handleChange={isEmployees ? handleEmployeeChange : handleRoleChange}
+          items={isEmployees ? selectedEmployees : selectedRoles}
+          keys={isEmployees ? ['firstName', 'lastName'] : ['name']}
         />
       </div>
       <div className="mt-[32px]">
-        {type === 'section' && <SectionFormPermissions />}
-        {type === 'folder' && <FolderFormPermissions />}
-        {type === 'file' && <FileFormPermissions />}
+        {type === 'section' && (
+          <SectionFormPermissions
+            id={isEmployees ? selectedEmployeeIds : selectedRoleIds}
+            type={isEmployees ? 'employee' : 'role'}
+          />
+        )}
+        {type === 'folder' && (
+          <FolderFormPermissions
+            id={isEmployees ? selectedEmployeeIds : selectedRoleIds}
+            type={isEmployees ? 'employee' : 'role'}
+          />
+        )}
+        {type === 'file' && (
+          <FileFormPermissions
+            id={isEmployees ? selectedEmployeeIds : selectedRoleIds}
+            type={isEmployees ? 'employee' : 'role'}
+          />
+        )}
       </div>
     </Modal>
   );

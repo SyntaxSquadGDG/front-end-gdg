@@ -49,13 +49,13 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <VerticalNavbar />
           <HorizontalNavbar />
-          <ModalProvider>
-            <QueryClientWrapper>
-              <SocketProvider>
+          <QueryClientWrapper>
+            <SocketProvider>
+              <ModalProvider>
                 <main className="relative z-50">{children}</main>
-              </SocketProvider>
-            </QueryClientWrapper>
-          </ModalProvider>
+              </ModalProvider>
+            </SocketProvider>
+          </QueryClientWrapper>
         </NextIntlClientProvider>
       </body>
     </html>

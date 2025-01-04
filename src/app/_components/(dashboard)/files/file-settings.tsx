@@ -18,94 +18,92 @@ import MetadataSVG from '@app/_components/svgs/modals/metadata';
 import MoveSVG from '@app/_components/svgs/modals/move';
 import CopySVG from '@app/_components/svgs/modals/copy';
 import RemoveSVG from '@app/_components/svgs/modals/remove';
+import { fetchFileSettings } from './data/queries';
+import toast from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query';
+import LoadingSpinner from '../general/loader';
 
-const FileSettings = ({ file }) => {
+const FileSettings = ({ id }) => {
   const { modalStack, openModal } = useModal();
   const t = useTranslations();
   const [isDeleting, setIsDeleting] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  function handleDelete() {
-    try {
-      setIsDeleting(true);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setIsDeleting(false);
+  const [error, setError] = useState(null);
+  const [isOpenedBefore, setIsOpenedBefore] = useState(false);
+
+  function handleSettingsClick() {
+    setIsOpen(true);
+    if (!isOpenedBefore) {
+      setIsOpenedBefore(true);
+      refetch(); // Fetch only when settings is opened for the first time
     }
   }
 
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ['fileSettings', id], // Unique key for the query
+    queryFn: () => fetchFileSettings(id, setError, t, toast), // Function to fetch the data
+    enabled: false, // Set to false if you want to fetch on user action (e.g., button click)
+  });
+
   return (
     <div className="relative flex justify-end">
-      <button onClick={() => setIsOpen(true)}>
+      <button onClick={handleSettingsClick}>
         <SettingsSVG />
       </button>
 
-      <ItemModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        modalName={`deleteFileModal${file.id}`}>
-        <ItemModalItem
-          SVG={EditPermissionsSVG}
-          text={t('modals.editPermissions')}
-          onClick={() => openModal(`ItemPermissionsEdit${'file'}${file.id}`)}
-        />
-        <ItemModalItem
-          SVG={EditSVG}
-          text={t('modals.rename')}
-          onClick={() => openModal(`renameFileModal${file.id}`)}
-        />
-        <ItemModalItem
-          SVG={ShowVersionSVG}
-          text={t('modals.showVersions')}
-          onClick={() => console.log('Show versions')}
-          // onClick={() => openModal(`renameFileModal${file.id}`)}
-        />
-        <ItemModalItem
-          SVG={UpdateSVG}
-          text={t('modals.update')}
-          onClick={() => console.log('Update')}
-          // onClick={() => openModal(`renameFileModal${file.id}`)}
-        />
-        <ItemModalItem
-          SVG={MetadataSVG}
-          text={t('modals.viewMetadata')}
-          onClick={() => console.log('View Metadata')}
-          // onClick={() => openModal(`renameFileModal${file.id}`)}
-        />
-        <ItemModalItem
-          SVG={MoveSVG}
-          text={t('modals.move')}
-          onClick={() => openModal(`move${'file'}${file.id}`)}
-        />
-        <ItemModalItem
-          SVG={CopySVG}
-          text={t('modals.copy')}
-          onClick={() => openModal(`copy${'file'}${file.id}`)}
-        />
-        <ItemModalItem
-          SVG={RemoveSVG}
-          text={t('modals.delete')}
-          onClick={() => openModal(`deleteFileModal${file.id}`)}
-        />
+      <ItemModal isOpen={isOpen} setIsOpen={setIsOpen}>
+        {isLoading && <LoadingSpinner />}
+        {error && error}
+        {!isLoading && !error && (
+          <React.Fragment>
+            <ItemModalItem
+              SVG={EditPermissionsSVG}
+              text={t('modals.editPermissions')}
+              onClick={() => openModal(`ItemPermissionsEdit${'file'}${id}`)}
+            />
+            <ItemModalItem
+              SVG={EditSVG}
+              text={t('modals.rename')}
+              onClick={() => openModal(`renameFileModal${id}`)}
+            />
+            <ItemModalItem
+              SVG={ShowVersionSVG}
+              text={t('modals.showVersions')}
+              onClick={() => openModal(`ShowVersionsModal${id}`)}
+              // onClick={() => openModal(`renameFileModal${id}`)}
+            />
+            <ItemModalItem
+              SVG={UpdateSVG}
+              text={t('modals.update')}
+              onClick={() => openModal(`uploadNewFile${id}Version`)}
+              // onClick={() => openModal(`renameFileModal${id}`)}
+            />
+            <ItemModalItem
+              SVG={MetadataSVG}
+              text={t('modals.viewMetadata')}
+              onClick={() => openModal(`FileMetadata${id}`)}
+              // onClick={() => openModal(`renameFileModal${id}`)}
+            />
+            <ItemModalItem
+              SVG={MoveSVG}
+              text={t('modals.move')}
+              onClick={() => openModal(`move${'file'}${id}`)}
+            />
+            <ItemModalItem
+              SVG={CopySVG}
+              text={t('modals.copy')}
+              onClick={() => openModal(`copy${'file'}${id}`)}
+            />
+            <ItemModalItem
+              SVG={RemoveSVG}
+              text={t('modals.delete')}
+              onClick={() => openModal(`deleteFileModal${id}`)}
+            />
+          </React.Fragment>
+        )}
       </ItemModal>
-      <DeleteModal
-        head={t('files.deleteDescription')}
-        isDeleting={isDeleting}
-        modalName={`deleteFileModal${file.id}`}
-        onClick={handleDelete}
-      />
-      <RenameModal
-        head={t('modals.rename')}
-        modalName={`renameFileModal${file.id}`}
-        isRenaming={isRenaming}
-        onClick={(data) => console.log(data)}
-      />
-      <MoveModal move={true} type={'file'} id={file.id} itemName={file.name} />
-      <MoveModal move={false} type={'file'} id={file.id} itemName={file.name} />
-
-      <ItemPermissionsEditModal type={'file'} id={file.id} />
     </div>
   );
 };

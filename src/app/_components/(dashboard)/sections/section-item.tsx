@@ -24,14 +24,40 @@ import EditPermissionsSVG from '@app/_components/svgs/modals/edit-permissions';
 import ItemPermissionsEditModal from '../modals/item-permissions-edit-modal';
 import SectionFormPermissions from '../permissions/section-form-permissions';
 import SectionSettings from './section-settings';
+import SectionSettingsModals from './section-settings-modals';
 
 const SectionItem = ({ section }) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const { closeModal, modalStack, openModal } = useModal();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
 
   useClickOutside(containerRef, () => setIsOpen(false));
+
+  async function handleDelete() {
+    try {
+      setIsDeleting(true);
+      const res = await fetch(
+        `http://syntaxsquad.runasp.net/api/Sections/deletesection?id=${section.id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+      if (!res.ok) {
+        throw new Error('error');
+      }
+      console.log(res);
+      closeModal();
+      toast.success('Deleted Successfully');
+      await revalidatePathAction('/sections');
+    } catch (e) {
+      toast.error('Error while deleting section');
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <div
@@ -57,7 +83,7 @@ const SectionItem = ({ section }) => {
             </p>
           </div>
         </Link>
-        <SectionSettings section={section} />
+        <SectionSettings id={section.id} />
       </div>
 
       {/* Footer */}
@@ -82,6 +108,8 @@ const SectionItem = ({ section }) => {
           <StackUsers employeesCount={section.numberOfEmployees} />
         </div>
       </div>
+
+      <SectionSettingsModals id={section.id} />
     </div>
   );
 };

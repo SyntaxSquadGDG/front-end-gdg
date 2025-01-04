@@ -11,6 +11,7 @@ const DataFetching = ({
   data,
   isError,
   children,
+  skipEmpty = false,
   item = 'Manager',
 }) => {
   const t = useTranslations();
@@ -21,7 +22,7 @@ const DataFetching = ({
     return <LoadingSpinner full={false} />;
   }
 
-  if (!data || data.length === 0) {
+  if ((!data || data.length === 0) && !skipEmpty) {
     return <NoToShow>{item}</NoToShow>;
   }
 

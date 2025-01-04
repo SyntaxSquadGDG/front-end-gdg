@@ -125,3 +125,13 @@ export const fetchTypeActivities = async (currentPage, limit, type, id) => {
   return data;
 };
 
+export const fetchAvailableStructure = async () => {
+  const response = await fetch(`${BASE_URL}/structure`);
+  if (!response.ok) {
+    throw new Error('Error fetching roles');
+  }
+
+  const data = await response.json();
+  console.log(data);
+  return data;
+};

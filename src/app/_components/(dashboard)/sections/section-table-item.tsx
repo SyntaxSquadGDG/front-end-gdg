@@ -3,12 +3,11 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import StackUsers from '../general/stack';
-import VerticalDotsSVG from '@app/_components/svgs/general/vertical-dots';
-import ItemModal from '../modals/item-modal';
-import DeleteSectionModal from '../modals/delete-section-modal';
 import SectionSettings from './section-settings';
+import DocumentsSVG from '@app/_components/svgs/guest/documents';
+import SettingsSVG from '@app/_components/svgs/general/settings';
 
-const SectionListItem = ({ section }) => {
+const SectionTableItem = ({ section }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <tr key={section.id}>
@@ -24,11 +23,11 @@ const SectionListItem = ({ section }) => {
         </div>
       </td>
       <td>
-        <SectionSettings section={section} />
+        <SectionSettings id={section.id} />
       </td>
     </tr>
   );
 };
 
-export default SectionListItem;
+export default SectionTableItem;
 

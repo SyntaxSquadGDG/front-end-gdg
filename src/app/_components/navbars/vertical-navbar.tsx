@@ -40,16 +40,16 @@ const VerticalNavbar = () => {
       text: t('navbar.sections'),
       svg: SectionsSVG,
     },
-    // {
-    //   path: '/folders',
-    //   text: t('navbar.folders'),
-    //   svg: SectionsSVG,
-    // },
-    // {
-    //   path: '/files',
-    //   text: t('navbar.files'),
-    //   svg: SectionsSVG,
-    // },
+    {
+      path: '/folders',
+      text: t('navbar.folders'),
+      svg: SectionsSVG,
+    },
+    {
+      path: '/files',
+      text: t('navbar.files'),
+      svg: SectionsSVG,
+    },
     {
       path: '/managers',
       text: t('navbar.managers'),
