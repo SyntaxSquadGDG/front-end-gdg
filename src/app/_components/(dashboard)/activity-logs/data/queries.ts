@@ -1,107 +1,32 @@
-import { BASE_URL } from '@app/_utils/fetch/fetch';
-import { getCookie } from 'cookies-next';
+import { fetchData } from '@app/_utils/fetch';
 
 export const fetchActivities = async (page, limit) => {
-  const token = getCookie('token');
-  const response = await fetch(
-    `${BASE_URL}/employees/${1735224400}/activities?page=${page}&limit=${limit}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: 'include', // Ensures cookies are sent
-    },
+  return await fetchData(
+    `/employees/${1735224400}/activities?page=${page}&limit=${limit}`,
   );
-
-  if (!response.ok) {
-    throw new Error('Error fetching activities');
-  }
-
-  const data = await response.json();
-  return data;
 };
 
 export const fetchMyActivities = async (page, limit) => {
-  const token = getCookie('token');
-
-  const response = await fetch(
-    `${BASE_URL}/user/activities?page=${page}&limit=${limit}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: 'include', // Ensures cookies are sent
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error('Error fetching activities');
-  }
-
-  const data = await response.json();
-  return data;
+  return await fetchData(`/user/activities?page=${page}&limit=${limit}`);
 };
 
-export const fetchSectionActivities = async (page, limit, id) => {
-  const token = getCookie('token');
-
-  const response = await fetch(
-    `${BASE_URL}/sections/${id}/activities?page=${page}&limit=${limit}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: 'include', // Ensures cookies are sent
-    },
+export const fetchSectionActivities = async (id, page, limit) => {
+  return await fetchData(
+    `/sections/${id}/activities?page=${page}&limit=${limit}`,
   );
-
-  if (!response.ok) {
-    throw new Error('Error fetching activities');
-  }
-
-  const data = await response.json();
-  return data;
 };
 
-export const fetchFolderActivities = async (page, limit, id) => {
-  const token = getCookie('token');
-
-  const response = await fetch(
-    `${BASE_URL}/folders/${id}/activities?page=${page}&limit=${limit}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: 'include', // Ensures cookies are sent
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error('Error fetching activities');
-  }
-
-  const data = await response.json();
-  return data;
+export const fetchFolderActivities = async (id, page, limit) => {
+  return await fetch(`/folders/${id}/activities?page=${page}&limit=${limit}`);
 };
 
-export const fetchFileActivities = async (page, limit, id) => {
-  const token = getCookie('token');
+export const fetchFileActivities = async (id, page, limit) => {
+  return await fetch(`/files/${id}/activities?page=${page}&limit=${limit}`);
+};
 
-  const response = await fetch(
-    `${BASE_URL}/files/${id}/activities?page=${page}&limit=${limit}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: 'include', // Ensures cookies are sent
-    },
+export const fetchEmployeeActivities = async (id, page, limit) => {
+  return await fetchData(
+    `/employees/${id}/activities?page=${page}&limit=${limit}`,
   );
-
-  if (!response.ok) {
-    throw new Error('Error fetching activities');
-  }
-
-  const data = await response.json();
-  return data;
 };
 

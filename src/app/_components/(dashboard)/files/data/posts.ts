@@ -1,113 +1,39 @@
-import { BASE_URL } from '@app/_components/_constants/fetch';
+import { BASE_URL } from '@app/_constants/fetch';
+import { fetchData } from '@app/_utils/fetch';
 
-export const RestoreFileVersion = async (
-  fileId,
-  versionId,
-  setLoading,
-  setError,
-  onSuccess,
-  t,
-  toast,
-) => {
-  setLoading(true);
-  setError(null);
-  let errorText;
-
-  console.log(versionId);
-
-  try {
-    const response = await fetch(`${BASE_URL}/versions/${versionId}`, {
-      method: 'POST',
-    });
-
-    if (!response.ok) {
-      throw new Error('RESTORE_ERROR');
-    }
-
-    const result = await response.json();
-    await onSuccess();
-    return result;
-  } catch (error) {
-    errorText = t(`files.errors.${error.message}`);
-    toast.error(errorText);
-    setError(errorText);
-    throw error; // Optionally re-throw the error if you want to handle it further elsewhere
-  } finally {
-    setLoading(false);
-  }
+export const restoreFileVersion = async (fileId, versionId) => {
+  return await fetchData(`/versions/${versionId}`, 'POST');
 };
 
-export const UploadNewVersion = async (
-  fileId,
-  setLoading,
-  setError,
-  onSuccess,
-  t,
-  toast,
-) => {
-  setLoading(true);
-  setError(null);
-  let errorText;
-
-  try {
-    const response = await fetch(`${BASE_URL}/versions`, {
-      method: 'GET',
-    });
-
-    if (!response.ok) {
-      console.log(response);
-      throw new Error('VERSION_NEW_ERROR');
-    }
-
-    const result = await response.json();
-    await onSuccess();
-    return result;
-  } catch (error) {
-    errorText = t(`files.errors.${error.message}`);
-    toast.error(errorText);
-    setError(errorText);
-    throw error; // Optionally re-throw the error if you want to handle it further elsewhere
-  } finally {
-    setLoading(false);
-  }
+export const uploadNewFileVersion = async (fileId, data) => {
+  return await fetchData(`/versions`, 'POST', data);
 };
 
-export const LockFile = async (
-  fileId,
-  type,
-  setLoading,
-  setError,
-  onSuccess,
-  t,
-  toast,
-) => {
-  setLoading(true);
-  setError(null);
-  let errorText;
+export const lockFile = async (fileId) => {
+  return await fetchData(`/versions`, 'POST');
+};
 
-  try {
-    const response = await fetch(`${BASE_URL}/versions`, {
-      method: 'GET',
-    });
+export const unlockFile = async (fileId) => {
+  return await fetchData(`/versions`, 'POST');
+};
 
-    if (!response.ok) {
-      console.log(response);
-      if (type === 'lock') {
-        throw new Error('LOCK_ERROR');
-      }
-      throw new Error('UNLOCK_ERROR');
-    }
+export const moveFileToFolder = async (fileId, folderId) => {
+  return await fetchData(`/movefiletofolder/${fileId}/${folderId}`);
+};
 
-    const result = await response.json();
-    await onSuccess();
-    return result;
-  } catch (error) {
-    errorText = t(`files.errors.${error.message}`);
-    toast.error(errorText);
-    setError(errorText);
-    throw error; // Optionally re-throw the error if you want to handle it further elsewhere
-  } finally {
-    setLoading(false);
-  }
+export const copyFileToFolder = async (fileId, folderId) => {
+  return await fetchData(`/copyfiletofolder/${fileId}/${folderId}`);
+};
+
+export const classifyAIFiles = async (data) => {
+  return await fetchData(`/sendAIFiles`, 'POST', data);
+};
+
+export const sendFilesToFolder = async (folderId, data) => {
+  return await fetchData(`/sendFiles`, 'POST', data);
+};
+
+export const confirmAIFiles = async (data) => {
+  return await fetchData(`/sendAIFiles`, 'POST', data);
 };
 

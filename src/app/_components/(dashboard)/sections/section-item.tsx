@@ -36,29 +36,6 @@ const SectionItem = ({ section }) => {
 
   useClickOutside(containerRef, () => setIsOpen(false));
 
-  async function handleDelete() {
-    try {
-      setIsDeleting(true);
-      const res = await fetch(
-        `http://syntaxsquad.runasp.net/api/Sections/deletesection?id=${section.id}`,
-        {
-          method: 'DELETE',
-        },
-      );
-      if (!res.ok) {
-        throw new Error('error');
-      }
-      console.log(res);
-      closeModal();
-      toast.success('Deleted Successfully');
-      await revalidatePathAction('/sections');
-    } catch (e) {
-      toast.error('Error while deleting section');
-    } finally {
-      setIsDeleting(false);
-    }
-  }
-
   return (
     <div
       ref={containerRef}

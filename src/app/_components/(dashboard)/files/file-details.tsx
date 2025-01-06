@@ -28,7 +28,7 @@ const FileDetails = ({ file }) => {
 
       {/* actions */}
       <div className="flex gap-[16px] items-center">
-        <ViewMetadataButton />
+        <ViewMetadataButton id={file.id} />
         <UploadNewVersionButton id={file.id} />
         <DeleteFileButton file={file} />
       </div>

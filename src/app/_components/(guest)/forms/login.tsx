@@ -18,16 +18,23 @@ import { setCookie } from 'cookies-next/client';
 import { revalidatePathAction } from '@app/actions';
 import { redirect, useRouter } from 'next/navigation';
 import { useLoginSchema } from '@app/_schemas/login';
+import { useMutation } from '@tanstack/react-query';
+import { login } from './data/posts';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
+import ErrorAction from '../common/error-action';
 
 const Login = () => {
   const t = useTranslations();
   const router = useRouter();
   const loginSchema = useLoginSchema();
   const [isPending, setIsPending] = useState(false);
+  const [errorText, setErrorText] = useState(null);
 
   const {
     register,
     control,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -37,22 +44,50 @@ const Login = () => {
     },
   });
 
-  const onSubmit = async (data) => {
-    try {
-      setIsPending(true);
-      console.log(data);
+  // const onSubmit = async (data) => {
+  //   try {
+  //     setIsPending(true);
+  //     console.log(data);
 
-      setCookie(
-        'token',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
-      );
+  //     setCookie(
+  //       'token',
+  //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+  //     );
+  //     await revalidatePathAction('/dashboard');
+  //     router.push('/dashboard');
+  //   } catch (e) {
+  //   } finally {
+  //     setIsPending(false);
+  //   }
+  // };
+
+  async function onSubmit(data) {
+    setErrorText(null);
+    mutation.mutate(data);
+  }
+
+  function onError() {}
+
+  const mutation = useMutation({
+    mutationFn: (data) => login(data),
+    onSuccess: async (data) => {
+      console.log(data);
+      setCookie('token', data.token);
       await revalidatePathAction('/dashboard');
       router.push('/dashboard');
-    } catch (e) {
-    } finally {
-      setIsPending(false);
-    }
-  };
+      toast.success(t('forms.login.success'));
+      reset();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `forms.errors.${error?.message}`,
+        `forms.errors.LOGIN_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <form
@@ -75,7 +110,7 @@ const Login = () => {
             label={t('forms.login.companyLabel')}
             placeHolder={t('forms.login.companyPlaceholder')}
             type={'text'}
-            disabled={isPending}
+            disabled={mutation.isPending}
             {...register('company')}
             error={errors.company?.message}
           />
@@ -84,7 +119,7 @@ const Login = () => {
             label={t('forms.login.emailLabel')}
             placeHolder={t('forms.login.emailPlaceholder')}
             type={'text'}
-            disabled={isPending}
+            disabled={mutation.isPending}
             {...register('email')}
             error={errors.email?.message}
           />
@@ -93,7 +128,7 @@ const Login = () => {
             label={t('forms.login.passwordLabel')}
             placeHolder={t('forms.login.passwordPlaceholder')}
             type={'password'}
-            disabled={isPending}
+            disabled={mutation.isPending}
             {...register('password')}
             error={errors.password?.message}
           />
@@ -103,7 +138,11 @@ const Login = () => {
             name="remember"
             control={control}
             render={({ field }) => (
-              <Checkbox label={t('forms.login.remember')} {...field} />
+              <Checkbox
+                disabled={mutation.isPending}
+                label={t('forms.login.remember')}
+                {...field}
+              />
             )}
           />
           <Link
@@ -113,10 +152,13 @@ const Login = () => {
           </Link>
         </div>
         <GuestButton
-          disabled={isPending}
+          disabled={mutation.isPending}
           className={'w-[100%] mt-[40px] mb-[32px]'}>
-          {t('forms.login.login')}
+          {mutation.isPending
+            ? t('forms.login.logging')
+            : t('forms.login.login')}
         </GuestButton>
+        <ErrorAction>{errorText}</ErrorAction>
         <p className="text-[20px] text-textLight text-center">
           <span>{t('forms.login.not')}</span>
           <span> | </span>

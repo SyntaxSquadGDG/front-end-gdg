@@ -10,15 +10,18 @@ import SectionFormPermissions from '../permissions/section-form-permissions';
 import FolderFormPermissions from '../permissions/folder-form-permissions';
 import FileFormPermissions from '../permissions/file-form-permissions';
 import DeleteModal from '../modals/delete-modal';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'nextjs-toploader/app';
 import { useTranslations } from 'next-intl';
 import { DeleteItemPermission } from '@app/_utils/fetch/deletes';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
+import { deleteEmployeePermission } from '../employees/data/deletes';
+import { deleteRolePermission } from '../roles/data/deletes';
 
 const PermissionItem = ({ item, type, id }) => {
   const t = useTranslations();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [errorDeleting, setErrorDeleting] = useState(null);
+  const [errorText, setErrorText] = useState(null);
   const { openModal, closeModal } = useModal();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -29,20 +32,29 @@ const PermissionItem = ({ item, type, id }) => {
       : t('permissions.removePermissionFromRoleText');
 
   async function handleDelete() {
-    await DeleteItemPermission(
-      id,
-      type,
-      item.id,
-      setIsDeleting,
-      setErrorDeleting,
-      onDeleteSuccess,
-    );
+    setErrorText(null);
+    mutation.mutate();
   }
 
-  async function onDeleteSuccess() {
-    closeModal();
-    queryClient.invalidateQueries([`${type}Permissions`]);
-  }
+  const mutation = useMutation({
+    mutationFn: () =>
+      type === 'employee'
+        ? deleteEmployeePermission(id, item.id)
+        : deleteRolePermission(id, item.id),
+    onSuccess: async () => {
+      queryClient.invalidateQueries([`${type}${id}Permissions`]);
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `permissions.errors.${error?.message}`,
+        `permissions.errors.PERMISSION_DELETE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <tr key={`${item.type}${item.id}`}>
@@ -87,8 +99,8 @@ const PermissionItem = ({ item, type, id }) => {
             <DeleteModal
               head={deleteModalHead}
               modalName={`deletePermissionFrom${type}${id}${item.type}${item.id}`}
-              isDeleting={isDeleting}
-              error={errorDeleting}
+              isDeleting={mutation.isPending}
+              error={errorText}
               onClick={handleDelete}
             />
             <PermissionItemEditModal

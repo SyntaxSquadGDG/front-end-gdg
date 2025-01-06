@@ -1,50 +1,56 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ActivityItem from './activity-item';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import LoadingSpinner from '../general/loader';
-import NoToShow from '../general/no-to-show';
-import TryLater from '../general/try-later';
 import ShowMore from '../general/show-more';
 import { fetchManagerActivities } from './data/queries';
 import DataFetching from '../general/data-fetching';
+import { getErrorText } from '@app/_utils/translations';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { getNextPage } from '@app/_utils/fetch';
 
 const Activity = ({ id, full = false }) => {
   const t = useTranslations();
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
+  const [errorText, setErrorText] = useState(null);
 
   const {
     data: activitiesData,
     isLoading: isLoadingActivities,
     isFetching: isFetchingActivities,
-    isError: isActivitiesError,
+    error,
     fetchNextPage: fetchNextActivities,
     hasNextPage: hasNextActivities,
   } = useInfiniteQuery({
-    queryKey: ['managersActivities'],
     refetchOnWindowFocus: false,
     queryFn: ({ pageParam = 1 }) => {
-      return fetchManagerActivities(pageParam, 5, id); // Return initial data if provided
+      return fetchManagerActivities(id, pageParam, paginationPageLimit); // Return initial data if provided
     },
-    getNextPageParam: (lastPage, pages) => {
-      const hasData = lastPage.length > 0;
-
-      const isLastPage = !hasData || lastPage.length < 5; // Adjust length based on how many items are expected per page
-
-      return hasData && !isLastPage ? pages.length + 1 : undefined;
-    },
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
   });
 
   let activities = activitiesData?.pages?.flat() || []; // Flatten the pages to get all activities in one array
 
   if (!full) {
-    activities = activities.slice(0, 5);
+    activities = activities.slice(0, paginationPageLimit);
   }
+
+  useEffect(() => {
+    const errorText = getErrorText(
+      t,
+      `activity.errors.${error?.message}`,
+      `activity.errors.ACTIVITY_LOAD_ERROR`,
+    );
+    setErrorText(errorText);
+  }, [error]);
 
   return (
     <DataFetching
-      data={activitiesData}
-      isError={isActivitiesError}
+      data={activities}
+      error={error && errorText}
+      emptyError={t('activity.errors.ACTIVITY_ZERO_ERROR')}
       isLoading={isLoadingActivities}>
       <div className="rounded-[16px] overflow-x-auto border-[1px] border-solid border-black">
         <table className="activityTable">

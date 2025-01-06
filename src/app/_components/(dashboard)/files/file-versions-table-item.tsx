@@ -6,114 +6,116 @@ import { useModal } from '@app/_contexts/modal-provider';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import DeleteModal from '../modals/delete-modal';
-import { DeleteFileVersion } from './data/deletes';
+import { DeleteFileVersion, deleteFileVersion } from './data/deletes';
 import toast from 'react-hot-toast';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import RestoreModal from './restore-file-modal';
 import { revalidatePathAction } from '@app/actions';
-import { RestoreFileVersion } from './data/posts';
+import { RestoreFileVersion, restoreFileVersion } from './data/posts';
 import { fetchFileVersion } from './data/queries';
 import LoadingSpinner from '../general/loader';
+import { getErrorText } from '@app/_utils/translations';
 
 const FileVersionsTableItem = ({ fileId, version }) => {
   const t = useTranslations();
   const queryClient = useQueryClient();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isRestoring, setIsRestoring] = useState(false);
-  const [isFetchingVersion, setIsFetchingVersion] = useState(false);
-  const [deletingError, setDeletingError] = useState(null);
-  const [restoringError, setRestoringError] = useState(null);
-  const [fetchingVersionError, setFetchingVersionError] = useState(null);
-  const { openModal } = useModal();
+  const [errorTextDeleting, setErrorTextDeleting] = useState(null);
+  const [errorTextRestoring, setErrorTextRestoring] = useState(null);
+  const [errorTextVersion, setErrorTextVersion] = useState(null);
+
+  const { openModal, closeModal } = useModal();
 
   function handleCloseDeleting() {
-    setDeletingError(null);
-    setIsDeleting(false);
+    setErrorTextDeleting(null);
+    // closeModal();
   }
 
   function handleCloseRestoring() {
-    setRestoringError(null);
-    setIsRestoring(false);
-  }
-
-  async function handleDeleteSuccess() {
-    handleCloseDeleting();
-    queryClient.invalidateQueries(['fileVersions', fileId]);
-    toast.success('general.deleted');
+    setErrorTextRestoring(null);
+    // closeModal();
   }
 
   async function handleDelete() {
-    await DeleteFileVersion(
-      fileId,
-      version.id,
-      setIsDeleting,
-      setDeletingError,
-      handleDeleteSuccess,
-      t,
-      toast,
-    );
+    setErrorTextDeleting(null);
+    deleteMutation.mutate();
   }
 
-  async function handleRestoreSuccess() {
-    handleCloseRestoring();
-    revalidatePathAction(`/files${fileId}`);
-    toast.success('files.restored');
-  }
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteFileVersion(fileId, version.id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['versions', fileId]);
+      toast.success(t('global.deleted'));
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILE_VERSION_DELETE_ERROR`,
+      );
+      setErrorTextDeleting(textError);
+      toast.error(textError);
+    },
+  });
 
   async function handleRestore() {
-    await RestoreFileVersion(
-      fileId,
-      version.id,
-      setIsRestoring,
-      setRestoringError,
-      handleRestoreSuccess,
-      t,
-      toast,
-    );
+    setErrorTextRestoring(null);
+    restoreMutation.mutate();
   }
 
-  async function handleFetchingVersionSuccess() {
-    try {
-      // Fetch a random image from the internet
-      const response = await fetch('https://picsum.photos/200'); // Random image from Picsum
-      if (!response.ok) {
-        throw new Error('Failed to fetch image');
-      }
+  const restoreMutation = useMutation({
+    mutationFn: () => restoreFileVersion(fileId, version.id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['versions', fileId]);
+      await revalidatePathAction(`/files/${fileId}`);
+      toast.success(t('files.versionRestored'));
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILE_VERSION_RESTORED_ERROR`,
+      );
+      setErrorTextRestoring(textError);
+      toast.error(textError);
+    },
+  });
 
-      // Get the image as a Blob
-      const blob = await response.blob();
+  async function handleFetchVersion() {
+    setErrorTextVersion(null);
+    versionMutation.mutate();
+  }
 
-      // Create a URL for the Blob
-      const imageUrl = URL.createObjectURL(blob);
-
-      // Open the image in a new tab
+  const versionMutation = useMutation({
+    mutationFn: () => fetchFileVersion(fileId, version.id),
+    onSuccess: async (data) => {
+      const imageUrl = URL.createObjectURL(data);
       window.open(imageUrl, '_blank');
-
-      // Clean up the created object URL after use (optional but recommended)
       setTimeout(() => URL.revokeObjectURL(imageUrl), 1000);
-    } catch (error) {
-      console.error('Error fetching and displaying image:', error);
-    }
-  }
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILE_VERSION_FETCH_ERROR`,
+      );
+      setErrorTextVersion(textError);
+      toast.error(textError);
+    },
+  });
 
-  async function handleFetchingVersion() {
-    await fetchFileVersion(
-      fileId,
-      version.id,
-      setIsFetchingVersion,
-      setFetchingVersionError,
-      handleFetchingVersionSuccess,
-      toast,
-      t,
-    );
-  }
+  const pendingCondition =
+    versionMutation.isPending ||
+    deleteMutation.isPending ||
+    restoreMutation.isPending;
 
   return (
     <>
       <tr>
         <td>{version.uploaded}</td>
         <td>
-          <button onClick={handleFetchingVersion}>
+          <button onClick={handleFetchVersion}>
             {isFetchingVersion ? <LoadingSpinner /> : version.name}
           </button>
         </td>
@@ -121,7 +123,8 @@ const FileVersionsTableItem = ({ fileId, version }) => {
           <button
             onClick={() => {
               openModal(`RestoreFile${fileId}Version${version.id}`);
-            }}>
+            }}
+            disabled={pendingCondition}>
             <RestoreSVG />
           </button>
         </td>
@@ -130,6 +133,7 @@ const FileVersionsTableItem = ({ fileId, version }) => {
             onClick={() => {
               openModal(`DeleteFile${fileId}Version${version.id}`);
             }}
+            disabled={pendingCondition}
             className="flex items-center justify-center gap-[10px] items-center w-[100%]">
             <RemoveSVG />
             <p className="text-dangerColor text-[16px] font-normal">
@@ -139,17 +143,17 @@ const FileVersionsTableItem = ({ fileId, version }) => {
         </td>
       </tr>
       <DeleteModal
-        isDeleting={isDeleting}
-        error={deletingError}
+        isDeleting={deleteMutation.isPending}
+        error={errorTextDeleting}
         modalName={`DeleteFile${fileId}Version${version.id}`}
         head={t('files.deleteVersionDescription')}
         onClick={handleDelete}
         onClose={handleCloseDeleting}
       />
       <RestoreModal
-        error={restoringError}
+        error={errorTextRestoring}
         fileId={fileId}
-        isRestoring={isRestoring}
+        isRestoring={restoreMutation.isPending}
         onClose={handleCloseRestoring}
         versionId={version.id}
         onClick={handleRestore}

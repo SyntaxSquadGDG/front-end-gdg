@@ -6,6 +6,7 @@ import PieChartPage from './storage-pie';
 import { contentFont } from '@app/_utils/fonts';
 import { fetchStoragePercentages } from './data/queries';
 import LoadError from '../general/load-error';
+import { getErrorText } from '@app/_utils/translations';
 
 const Storage = async () => {
   const t = await getTranslations();
@@ -15,7 +16,13 @@ const Storage = async () => {
   try {
     data = await fetchStoragePercentages();
   } catch (error) {
-    return <LoadError>{t('dashboard.STORAGE_RESULTS_ERROR')}</LoadError>;
+    const errorText = getErrorText(
+      t,
+      `dashboard.errors.${error?.message}`,
+      `dashboard.errors.STORAGE_RESULTS_ERROR`,
+    );
+
+    return <LoadError>{errorText}</LoadError>;
   }
 
   return (

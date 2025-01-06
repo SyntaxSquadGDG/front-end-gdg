@@ -11,24 +11,31 @@ import { useLocale, useTranslations } from 'next-intl';
 import { getLangDir } from 'rtl-detect';
 import clsx from 'clsx';
 import { contentFont } from '@app/_utils/fonts';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { fetchMessages } from './data/queries';
 import LoadingSpinner from '../general/loader';
 import { sendMessage } from './data/posts';
 import toast from 'react-hot-toast';
+import { getNextPage } from '@app/_utils/fetch';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { getErrorText } from '@app/_utils/translations';
 
-const Chat = () => {
+const Chat = ({ user }) => {
   const t = useTranslations();
   const locale = useLocale();
   const dir = getLangDir(locale);
   const messageSchema = useMessageSchema();
-  const [isLoadingSending, setIsLoadingSending] = useState(false);
-  const [errorSending, setErrorSending] = useState(null);
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
   const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
@@ -46,19 +53,28 @@ const Chat = () => {
 
   const handleSuccessMessage = async (data) => {
     const sendData = {
-      type: 'admin',
+      type: 'customer',
       time: Date.now(),
       content: data.message,
     };
-    const res = await sendMessage(
-      sendData,
-      setIsLoadingSending,
-      setErrorSending,
-      handleSuccess,
-      t,
-      toast,
-    );
+    mutation.mutate(sendData);
   };
+
+  const mutation = useMutation({
+    mutationFn: (data) => sendMessage(data),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['messages']);
+      reset();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `help.errors.${error?.message}`,
+        `help.errors.MESSAGE_SEND_ERROR`,
+      );
+      toast.error(textError);
+    },
+  });
 
   const handleErrorMessage = (errors) => {
     console.log(errors);
@@ -67,15 +83,11 @@ const Chat = () => {
   const { data, isLoading, isFetching, isError, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
       queryKey: ['messages'],
-      refetchOnWindowFocus: false,
       queryFn: ({ pageParam = 1 }) => {
-        return fetchMessages(pageParam, 5); // Fetch 5 messages per page
+        return fetchMessages(pageParam, paginationPageLimit); // Fetch 5 messages per page
       },
-      getNextPageParam: (lastPage, pages) => {
-        const hasData = lastPage.length > 0;
-        const isLastPage = !hasData || lastPage.length < 5;
-        return hasData && !isLastPage ? pages.length + 1 : undefined;
-      },
+      getNextPageParam: (lastPage, pages) =>
+        getNextPage(lastPage, pages, paginationPageLimit),
     });
 
   // Safely access messages after the data is fetched
@@ -87,12 +99,6 @@ const Chat = () => {
       fetchNextPage();
     }
   };
-
-  async function handleSuccess() {
-    await queryClient.invalidateQueries(['messages']);
-  }
-
-  async function handleSendMessage() {}
 
   return (
     <section
@@ -131,9 +137,7 @@ const Chat = () => {
                       ? 'ml-auto'
                       : 'mr-auto'
                   }`}>
-                  {message.type === 'customer' && (
-                    <img src="/images/defaults/user.png" alt="" />
-                  )}
+                  {message.type === 'customer' && <img src={user.img} alt="" />}
                   {message.type !== 'customer' && (
                     <img src="/images/defaults/bot.png" alt="" />
                   )}
@@ -174,18 +178,28 @@ const Chat = () => {
         onSubmit={handleSubmit(handleSuccessMessage, handleErrorMessage)}
         className="py-[20px] px-[8px] xs:px-[32px] bg-mainColor1 flex sm:flex-row flex-col items-center gap-[8px] sm:gap-[40px]">
         <textarea
-          disabled={isLoadingSending}
+          disabled={mutation.isPending}
           id="chatMessage"
           {...register('message')}
           placeholder="Enter Your Message"
           className="resize-none w-[100%] h-[55px] overflow-y-auto rounded-[8px] xs:p-[14px] p-[1px] focus:outline-none text-mainColor1"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault(); // Prevents adding a new line
+              handleSubmit(handleSuccessMessage, handleErrorMessage)(); // Calls the form submit function
+            }
+          }}
         />
         {/* {errors.message && (
           <p className="text-teal-400">{errors.message.message}</p>
         )} */}
-        <button type="submit" disabled={isLoadingSending}>
-          <SendSVG />
-        </button>
+        {mutation.isPending ? (
+          <LoadingSpinner />
+        ) : (
+          <button type="submit" disabled={mutation.isPending}>
+            <SendSVG />
+          </button>
+        )}
       </form>
     </section>
   );

@@ -12,6 +12,11 @@ import { revalidatePathAction } from '@/app/actions';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import clsx from 'clsx';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createSection } from '../sections/data/posts';
+import { useRouter } from 'nextjs-toploader/app';
+import { getErrorText } from '@app/_utils/translations';
+import ErrorAction from '../general/error-action';
 
 // Define a Zod schema for validation
 const schema = z.object({
@@ -23,8 +28,10 @@ const schema = z.object({
 const CreateSectionModal = () => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
-  const [isLoading, setIsLoading] = useState(false);
-  // Use React Hook Form with Zod validation
+  const [errorText, setErrorText] = useState(null);
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -34,29 +41,31 @@ const CreateSectionModal = () => {
     resolver: zodResolver(schema),
   });
 
-  // Handle form submission
-  const onSubmit = async (data) => {
-    console.log(data);
-    try {
-      setIsLoading(true);
-      const response = await fetch(
-        `http://syntaxsquad.runasp.net/api/Sections/newsection?name=${data.sectionName}`,
-        {
-          method: 'POST',
-        },
-      );
-      if (response.status === 404) throw new Error('Error');
-      toast.success('Created');
-      // handle form data (e.g., create a new section)
-      await revalidatePathAction('/sections');
-      closeModal(); // Close modal after submitting
+  async function onSubmit(data) {
+    setErrorText(null);
+    mutation.mutate(data);
+  }
+
+  function onError() {}
+
+  const mutation = useMutation({
+    mutationFn: (data) => createSection(data),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['sections']);
+      router.push('/sections');
       reset();
-    } catch (e) {
-      toast.error('Error while Creating the section');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `sections.errors.${error?.message}`,
+        `sections.errors.SECTION_CREATE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <Modal
@@ -70,7 +79,7 @@ const CreateSectionModal = () => {
           {...register('sectionName')}
           type="text"
           placeholder="Enter Section Name"
-          disabled={isLoading}
+          disabled={mutation.isPending}
           className="w-[100%] py-[20px] rounded-[8px] px-[16px] border-[1px] border-solid border-blue1 outline-none mb-[16px]"
         />
         {errors.sectionName && (
@@ -81,13 +90,14 @@ const CreateSectionModal = () => {
 
         <input
           type="submit"
-          disabled={isLoading}
+          disabled={mutation.isPending}
           className={clsx(
             'w-[100%] py-[20px] rounded-[8px] px-[16px] bg-blue1 outline-none text-textLight',
-            isLoading && 'bg-slate-500 cur',
+            mutation.isPending && 'bg-slate-500 cur',
           )}
         />
       </form>
+      <ErrorAction>{errorText}</ErrorAction>
     </Modal>
   );
 };

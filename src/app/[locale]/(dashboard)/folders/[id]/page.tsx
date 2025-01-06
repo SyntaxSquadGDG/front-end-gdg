@@ -9,12 +9,14 @@ import {
 import FolderSettingsModals from '@app/_components/(dashboard)/folders/folder-settings-modals';
 import FoldersViewWrapper from '@app/_components/(dashboard)/folders/folders-view-wrapper';
 import ErrorBoundary from '@app/_components/(dashboard)/general/error-boundary';
+import LoadError from '@app/_components/(dashboard)/general/load-error';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
 import TryLater from '@app/_components/(dashboard)/general/try-later';
 import ToolBar from '@app/_components/navbars/toolbar';
 import { HeightProvider } from '@app/_contexts/toolbar-height-provider';
 import { ViewProvider } from '@app/_contexts/view-provider';
 import { fetcher } from '@app/_utils/fetch/fetch';
+import { getErrorText } from '@app/_utils/translations';
 import { getTranslations } from 'next-intl/server';
 import React, { Suspense } from 'react';
 
@@ -28,8 +30,12 @@ const page = async ({ params }) => {
     try {
       path = await fetchFolderPath(id);
     } catch (error) {
-      console.error('Error fetching employees:', error);
-      return <TryLater>Folders</TryLater>;
+      const errorText = getErrorText(
+        t,
+        `folders.errors.${error?.message}`,
+        `folders.errors.FOLDER_PATH_ERROR`,
+      );
+      return <LoadError>{errorText}</LoadError>;
     }
 
     console.log(path);
@@ -43,24 +49,22 @@ const page = async ({ params }) => {
   };
 
   const ViewsWrapper = async () => {
-    let sectionName;
-    try {
-      sectionName = await fetchFolderSectionName(id);
-    } catch (e) {
-      return <TryLater>{t('zero.employees')}</TryLater>;
-    }
     let path;
     try {
       path = await fetchFolderPath(id);
     } catch (error) {
-      console.error('Error fetching employees:', error);
-      return <TryLater>Folders</TryLater>;
+      const errorText = getErrorText(
+        t,
+        `folders.errors.${error?.message}`,
+        `folders.errors.FOLDER_PATH_ERROR`,
+      );
+      return <LoadError>{errorText}</LoadError>;
     }
 
     return (
       <FoldersViewWrapper
         id={id}
-        sectionName={sectionName.name}
+        sectionName={path[0].name}
         folderName={path.slice(-1)[0].name}>
         <ActivitySection />
       </FoldersViewWrapper>

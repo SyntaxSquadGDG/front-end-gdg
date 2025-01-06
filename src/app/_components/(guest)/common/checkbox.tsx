@@ -4,7 +4,13 @@ import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import React, { useId } from 'react';
 
-const Checkbox = ({ alwaysTrue = false, label, value, onChange }) => {
+const Checkbox = ({
+  alwaysTrue = false,
+  label,
+  value,
+  onChange,
+  disabled = false,
+}) => {
   const checkboxId = useId();
 
   return (
@@ -12,19 +18,24 @@ const Checkbox = ({ alwaysTrue = false, label, value, onChange }) => {
       <input
         type="checkbox"
         id={checkboxId}
+        disabled={disabled}
         checked={alwaysTrue ? true : value ? value : false}
         className="hidden"
         onChange={alwaysTrue ? () => {} : (e) => onChange(e.target.checked)}
       />
       <div
-        className={clsx(contentFont.className, 'flex items-center gap-[8px]')}>
+        className={clsx(
+          contentFont.className,
+          'flex items-center gap-[8px]',
+          disabled && 'cursor-not-allowed',
+        )}>
         <div
           className={clsx(
             'w-[24px] h-[24px] border-[2px] border-solid border-white relative rounded-[4px]',
-            !alwaysTrue && 'cursor-pointer',
             (value || alwaysTrue) && 'bg-goldLinear border-none',
+            disabled ? 'cursor-not-allowed' : 'cursor-pointer',
           )}
-          onClick={alwaysTrue ? () => {} : () => onChange(!value)}>
+          onClick={alwaysTrue || disabled ? () => {} : () => onChange(!value)}>
           {(value || alwaysTrue) && (
             <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
               <CheckedCheckboxSVG />
@@ -32,7 +43,10 @@ const Checkbox = ({ alwaysTrue = false, label, value, onChange }) => {
           )}
         </div>
         <label
-          className="text-[18px] text-textLight cursor-pointer"
+          className={clsx(
+            'text-[18px] text-textLight',
+            disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+          )}
           htmlFor={checkboxId}>
           {label}
         </label>

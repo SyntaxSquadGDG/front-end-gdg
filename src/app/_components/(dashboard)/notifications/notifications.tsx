@@ -7,20 +7,22 @@ import LoadingSpinner from '../general/loader';
 import DataFetching from '../general/data-fetching';
 import ErrorBoundaryWrapper from '../general/error-boundary-wrapper';
 import NotificationItem from './notification-item';
+import { getNextPage } from '@app/_utils/fetch';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { getErrorText } from '@app/_utils/translations';
+import { useTranslations } from 'use-intl';
 
 const Notifications = () => {
-  const { data, isLoading, isFetching, isError, fetchNextPage, hasNextPage } =
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
+  const t = useTranslations();
+  const { data, isLoading, isFetching, error, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
       queryKey: ['notifications'],
-      refetchOnWindowFocus: false,
       queryFn: ({ pageParam = 1 }) => {
-        return fetchNotifications(pageParam, 5); // Fetch 5 messages per page
+        return fetchNotifications(pageParam, paginationPageLimit); // Fetch 5 messages per page
       },
-      getNextPageParam: (lastPage, pages) => {
-        const hasData = lastPage.length > 0;
-        const isLastPage = !hasData || lastPage.length < 5;
-        return hasData && !isLastPage ? pages.length + 1 : undefined;
-      },
+      getNextPageParam: (lastPage, pages) =>
+        getNextPage(lastPage, pages, paginationPageLimit),
     });
 
   function getNext() {
@@ -32,12 +34,18 @@ const Notifications = () => {
   // Safely access messages after the data is fetched
   const notifications = data?.pages?.flat() || [];
 
+  const errorText = getErrorText(
+    t,
+    `notifications.errors.${error?.message}`,
+    `notifications.errors.NOTIFICATIONS_ERROR`,
+  );
+
   return (
     <DataFetching
       data={notifications}
-      isError={isError}
+      error={error && errorText}
       isLoading={isLoading}
-      item="Notifications">
+      emptyError={t('notifications.errors.NOTIFICATIONS_ZERO_ERROR')}>
       <div className="flex flex-col gap-[32px]">
         {notifications.map((notification, index) => {
           return (

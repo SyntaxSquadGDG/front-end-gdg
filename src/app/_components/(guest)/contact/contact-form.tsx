@@ -1,6 +1,6 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import React from 'react';
+import React, { useState } from 'react';
 import ContactItem from './contact-item';
 import AddressSVG from '@app/_components/svgs/guest/contact/address';
 import PhoneSVG from '@app/_components/svgs/guest/contact/phone';
@@ -18,10 +18,16 @@ import GuestButton from '@app/_components/(guest)/common/guest-button';
 import clsx from 'clsx';
 import OverlaySection from '../common/overlay-section';
 import { contentFont } from '@app/_utils/fonts';
+import { useMutation } from '@tanstack/react-query';
+import { contact } from './data/posts';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
+import ErrorAction from '../common/error-action';
 
 const ContactForm = () => {
   const t = useTranslations();
   const contactSchema = useContactSchema();
+  const [errorText, setErrorText] = useState(null);
 
   const contacts = [
     {
@@ -59,16 +65,36 @@ const ContactForm = () => {
 
   const {
     register,
-    control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(contactSchema),
   });
 
-  function onSuccess() {}
+  async function onSuccess(data) {
+    setErrorText(null);
+    mutation.mutate(data);
+  }
 
   function onError() {}
+
+  const mutation = useMutation({
+    mutationFn: (data) => contact(data),
+    onSuccess: async () => {
+      toast.success(t('contact.form.success'));
+      reset();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `contact.errors.${error?.message}`,
+        `contact.errors.CONTACT_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <section
@@ -127,6 +153,7 @@ const ContactForm = () => {
               label={t('contact.form.nameLabel')}
               placeHolder={t('contact.form.namePlaceholder')}
               type={'text'}
+              disabled={mutation.isPending}
               {...register('name')}
               error={errors.name?.message}
             />
@@ -135,6 +162,7 @@ const ContactForm = () => {
               label={t('contact.form.emailLabel')}
               placeHolder={t('contact.form.emailPlaceholder')}
               type={'text'}
+              disabled={mutation.isPending}
               {...register('email')}
               error={errors.email?.message}
             />
@@ -143,13 +171,17 @@ const ContactForm = () => {
               label={t('contact.form.messageLabel')}
               placeHolder={t('contact.form.messagePlaceholder')}
               type={'textarea'}
+              disabled={mutation.isPending}
               {...register('message')}
               error={errors.message?.message}
             />
 
-            <GuestButton className={'w-[100%] mt-[32px]'}>
-              {t('general.send')}
+            <GuestButton
+              className={'w-[100%] mt-[32px]'}
+              disabled={mutation.isPending}>
+              {mutation.isPending ? t('general.sending') : t('general.send')}
             </GuestButton>
+            <ErrorAction>{errorText}</ErrorAction>
           </form>
         </div>
       </div>

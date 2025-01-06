@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ItemPermissionsEditModal from '../modals/item-permissions-edit-modal';
 import SettingsSVG from '@app/_components/svgs/general/settings';
 import ItemModal from '../modals/item-modal';
@@ -23,39 +23,49 @@ import DocumentsSVG from '@app/_components/svgs/guest/documents';
 import { fetchFolderSettings } from './data/queries';
 import LoadingSpinner from '../general/loader';
 import { useQuery } from '@tanstack/react-query';
+import DataFetching from '../general/data-fetching';
+import { getErrorText } from '@app/_utils/translations';
 
 const FolderSettings = ({ id }) => {
   const t = useTranslations();
   const { openModal, modalStack, closeModal } = useModal();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isRenaming, setIsRenaming] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const path = usePathname();
 
-  const [error, setError] = useState(null);
-  const [isOpenedBefore, setIsOpenedBefore] = useState(false);
+  const [errorText, setErrorText] = useState(null);
 
   function handleSettingsClick() {
-    setIsOpenedBefore(true);
     setIsOpen(true);
   }
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['folderSettings', id], // Unique key for the query
-    queryFn: () => fetchFolderSettings(id, setError, t, toast), // Function to fetch the data
-    enabled: isOpenedBefore, // Set to false if you want to fetch on user action (e.g., button click)
+    queryFn: () => fetchFolderSettings(id), // Function to fetch the data
+    enabled: false, // Set to false if you want to fetch on user action (e.g., button click)
   });
+
+  useEffect(() => {
+    console.log('AHA');
+    const textError = getErrorText(
+      t,
+      `folders.errors.${error?.message}`,
+      `folders.errors.FOLDER_SETTINGS_LOAD_ERROR`,
+    );
+    setErrorText(textError);
+  }, [error]);
 
   return (
     <div className="relative">
-      <button onClick={handleSettingsClick}>
+      <button onClick={() => handleSettingsClick()}>
         <SettingsSVG />
       </button>
 
       <ItemModal isOpen={isOpen} setIsOpen={setIsOpen}>
-        {isLoading && <LoadingSpinner />}
-        {error && error}
-        {!isLoading && !error && (
+        <DataFetching
+          data={data}
+          isLoading={isLoading}
+          error={error && errorText}
+          emptyError={t('folders.errors.FOLDER_SETTINGS_ZERO_ERROR')}>
           <React.Fragment>
             <ItemModalItem
               SVG={EditPermissionsSVG}
@@ -89,7 +99,7 @@ const FolderSettings = ({ id }) => {
               onClick={() => openModal(`deleteFolderModal${id}`)}
             />
           </React.Fragment>
-        )}
+        </DataFetching>
       </ItemModal>
     </div>
   );

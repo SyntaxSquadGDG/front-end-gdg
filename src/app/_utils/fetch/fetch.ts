@@ -67,7 +67,7 @@ export async function fetcher(url: string, options: any = {}) {
   } catch (error: any) {
     // Handle network errors or other unexpected errors
     console.error('Fetcher Error:', error.message || error);
-    throw new Error(`Failed to fetch from ${url}: ${error.message}`);
+    throw new Error(`Failed to fetch from ${url}: ${error?.message}`);
   }
 }
 

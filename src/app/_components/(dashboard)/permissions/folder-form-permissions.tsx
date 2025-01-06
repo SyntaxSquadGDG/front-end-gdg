@@ -5,10 +5,20 @@ import Button from '../general/button';
 import PermissionsHeadText from './permissions-head-text';
 import { useTranslations } from 'next-intl';
 import PermissionsDiv from './permissions-div';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useModal } from '@app/_contexts/modal-provider';
+import {
+  updateEmployeesFolderPermissions,
+  updateRolesFolderPermissions,
+} from './data/updates';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
+import ErrorAction from '../general/error-action';
 
 const FolderFormPermissions = ({
   type,
   id,
+  folderId,
   defaultFolderPermissions = [],
   defaultSubFolderPermissions = [],
   defaultFilePermissions = [],
@@ -56,6 +66,43 @@ const FolderFormPermissions = ({
     if (type === 'file') updatePermissions(filePermissions, setFilePermissions);
   };
 
+  const queryClient = useQueryClient();
+  const [errorText, setErrorText] = useState(null);
+  const { closeModal } = useModal();
+
+  async function handleUpdate() {
+    setErrorText(null);
+    const data = {
+      permissions: {
+        folderPermissions: folderPermissions,
+        subFolderPermissions: subFolderPermissions,
+        filePermissions: filePermissions,
+      },
+      Ids: id,
+    };
+    mutation.mutate(data);
+  }
+
+  const mutation = useMutation({
+    mutationFn: (data) =>
+      type === 'employee'
+        ? updateEmployeesFolderPermissions(folderId, data)
+        : updateRolesFolderPermissions(folderId, data),
+    onSuccess: async () => {
+      queryClient.invalidateQueries([`${type}${id}Permissions`]);
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `permissions.errors.${error?.message}`,
+        `permissions.errors.PERMISSIONS_UPDATE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
+
   return (
     <div>
       <div className="grid grid-cols-2 gap-[24px]">
@@ -68,7 +115,10 @@ const FolderFormPermissions = ({
               <Checkbox
                 key={`folder-${index}`}
                 value={folderPermissions.includes(index)}
-                disabled={index > 0 && !folderPermissions.includes(index - 1)}
+                disabled={
+                  (index > 0 && !folderPermissions.includes(index - 1)) ||
+                  mutation.isPending
+                }
                 onChange={() => handleToggle('folder', index)}
                 label={`Folder Permission ${index}`}
               />
@@ -85,7 +135,8 @@ const FolderFormPermissions = ({
                 key={`subFolder-${index}`}
                 value={subFolderPermissions.includes(index)}
                 disabled={
-                  index > 0 && !subFolderPermissions.includes(index - 1)
+                  (index > 0 && !subFolderPermissions.includes(index - 1)) ||
+                  mutation.isPending
                 }
                 onChange={() => handleToggle('subFolder', index)}
                 label={`Subfolder Permission ${index}`}
@@ -102,7 +153,10 @@ const FolderFormPermissions = ({
               <Checkbox
                 key={`file-${index}`}
                 value={filePermissions.includes(index)}
-                disabled={index > 0 && !filePermissions.includes(index - 1)}
+                disabled={
+                  (index > 0 && !filePermissions.includes(index - 1)) ||
+                  mutation.isPending
+                }
                 onChange={() => handleToggle('file', index)}
                 label={`File Permission ${index}`}
               />
@@ -114,14 +168,12 @@ const FolderFormPermissions = ({
       <Button
         text={t('permissions.updateButton')}
         disabled={disabledCondition || id.length === 0}
+        isPending={mutation.isPending}
+        isPendingText={t('general.updating')}
         className={'mt-[32px] w-[100%]'}
-        onClick={() => {
-          console.log(id);
-          console.log(folderPermissions);
-          console.log(subFolderPermissions);
-          console.log(filePermissions);
-        }}
+        onClick={() => handleUpdate()}
       />
+      <ErrorAction>{errorText}</ErrorAction>
     </div>
   );
 };

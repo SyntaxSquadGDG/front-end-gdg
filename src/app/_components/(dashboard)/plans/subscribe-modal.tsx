@@ -12,19 +12,20 @@ import EmailSVG from '@app/_components/svgs/dashboard-inputs/email';
 import Input from '../general/input';
 import { useSubscribeSchema } from './schema/subscribe';
 import toast from 'react-hot-toast';
-import { SubscribePlan } from './data/posts';
+import { subscribePlan } from './data/posts';
 import { revalidatePathAction } from '@app/actions';
+import { useMutation } from '@tanstack/react-query';
+import { getErrorText } from '@app/_utils/translations';
+import ErrorAction from '../general/error-action';
 
 const SubscribeModal = ({ plan }) => {
   const { modalStack, closeModal } = useModal();
   const subscribeSchema = useSubscribeSchema();
   const t = useTranslations();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [errorText, setErrorText] = useState(null);
 
   const {
     register,
-    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -32,37 +33,53 @@ const SubscribeModal = ({ plan }) => {
     resolver: zodResolver(subscribeSchema),
   });
 
-  async function onSuccessHandler() {
-    toast.success(
-      `${t('plans.subscribedSuccessfully')} ${t(`plans.${plan}`)} ${t(
-        'general.successfully',
-      )}`,
-    );
-    await revalidatePathAction('/plans');
-    closeModal();
-    reset();
-  }
-
   async function onSuccess(data) {
     console.log(data);
-    const res = await SubscribePlan(
-      { plan: plan },
-      setIsLoading,
-      setError,
-      onSuccessHandler,
-    );
-
-    console.log(res);
+    const newData = {
+      email: data.email,
+      plan: plan,
+    };
+    setErrorText(null);
+    mutation.mutate(newData);
   }
 
   function onError(errors) {
     console.log(errors);
   }
 
+  const mutation = useMutation({
+    mutationFn: (data) => subscribePlan(data),
+    onSuccess: async () => {
+      await revalidatePathAction('/plans');
+      toast.success(
+        `${t('plans.subscribedSuccessfully')} ${t(`plans.${plan}`)} ${t(
+          'general.successfully',
+        )}`,
+      );
+      await revalidatePathAction('/plans');
+      reset();
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `plans.errors.${error?.message}`,
+        `plans.errors.SUBSCRIBE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
+
+  function close() {
+    setErrorText(null);
+    closeModal();
+  }
+
   return (
     <Modal
       isOpen={modalStack.includes(`subscribePlans${plan}`)}
-      onClose={closeModal}
+      onClose={close}
       className={clsx(contentFont.className)}>
       <div className="text-center flex flex-col justify-center gap-[32px]">
         <div>
@@ -84,15 +101,16 @@ const SubscribeModal = ({ plan }) => {
             {...register('email')}
             error={errors.email?.message}
             SVG={EmailSVG}
-            isPending={isLoading}
+            isPending={mutation.isPending}
           />
           <Button
             text={t('plans.modals.subscribeButton')}
             className={'w-[100%]'}
-            isPending={isLoading}
+            isPending={mutation.isPending}
             isPendingText={t('plans.subscribing')}
           />
         </form>
+        <ErrorAction>{errorText}</ErrorAction>
       </div>
     </Modal>
   );

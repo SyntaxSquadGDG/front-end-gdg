@@ -7,11 +7,18 @@ import { useTranslations } from 'next-intl';
 import { useModal } from '@app/_contexts/modal-provider';
 import Modal from './modal';
 import toast from 'react-hot-toast';
-import { fetcher } from '@app/_utils/fetch/fetch';
 import { usePathname } from 'next/navigation';
 import { revalidatePathAction } from '@/app/actions';
 import { useState } from 'react';
 import clsx from 'clsx';
+import { useRouter } from 'nextjs-toploader/app';
+import { getErrorText } from '@app/_utils/translations';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  createFolderToFolder,
+  createFolderToSection,
+} from '../folders/data/posts';
+import ErrorAction from '../general/error-action';
 
 // Define a Zod schema for validation
 const schema = z.object({
@@ -22,7 +29,10 @@ const CreateFolderModal = ({ type, id }) => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
   const currentRoute = usePathname();
-  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState(null);
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const parentSection = type === 'section';
 
   // Use React Hook Form with Zod validation
   const {
@@ -34,35 +44,34 @@ const CreateFolderModal = ({ type, id }) => {
     resolver: zodResolver(schema),
   });
 
-  console.log('OPENED');
+  async function onSubmit(data) {
+    setErrorText(null);
+    mutation.mutate(data);
+  }
 
-  // Handle form submission
-  const onSubmit = async (data) => {
-    console.log(data);
+  function onError() {}
 
-    try {
-      setIsLoading(true);
-      const response = await fetch(
-        type === 'section'
-          ? `http://syntaxsquad.runasp.net/api/Folders/newfolder?name=${data.folderName}&FolderParentId&SectionParentId=${id}`
-          : `http://syntaxsquad.runasp.net/api/Folders/newfolder?name=${data.folderName}&FolderParentId=${id}&SectionParentId`,
-        {
-          method: 'POST',
-        },
-      );
-      console.log(response);
-      if (response.status === 404) throw new Error('Error');
-      toast.success('Created');
+  const mutation = useMutation({
+    mutationFn: (data) =>
+      parentSection
+        ? createFolderToSection(id, data)
+        : createFolderToFolder(id, data),
+    onSuccess: async () => {
       await revalidatePathAction(currentRoute);
-      // handle form data (e.g., create a new folder)
-      closeModal(); // Close modal after submitting
+      toast.success(t('folders.created'));
       reset();
-    } catch (e) {
-      toast.error('Error while Creating the section');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `folders.errors.${error?.message}`,
+        `folders.errors.FOLDER_CREATE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <Modal
@@ -76,7 +85,7 @@ const CreateFolderModal = ({ type, id }) => {
           {...register('folderName')}
           type="text"
           placeholder="Enter Folder Name"
-          disabled={isLoading}
+          disabled={mutation.isPending}
           className="w-[100%] py-[20px] rounded-[8px] px-[16px] border-[1px] border-solid border-blue1 outline-none mb-[16px]"
         />
         {errors.folderName && (
@@ -87,13 +96,14 @@ const CreateFolderModal = ({ type, id }) => {
 
         <input
           type="submit"
-          disabled={isLoading}
+          disabled={mutation.isPending}
           className={clsx(
             'w-[100%] py-[20px] rounded-[8px] px-[16px] bg-blue1 outline-none text-textLight',
-            isLoading && 'bg-slate-400',
+            mutation.isPending && 'bg-slate-400',
           )}
         />
       </form>
+      <ErrorAction>{errorText}</ErrorAction>
     </Modal>
   );
 };

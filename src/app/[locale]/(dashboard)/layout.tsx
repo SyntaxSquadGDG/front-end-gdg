@@ -11,6 +11,7 @@ import { Toaster } from 'react-hot-toast';
 import { getLangDir } from 'rtl-detect';
 import QueryClientWrapper from '@app/_contexts/react-query-provider';
 import { SocketProvider } from '@app/_contexts/socket-context';
+import { NextIntlProvider } from '@app/_contexts/next-intl-provider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -46,17 +47,17 @@ export default async function RootLayout({
           containerStyle={{ zIndex: 99999999999999 }}
         />
 
-        <NextIntlClientProvider messages={messages}>
-          <VerticalNavbar />
-          <HorizontalNavbar />
+        <NextIntlProvider messages={messages} locale={locale}>
           <QueryClientWrapper>
+            <VerticalNavbar />
+            <HorizontalNavbar />
             <SocketProvider>
               <ModalProvider>
                 <main className="relative z-50">{children}</main>
               </ModalProvider>
             </SocketProvider>
           </QueryClientWrapper>
-        </NextIntlClientProvider>
+        </NextIntlProvider>
       </body>
     </html>
   );

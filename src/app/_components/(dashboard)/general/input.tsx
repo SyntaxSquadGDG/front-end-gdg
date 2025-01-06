@@ -36,7 +36,7 @@ const Input = ({
           placeholder={placeHolder}
           onChange={onChange}
           className={clsx(
-            readOnly && 'read-only',
+            readOnly && 'opacity-50',
             'rounded-[8px] py-[16px] text-[16px] font-normal text-black w-[100%] outline-none',
             contentFont.className,
           )}

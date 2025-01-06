@@ -3,49 +3,48 @@ import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import React from 'react';
-import VerticalDotsSVG from '@app/_components/svgs/general/vertical-dots';
-import Link from 'next/link';
-import ViewSVG from '@app/_components/svgs/employees/view';
-import SectionItemPermissionSVG from '@app/_components/svgs/sections/section-item-permission';
-import FolderItemPermissionSVG from '@app/_components/svgs/folders/folder-item-permission';
-import FileItemPermissionSVG from '@app/_components/svgs/files/file-item-permission';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import ActivityTableItem from './activity-table-item';
 import DataFetching from '../general/data-fetching';
 import { fetchActivities } from './data/queries';
 import ShowMore from '../general/show-more';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { getNextPage } from '@app/_utils/fetch';
+import { getErrorText } from '@app/_utils/translations';
 
 const ActivityTable = () => {
   const t = useTranslations();
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
 
   const {
     data: activitiesData,
     isLoading: isLoadingActivities,
     isFetching: isFetchingActivities,
-    isError: isActivitiesError,
+    error,
     fetchNextPage: fetchNextActivities,
     hasNextPage: hasNextActivities,
   } = useInfiniteQuery({
     queryKey: ['activities'],
-    refetchOnWindowFocus: false,
     queryFn: ({ pageParam = 1 }) => {
-      return fetchActivities(pageParam, 5); // Return initial data if provided
+      return fetchActivities(pageParam, paginationPageLimit); // Return initial data if provided
     },
-    getNextPageParam: (lastPage, pages) => {
-      const hasData = lastPage.length > 0;
-
-      const isLastPage = !hasData || lastPage.length < 5; // Adjust length based on how many items are expected per page
-
-      return hasData && !isLastPage ? pages.length + 1 : undefined;
-    },
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
   });
 
   let activities = activitiesData?.pages?.flat() || []; // Flatten the pages to get all activities in one array
 
+  const errorText = getErrorText(
+    t,
+    `activity.errors.${error?.message}`,
+    `activity.errors.ACTIVITY_LOAD_ERROR`,
+  );
+
   return (
     <DataFetching
-      data={activitiesData}
-      isError={isActivitiesError}
+      data={activities}
+      emptyError={t('activity.errors.ACTIVITY_ZERO_ERROR')}
+      error={error && errorText}
       isLoading={isLoadingActivities}>
       <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
         <table className={clsx(contentFont.className, 'table')}>

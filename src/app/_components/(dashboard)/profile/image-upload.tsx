@@ -11,6 +11,10 @@ import { revalidatePathAction } from '@app/actions';
 import toast from 'react-hot-toast';
 import { DeletePersonalImage } from './data/deletes';
 import ErrorAction from '../general/error-action';
+import { useMutation } from '@tanstack/react-query';
+import { showErrorMessage } from '@app/_utils/fetch';
+import DeleteUserImageModal from './delete-user-image-modal';
+import DeleteModal from '../modals/delete-modal';
 
 interface ImageUploadProps {
   initialImageUrl?: string; // Pass the current image URL as a prop
@@ -19,8 +23,7 @@ interface ImageUploadProps {
 export default function ImageUpload({ initialImageUrl }: ImageUploadProps) {
   const [image, setImage] = useState<string | null>(initialImageUrl || null);
   const [file, setFile] = useState<File | null>(null);
-  const [loadingDeleting, setLoadingDeleting] = useState(false);
-  const [loadingUploading, setLoadingUploading] = useState(false);
+
   const [errorDeleting, setErrorDeleting] = useState(null);
   const [errorUploading, setErrorUploading] = useState(null);
 
@@ -41,40 +44,52 @@ export default function ImageUpload({ initialImageUrl }: ImageUploadProps) {
     }
   };
 
-  async function onSuccess() {
-    await revalidatePathAction('/profile');
-    toast.success(t('profile.image.updatedSuccessfully'));
-  }
-
-  async function onDeleteSuccess() {
-    await revalidatePathAction('/profile');
-    toast.success(t('profile.image.deletedSuccessfully'));
-  }
-
   const handleUpload = async () => {
     if (!file) return;
     const formData = new FormData();
     formData.append('file', file);
-
-    const res = await UpdatePersonalImage(
-      formData,
-      setLoadingUploading,
-      setErrorUploading,
-      onSuccess,
-      toast,
-      t,
-    );
+    setErrorUploading(null);
+    updateImage.mutate(formData);
   };
 
   const handleDelete = async () => {
-    const res = await DeletePersonalImage(
-      setLoadingDeleting,
-      setErrorDeleting,
-      onDeleteSuccess,
-      toast,
-      t,
-    );
+    setErrorDeleting(null);
+    openModal('DeleteUserImage');
   };
+
+  const updateImage = useMutation({
+    mutationFn: (formData) => UpdatePersonalImage(formData),
+    onSuccess: async () => {
+      await revalidatePathAction('/profile');
+      toast.success(t('profile.image.updatedSuccessfully'));
+    },
+    onError: (error) => {
+      showErrorMessage(
+        t,
+        `profile.errors.${error?.message}`,
+        `profile.errors.IMAGE_UPDATE_ERROR`,
+        setErrorUploading,
+        toast,
+      );
+    },
+  });
+
+  const deleteImage = useMutation({
+    mutationFn: () => DeletePersonalImage(),
+    onSuccess: async () => {
+      await revalidatePathAction('/profile');
+      toast.success(t('profile.image.deletedSuccessfully'));
+    },
+    onError: (error) => {
+      showErrorMessage(
+        t,
+        `profile.errors.${error?.message}`,
+        `profile.errors.IMAGE_DELETE_ERROR`,
+        setErrorDeleting,
+        toast,
+      );
+    },
+  });
 
   const handleCancel = () => {
     setFile(null); // Clear the file selection
@@ -95,7 +110,13 @@ export default function ImageUpload({ initialImageUrl }: ImageUploadProps) {
             <img
               src={image}
               alt="Profile Preview"
-              className="w-[80px] h-[80px] object-cover rounded-full"
+              className="w-[80px] h-[80px] object-cover rounded-full cursor-pointer"
+              onClick={() => {
+                const newTab = window.open();
+                if (newTab) {
+                  newTab.document.body.innerHTML = `<img src="${image}" style="height:100%">`;
+                }
+              }}
             />
           ) : (
             <p>{t('profile.image.noUploaded')}</p>
@@ -107,10 +128,10 @@ export default function ImageUpload({ initialImageUrl }: ImageUploadProps) {
             htmlFor="fileInput"
             className={clsx(
               'cursor-pointer px-[14px] py-[12px] bg-mainColor1 rounded-[8px] text-[12px] text-textLight',
-              (loadingDeleting || loadingUploading) &&
+              (updateImage.isPending || deleteImage.isPending) &&
                 'opacity-50 cursor-default',
             )}>
-            {loadingUploading
+            {updateImage.isPending
               ? t('profile.image.uploading')
               : t('profile.image.upload')}
           </label>
@@ -120,16 +141,16 @@ export default function ImageUpload({ initialImageUrl }: ImageUploadProps) {
             ref={fileInputRef}
             type="file"
             accept="image/*"
-            disabled={loadingDeleting || loadingUploading}
+            disabled={deleteImage.isPending || updateImage.isPending}
             onChange={handleImageChange}
             className="hidden" // Hide default file input
           />
 
           <button
             onClick={handleDelete}
-            disabled={loadingDeleting || loadingUploading || !image}
+            disabled={deleteImage.isPending || updateImage.isPending || !image}
             className="text-tertiaryButton text-[14px] p-[12px] rounded-md w-fit h-fit">
-            {loadingDeleting
+            {deleteImage.isPending
               ? t('profile.image.deleting')
               : t('profile.image.delete')}
           </button>
@@ -143,8 +164,16 @@ export default function ImageUpload({ initialImageUrl }: ImageUploadProps) {
         handleCancel={handleCancel}
         handleUpload={handleUpload}
         image={image}
-        loading={loadingUploading}
+        loading={updateImage.isPending}
         errorUpload={errorUploading}
+      />
+
+      <DeleteModal
+        error={errorDeleting}
+        head={t('profile.image.removeImageDescription')}
+        isDeleting={deleteImage.isPending}
+        modalName={'DeleteUserImage'}
+        onClick={deleteImage.mutate}
       />
     </div>
   );

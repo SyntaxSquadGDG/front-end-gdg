@@ -1,23 +1,22 @@
 'use client';
-import AccuracyLevel from '@app/_components/(dashboard)/general/accuracy';
 import { useModal } from '@app/_contexts/modal-provider';
 import { contentFont } from '@/app/_utils/fonts';
 import { revalidatePathAction } from '@/app/actions';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import FileIcon from '../general/file-icon';
-import EditPathModal from '../modals/edit-path-modal';
 import FileAiResultsItem from './file-ai-results-item';
+import { useMutation } from '@tanstack/react-query';
+import { confirmAIFiles } from './data/posts';
+import { getErrorText } from '@app/_utils/translations';
+import LoadingSpinner from '../general/loader';
+import ErrorAction from '../general/error-action';
 
 const FileAIResults = ({ files, data, setFiles, setFilesData }) => {
   const { closeModal } = useModal();
   const t = useTranslations();
-  const pathName = usePathname();
-  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState(null);
 
   console.log(files);
 
@@ -31,39 +30,33 @@ const FileAIResults = ({ files, data, setFiles, setFilesData }) => {
     setFilesData(null);
   }
 
-  async function handleConfirm() {
-    try {
-      setIsLoading(true);
-      const formData = new FormData();
-      files.forEach((file, index) => {
-        formData.append(`files[${index}]`, file);
-      });
-      formData.append('path', data[0]?.path || ''); // Example: Assuming all files share the same path.
-      const response = await fetch(
-        `http://syntaxsquad.runasp.net/api/SFiles/upload?folderid=${
-          data[0]?.folderId || ''
-        }`,
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
-
-      closeModal();
-      setFiles([]);
-      setFilesData([]);
-      await revalidatePathAction(pathName);
-      toast.success('Classified successfully');
-    } catch (e) {
-      console.error('Error uploading files:', e);
-      toast.error('Failed to classify files.');
-    } finally {
-      setIsLoading(false);
-    }
+  async function handleSend() {
+    setErrorText(null);
+    sendMutation.mutate(data);
   }
 
-  if (isLoading) {
-    return <p>Loading...</p>;
+  const sendMutation = useMutation({
+    mutationFn: (data) => confirmAIFiles(data),
+    onSuccess: async () => {
+      await revalidatePathAction('/sections');
+      toast.success(t('files.classified'));
+      setFiles([]);
+      setFilesData([]);
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILES_CLASSIFICATION_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
+
+  if (sendMutation.isPending) {
+    return <LoadingSpinner />;
   }
 
   return (
@@ -73,7 +66,7 @@ const FileAIResults = ({ files, data, setFiles, setFilesData }) => {
         <div className="flex gap-[16px] items-center">
           <button
             className="px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1"
-            onClick={() => handleConfirm()}>
+            onClick={() => handleSend()}>
             Confirm
           </button>
           <button
@@ -105,9 +98,12 @@ const FileAIResults = ({ files, data, setFiles, setFilesData }) => {
                 const metadata = data[index] || {}; // Match file with metadata or fallback to empty object
                 return (
                   <FileAiResultsItem
+                    index={index}
                     key={`${file.name}-${file.lastModified}`}
                     file={file}
                     id={index}
+                    files={files}
+                    filesData={data}
                     setFiles={setFiles}
                     setFilesData={setFilesData}
                     metadata={metadata}
@@ -117,6 +113,7 @@ const FileAIResults = ({ files, data, setFiles, setFilesData }) => {
           </tbody>
         </table>
       </div>
+      <ErrorAction>{errorText}</ErrorAction>
     </div>
   );
 };

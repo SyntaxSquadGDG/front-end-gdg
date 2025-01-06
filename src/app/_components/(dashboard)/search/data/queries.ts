@@ -1,23 +1,11 @@
-import { BASE_URL } from '@app/_utils/fetch/fetch';
-import { getCookie } from 'cookies-next';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { fetchData } from '@app/_utils/fetch';
 
-export const fetchSearchResults = async (currentPage, limit, query) => {
-  const token = getCookie('token');
-  const response = await fetch(
-    `${BASE_URL}/search?query=${query}&page=${currentPage}&limit=${limit}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: 'include', // Ensures cookies are sent
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error('Error fetching notifications');
-  }
-
-  const data = await response.json();
-  return data;
+export const fetchSearchResults = async (
+  query,
+  page = 1,
+  limit = PAGINATION_PAGE_LIMIT,
+) => {
+  return await fetchData(`/search?query=${query}&page=${page}&limit=${limit}`);
 };
 

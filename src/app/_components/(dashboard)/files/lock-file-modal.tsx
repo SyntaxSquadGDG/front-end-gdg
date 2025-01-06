@@ -8,6 +8,7 @@ import Modal from '../modals/modal';
 import toast from 'react-hot-toast';
 import { revalidatePathAction } from '@app/actions';
 import { RestoreFileVersion } from './data/posts';
+import ErrorAction from '../general/error-action';
 
 const LockModal = ({
   fileId,
@@ -52,9 +53,7 @@ const LockModal = ({
             disabled={isLocking}
           />
         </div>
-        {error && (
-          <p className="text-[16px] font-medium text-red-500">* {error}</p>
-        )}
+        <ErrorAction>{error}</ErrorAction>
       </div>
     </Modal>
   );

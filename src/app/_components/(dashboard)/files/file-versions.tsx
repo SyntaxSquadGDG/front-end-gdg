@@ -5,42 +5,51 @@ import RestoreSVG from '@app/_components/svgs/files/restore';
 import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import HeadText from '../general/headtext';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { fetchFileVersions } from './data/queries';
 import FileVersionsTable from './file-versions-table';
 import DataFetching from '../general/data-fetching';
+import { getNextPage } from '@app/_utils/fetch';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { getErrorText } from '@app/_utils/translations';
 
 const FileVersions = ({ id, enabled = true }) => {
   const t = useTranslations();
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
+  const [errorText, setErrorText] = useState(null);
 
-  const { data, isLoading, isFetching, isError, fetchNextPage, hasNextPage } =
+  const { data, isLoading, isFetching, error, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
       queryKey: ['fileVersions', id],
-      refetchOnWindowFocus: false,
       queryFn: ({ pageParam = 1 }) => {
-        return fetchFileVersions(pageParam, 5, id); // Fetch 5 messages per page
+        return fetchFileVersions(id, pageParam, paginationPageLimit); // Fetch 5 messages per page
       },
-      getNextPageParam: (lastPage, pages) => {
-        const hasData = lastPage.length > 0;
-        const isLastPage = !hasData || lastPage.length < 5;
-        return hasData && !isLastPage ? pages.length + 1 : undefined;
-      },
+      getNextPageParam: (lastPage, pages) => getNextPage,
       enabled: enabled,
     });
 
   // Safely access messages after the data is fetched
   const versions = data?.pages?.flat() || [];
 
+  useEffect(() => {
+    const textError = getErrorText(
+      t,
+      `files.errors.${error?.message}`,
+      `files.errors.FILE_VERSIONS_LOAD_ERROR`,
+    );
+    setErrorText(textError);
+  }, [error]);
+
   return (
     <div>
       <HeadText>{t('files.otherVersions')}</HeadText>
       <DataFetching
-        data={data}
-        isError={isError}
-        isLoading={isLoading}
-        item="Versions">
+        data={versions}
+        error={error && errorText}
+        emptyError={t('files.errors.FILE_VERSIONS_ZERO_ERROR')}
+        isLoading={isLoading}>
         <FileVersionsTable
           fileId={id}
           versions={versions}

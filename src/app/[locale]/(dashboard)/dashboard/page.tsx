@@ -9,6 +9,7 @@ import ErrorBoundaryWrapper from '@app/_components/(dashboard)/general/error-bou
 import LoadError from '@app/_components/(dashboard)/general/load-error';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
 import { contentFont } from '@app/_utils/fonts';
+import { getErrorText } from '@app/_utils/translations';
 import clsx from 'clsx';
 import { getTranslations } from 'next-intl/server';
 import React, { Suspense } from 'react';
@@ -21,9 +22,13 @@ const page = async () => {
     try {
       data = await fetchCategorizationAccuracy();
     } catch (error) {
-      return (
-        <LoadError>{t('dashboard.CATEGORIZATION_RESULTS_ERROR')}</LoadError>
+      const errorText = getErrorText(
+        t,
+        `dashboard.errors.${error?.message}`,
+        `dashboard.errors.CATEGORIZATION_RESULTS_ERROR`,
       );
+
+      return <LoadError>{errorText}</LoadError>;
     }
     return (
       <>

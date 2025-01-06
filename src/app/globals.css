@@ -284,6 +284,7 @@ li {
 } */
 
 input:disabled,
+textarea:disabled,
 button:disabled {
   cursor: not-allowed;
   opacity: 50%;

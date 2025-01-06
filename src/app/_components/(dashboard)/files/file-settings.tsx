@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ItemPermissionsEditModal from '../modals/item-permissions-edit-modal';
 import MoveModal from '../modals/move-modal';
 import RenameModal from '../modals/rename-modal';
@@ -22,6 +22,8 @@ import { fetchFileSettings } from './data/queries';
 import toast from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
 import LoadingSpinner from '../general/loader';
+import DataFetching from '../general/data-fetching';
+import { getErrorText } from '@app/_utils/translations';
 
 const FileSettings = ({ id }) => {
   const { modalStack, openModal } = useModal();
@@ -30,22 +32,26 @@ const FileSettings = ({ id }) => {
   const [isRenaming, setIsRenaming] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const [error, setError] = useState(null);
-  const [isOpenedBefore, setIsOpenedBefore] = useState(false);
+  const [errorText, setErrorText] = useState(null);
 
   function handleSettingsClick() {
     setIsOpen(true);
-    if (!isOpenedBefore) {
-      setIsOpenedBefore(true);
-      refetch(); // Fetch only when settings is opened for the first time
-    }
   }
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['fileSettings', id], // Unique key for the query
-    queryFn: () => fetchFileSettings(id, setError, t, toast), // Function to fetch the data
-    enabled: false, // Set to false if you want to fetch on user action (e.g., button click)
+    queryFn: () => fetchFileSettings(id), // Function to fetch the data
+    enabled: isOpen, // Set to false if you want to fetch on user action (e.g., button click)
   });
+
+  useEffect(() => {
+    const textError = getErrorText(
+      t,
+      `files.errors.${error?.message}`,
+      `files.errors.FILE_SETTINGS_LOAD_ERROR`,
+    );
+    setErrorText(textError);
+  }, [error]);
 
   return (
     <div className="relative flex justify-end">
@@ -54,9 +60,11 @@ const FileSettings = ({ id }) => {
       </button>
 
       <ItemModal isOpen={isOpen} setIsOpen={setIsOpen}>
-        {isLoading && <LoadingSpinner />}
-        {error && error}
-        {!isLoading && !error && (
+        <DataFetching
+          data={data}
+          error={error && errorText}
+          isLoading={isLoading}
+          emptyError={t('files.errors.FILE_SETTINGS_LOAD_ERROR')}>
           <React.Fragment>
             <ItemModalItem
               SVG={EditPermissionsSVG}
@@ -102,7 +110,7 @@ const FileSettings = ({ id }) => {
               onClick={() => openModal(`deleteFileModal${id}`)}
             />
           </React.Fragment>
-        )}
+        </DataFetching>
       </ItemModal>
     </div>
   );

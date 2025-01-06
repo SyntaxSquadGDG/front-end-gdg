@@ -2,16 +2,21 @@
 import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ManagerTableItem from './managers-table-item';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import ShowMore from '@/app/_components/(dashboard)/general/show-more';
 import { fetchManagers } from './data/queries';
 import DataFetching from '@/app/_components/(dashboard)/general/data-fetching';
+import { getErrorText } from '@app/_utils/translations';
+import { getNextPage } from '@app/_utils/fetch';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
 
 const ManagersTable = () => {
   const t = useTranslations();
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
+  const [errorText, setErrorText] = useState(null);
 
   const [sortConfig, setSortConfig] = useState({
     key: 'id', // Default column to sort by
@@ -22,22 +27,17 @@ const ManagersTable = () => {
     data: managersData,
     isLoading: isLoadingManagers,
     isFetching: isFetchingManagers,
-    isError: isManagersError,
+    error,
     fetchNextPage: fetchNextManagers,
     hasNextPage: hasNextManagers,
   } = useInfiniteQuery({
     queryKey: ['managers'],
     refetchOnWindowFocus: false,
     queryFn: ({ pageParam = 1 }) => {
-      return fetchManagers(pageParam, 5); // Return initial data if provided
+      return fetchManagers(pageParam, paginationPageLimit); // Return initial data if provided
     },
-    getNextPageParam: (lastPage, pages) => {
-      const hasData = lastPage.length > 0;
-
-      const isLastPage = !hasData || lastPage.length < 5; // Adjust length based on how many items are expected per page
-
-      return hasData && !isLastPage ? pages.length + 1 : undefined;
-    },
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
   });
 
   const managers = managersData?.pages?.flat() || []; // Flatten the pages to get all managers in one array
@@ -73,10 +73,20 @@ const ManagersTable = () => {
     });
   };
 
+  useEffect(() => {
+    const errorText = getErrorText(
+      t,
+      `managers.errors.${error?.message}`,
+      `managers.errors.MANAGERS_LOAD_ERROR`,
+    );
+    setErrorText(errorText);
+  }, [error]);
+
   return (
     <DataFetching
-      data={managersData}
-      isError={isManagersError}
+      data={managers}
+      emptyError={t('managers.errors.MANAGERS_ZERO_ERROR')}
+      error={error && errorText}
       isLoading={isLoadingManagers}>
       <div className="tableDiv">
         <div>

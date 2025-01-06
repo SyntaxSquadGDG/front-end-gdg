@@ -19,6 +19,8 @@ import VerticalNavbarItem from './vertical-navbar-item';
 import { revalidatePathAction } from '@app/actions';
 import HelpSVG from '../svgs/navbars/help';
 import PlansSVG from '../svgs/navbars/plans';
+import Link from 'next/link';
+import useNavbar from './hooks/use-navbar';
 
 const VerticalNavbar = () => {
   const t = useTranslations();
@@ -29,63 +31,7 @@ const VerticalNavbar = () => {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
-  const data = [
-    {
-      path: '/dashboard',
-      text: t('navbar.home'),
-      svg: HomeSVG,
-    },
-    {
-      path: '/sections',
-      text: t('navbar.sections'),
-      svg: SectionsSVG,
-    },
-    {
-      path: '/folders',
-      text: t('navbar.folders'),
-      svg: SectionsSVG,
-    },
-    {
-      path: '/files',
-      text: t('navbar.files'),
-      svg: SectionsSVG,
-    },
-    {
-      path: '/managers',
-      text: t('navbar.managers'),
-      svg: EmployeesSVG,
-    },
-    {
-      path: '/employees',
-      text: t('navbar.employees'),
-      svg: EmployeesSVG,
-    },
-    {
-      path: '/roles',
-      text: t('navbar.roles'),
-      svg: RolesSVG,
-    },
-    {
-      path: '/activities',
-      text: t('navbar.activity'),
-      svg: ActivitySVG,
-    },
-    {
-      path: '/plans',
-      text: t('navbar.plans'),
-      svg: PlansSVG,
-    },
-    {
-      path: '/profile',
-      text: t('navbar.profile'),
-      svg: ProfileSVG,
-    },
-    // {
-    //   path: '/help',
-    //   text: t('navbar.help'),
-    //   svg: HelpSVG,
-    // },
-  ];
+  const data = useNavbar();
 
   async function handleLogout() {
     try {
@@ -139,22 +85,24 @@ const VerticalNavbar = () => {
         </div>
 
         <div className="px-[32px]">
-          {isPending && (
-            <p className="logoutButton my-[48px]">Logging Out!...</p>
-          )}
-          {!isPending && (
-            <div className="flex flex-col gap-[24px] my-[48px]">
-              <button className="logoutButton" onClick={() => handleLogout()}>
-                <HelpSVG />
-                <p>{t('navbar.help')}</p>
-              </button>
+          <div className="flex flex-col gap-[24px] my-[48px]">
+            <ul className="vertical-list flex flex-col gap-[32px] overflow-auto">
+              <VerticalNavbarItem
+                path={'/help'}
+                pathName={pathName}
+                text={t('navbar.help')}
+                SVG={HelpSVG}
+              />
+            </ul>
 
-              <button className="logoutButton" onClick={() => handleLogout()}>
-                <LogoutSVG />
-                <p>{t('navbar.logout')}</p>
-              </button>
-            </div>
-          )}
+            <button
+              className="logoutButton"
+              onClick={() => handleLogout()}
+              disabled={isPending}>
+              <LogoutSVG />
+              <p>{isPending ? t('navbar.loggingOut') : t('navbar.logout')} </p>
+            </button>
+          </div>
         </div>
       </div>
     </nav>

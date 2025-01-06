@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast';
 import { getLangDir } from 'rtl-detect';
 import GuestNavbar from '@app/_components/navbars/guest-navbar';
 import Footer from '@app/_components/navbars/footer';
+import QueryClientWrapper from '@app/_contexts/react-query-provider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -35,16 +36,22 @@ export default async function RootLayout({
         )}>
         <div className="w-[100vw] h-[100%] bg-guestMainColor mix-blend-multiply absolute top-0 left-0" />
         <NextTopLoader />
-        <Toaster position="top-center" reverseOrder={false} />
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          containerStyle={{ zIndex: 99999999999999 }}
+        />
 
         <NextIntlClientProvider messages={messages}>
-          <GuestNavbar />
-          <ModalProvider>
-            <main className="relative z-50">
-              {children}
-              <Footer />
-            </main>
-          </ModalProvider>
+          <QueryClientWrapper>
+            <GuestNavbar />
+            <ModalProvider>
+              <main className="relative z-50">
+                {children}
+                <Footer />
+              </main>
+            </ModalProvider>
+          </QueryClientWrapper>
         </NextIntlClientProvider>
       </body>
     </html>

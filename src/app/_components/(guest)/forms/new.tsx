@@ -14,24 +14,51 @@ import Input from '../common/input';
 import PasswordSVG from '@app/_components/svgs/guest/forms/password';
 import { useNewPasswordSchema } from '@app/_schemas/new';
 import TempSection from '../common/temp-section';
+import { newPassword } from './data/posts';
+import { useMutation } from '@tanstack/react-query';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
+import ErrorAction from '../common/error-action';
 
 const New = () => {
   const t = useTranslations();
   const newPasswordSchema = useNewPasswordSchema();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorText, setErrorText] = useState(null);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(newPasswordSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    setIsSuccess(true);
-  };
+  async function onSubmit(data) {
+    setErrorText(null);
+    mutation.mutate(data);
+  }
+
+  function onError() {}
+
+  const mutation = useMutation({
+    mutationFn: (data) => newPassword(data),
+    onSuccess: async () => {
+      setIsSuccess(true);
+      toast.success(t('forms.new.newSuccessHead'));
+      reset();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `forms.errors.${error?.message}`,
+        `forms.errors.NEW_PASSWORD_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   if (isSuccess) {
     return (
@@ -75,6 +102,7 @@ const New = () => {
               label={t('forms.new.newLabel')}
               placeHolder={t('forms.new.newPlaceholder')}
               type={'password'}
+              disabled={mutation.isPending}
               {...register('new')}
               error={errors.new?.message}
             />
@@ -83,15 +111,21 @@ const New = () => {
               label={t('forms.new.confirmLabel')}
               placeHolder={t('forms.new.confirmPlaceholder')}
               type={'password'}
+              disabled={mutation.isPending}
               {...register('confirm')}
               error={errors.confirm?.message}
             />
           </div>
-          <GuestButton className={'w-[100%] mt-[40px] mb-[32px]'}>
-            {t('general.confirm')}
+          <GuestButton
+            className={'w-[100%] mt-[40px] mb-[32px]'}
+            disabled={mutation.isPending}>
+            {mutation.isPending
+              ? t('general.confirming')
+              : t('general.confirm')}
           </GuestButton>
         </div>
       </form>
+      <ErrorAction>{errorText}</ErrorAction>
     </FormSection>
   );
 };

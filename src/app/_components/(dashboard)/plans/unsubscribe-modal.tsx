@@ -7,43 +7,53 @@ import Modal from '../modals/modal';
 import Button from '../general/button';
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
-import { UnsubscribePlan } from './data/posts';
+import { unsubscribePlan } from './data/posts';
 import ErrorAction from '../general/error-action';
 import { revalidatePathAction } from '@app/actions';
+import { useMutation } from '@tanstack/react-query';
+import { getErrorText } from '@app/_utils/translations';
 
 const UnsubscribeModal = ({ plan }) => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [errorText, setErrorText] = useState(null);
 
-  async function onSuccessHandler() {
-    toast.success(
-      `${t('plans.unsubscribedSuccessfully')} ${t(`plans.${plan}`)} ${t(
-        'general.successfully',
-      )}`,
-    );
-    await revalidatePathAction('/plans');
-    closeModal();
+  function unsubscribe() {
+    setErrorText(null);
+    mutation.mutate();
   }
 
-  async function onClick() {
-    const res = await UnsubscribePlan(
-      { plan: plan },
-      setIsLoading,
-      setError,
-      onSuccessHandler,
-      toast,
-      t,
-    );
+  const mutation = useMutation({
+    mutationFn: () => unsubscribePlan({ plan: plan }),
+    onSuccess: async () => {
+      toast.success(
+        `${t('plans.unsubscribedSuccessfully')} ${t(`plans.${plan}`)} ${t(
+          'general.successfully',
+        )}`,
+      );
+      await revalidatePathAction('/plans');
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `plans.errors.${error?.message}`,
+        `plans.errors.UNSUBSCRIBE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
-    console.log(res);
+  function close() {
+    setErrorText(null);
+    closeModal();
   }
 
   return (
     <Modal
       isOpen={modalStack.includes(`unsubscribePlans${plan}`)}
-      onClose={closeModal}
+      onClose={close}
       className={clsx(contentFont.className)}>
       <div className="text-center flex flex-col justify-center gap-[32px]">
         <div>
@@ -63,18 +73,18 @@ const UnsubscribeModal = ({ plan }) => {
             text={t('general.no')}
             onClick={() => closeModal()}
             className={'w-[100%]'}
-            isPending={isLoading}
+            isPending={mutation.isPending}
           />
           <Button
             variant="outline"
             text={t('general.yes')}
             className={'w-[100%]'}
             isPendingText={t('plans.modals.unsubscribing')}
-            isPending={isLoading}
-            onClick={() => onClick()}
+            isPending={mutation.isPending}
+            onClick={unsubscribe}
           />
         </div>
-        <ErrorAction>{error}</ErrorAction>
+        <ErrorAction>{errorText}</ErrorAction>
       </div>
     </Modal>
   );

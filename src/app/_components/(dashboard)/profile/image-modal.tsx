@@ -32,7 +32,13 @@ const ImageModal = ({
           <img
             src={image}
             alt="Selected Preview"
-            className="w-[80px] h-[80px] md:w-[140px] md:h-[140px] object-cover rounded-full mt-[38px] mb-[50px] mx-auto"
+            className="w-[80px] h-[80px] md:w-[140px] md:h-[140px] object-cover rounded-full mt-[38px] mb-[50px] mx-auto cursor-pointer"
+            onClick={() => {
+              const newTab = window.open();
+              if (newTab) {
+                newTab.document.body.innerHTML = `<img src="${image}" style="height:100%">`;
+              }
+            }}
           />
         )}
 

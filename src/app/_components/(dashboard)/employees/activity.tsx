@@ -14,76 +14,74 @@ import NoToShow from '../general/no-to-show';
 import TryLater from '../general/try-later';
 import { fetchTypeActivities } from '@app/_utils/fetch/queries';
 import ShowMore from '../general/show-more';
+import { fetchEmployeeActivities } from '../activity-logs/data/queries';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { getNextPage } from '@app/_utils/fetch';
+import DataFetching from '../general/data-fetching';
+import { getErrorText } from '@app/_utils/translations';
 
 const Activity = ({ type, id, full = false }) => {
   const t = useTranslations();
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
 
   const {
     data: activitiesData,
     isLoading: isLoadingActivities,
     isFetching: isFetchingActivities,
-    isError: isActivitiesError,
+    error,
     fetchNextPage: fetchNextActivities,
     hasNextPage: hasNextActivities,
   } = useInfiniteQuery({
-    queryKey: ['activities'],
     refetchOnWindowFocus: false,
     queryFn: ({ pageParam = 1 }) => {
-      return fetchTypeActivities(pageParam, 5, type, id); // Return initial data if provided
+      return fetchEmployeeActivities(id, pageParam, paginationPageLimit); // Return initial data if provided
     },
-    getNextPageParam: (lastPage, pages) => {
-      const hasData = lastPage.length > 0;
-
-      const isLastPage = !hasData || lastPage.length < 5; // Adjust length based on how many items are expected per page
-
-      return hasData && !isLastPage ? pages.length + 1 : undefined;
-    },
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
   });
 
   let activities = activitiesData?.pages?.flat() || []; // Flatten the pages to get all activities in one array
 
   if (!full) {
-    activities = activities.slice(0, 5);
+    activities = activities.slice(0, paginationPageLimit);
   }
 
-  if (isLoadingActivities) {
-    return <LoadingSpinner full={false} />;
-  }
-
-  if (isActivitiesError) {
-    return <TryLater>{t('zero.activities')}</TryLater>;
-  }
-
-  console.log(activitiesData);
-
-  if (activities.length === 0) {
-    return <NoToShow>{t('zero.activities')}</NoToShow>;
-  }
+  const errorText = getErrorText(
+    t,
+    `activity.errors.${error?.message}`,
+    `activity.errors.ACTIVITY_LOAD_ERROR`,
+  );
 
   return (
-    <div className="rounded-[16px] overflow-x-auto border-[1px] border-solid border-black">
-      <table className="activityTable">
-        <thead>
-          <tr>
-            <td>{t('activity.item')}</td>
-            <td>{t('activity.action')}</td>
-            <td>{t('activity.lastModified')}</td>
-          </tr>
-        </thead>
-        <tbody>
-          {activities.map((item) => {
-            return <ActivityItem item={item} key={item.id} />;
-          })}
-        </tbody>
-      </table>
-      {full && (
-        <ShowMore
-          hasNext={hasNextActivities}
-          isFetching={isFetchingActivities}
-          onClick={fetchNextActivities}
-        />
-      )}
-    </div>
+    <DataFetching
+      error={error && errorText}
+      data={activitiesData}
+      emptyError={t('activity.errors.ACTIVITY_ZERO_ERROR')}
+      isLoading={isLoadingActivities}>
+      <div className="rounded-[16px] overflow-x-auto border-[1px] border-solid border-black">
+        <table className="activityTable">
+          <thead>
+            <tr>
+              <td>{t('activity.item')}</td>
+              <td>{t('activity.action')}</td>
+              <td>{t('activity.lastModified')}</td>
+            </tr>
+          </thead>
+          <tbody>
+            {activities.map((item) => {
+              return <ActivityItem item={item} key={item.id} />;
+            })}
+          </tbody>
+        </table>
+        {full && (
+          <ShowMore
+            hasNext={hasNextActivities}
+            isFetching={isFetchingActivities}
+            onClick={fetchNextActivities}
+          />
+        )}
+      </div>
+    </DataFetching>
   );
 };
 

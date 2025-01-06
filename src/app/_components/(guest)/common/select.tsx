@@ -8,7 +8,14 @@ import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import React, { useState, useRef } from 'react';
 
-const CustomSelect = ({ label, options, value, onChange, error }) => {
+const CustomSelect = ({
+  label,
+  options,
+  value,
+  onChange,
+  error,
+  disabled = false,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
   const t = useTranslations();
@@ -48,7 +55,7 @@ const CustomSelect = ({ label, options, value, onChange, error }) => {
           <p className="text-errorColor font-medium text-[14px]">{error}</p>
         )}
 
-        {isOpen && (
+        {isOpen && !disabled && (
           <ul className="absolute top-[72px] left-0 z-10 w-full bg-white gradient-borders-absolute rounded-[16px] max-h-[240px] overflow-y-auto">
             {options.map((option) => (
               <li

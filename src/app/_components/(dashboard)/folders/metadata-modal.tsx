@@ -2,7 +2,7 @@
 import { useModal } from '@app/_contexts/modal-provider';
 import { contentFont } from '@app/_utils/fonts';
 import { useTranslations } from 'next-intl';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../general/button';
 import Modal from '../modals/modal';
 import toast from 'react-hot-toast';
@@ -12,11 +12,12 @@ import MetadataForm from './metadata-form';
 import { useQuery } from '@tanstack/react-query';
 import { fetchFolderMetadata } from './data/queries';
 import DataFetching from '../general/data-fetching';
+import { getErrorText } from '@app/_utils/translations';
 
 const FolderMetadataModal = ({ id, onClose = () => {} }) => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
-  const [error, setError] = useState(false);
+  const [errorText, setErrorText] = useState(null);
   const isOpen = modalStack.includes(`FolderMetadata${id}`);
 
   function handleClose() {
@@ -24,11 +25,20 @@ const FolderMetadataModal = ({ id, onClose = () => {} }) => {
     closeModal();
   }
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['folderMetadata', id], // Unique key for the query
-    queryFn: () => fetchFolderMetadata(id, setError, t, toast), // Function to fetch the data
+    queryFn: () => fetchFolderMetadata(id), // Function to fetch the data
     enabled: isOpen, // Set to false if you want to fetch on user action (e.g., button click)
   });
+
+  useEffect(() => {
+    const textError = getErrorText(
+      t,
+      `folders.errors.${error?.message}`,
+      `folders.errors.FOLDER_METADATA_FETCH_ERROR`,
+    );
+    setErrorText(textError);
+  }, [error]);
 
   return (
     <Modal
@@ -39,9 +49,7 @@ const FolderMetadataModal = ({ id, onClose = () => {} }) => {
       <DataFetching
         data={data}
         isLoading={isLoading}
-        isError={isError}
-        skipEmpty={true}
-        item="Metadata">
+        error={error && errorText}>
         <MetadataForm id={id} initialFields={data} />
       </DataFetching>
     </Modal>

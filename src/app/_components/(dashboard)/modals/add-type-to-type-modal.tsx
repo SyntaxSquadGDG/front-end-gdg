@@ -6,50 +6,60 @@ import { useModal } from '@app/_contexts/modal-provider';
 import clsx from 'clsx';
 import { contentFont } from '@app/_utils/fonts';
 import { extendSelect } from '@app/_utils/helper';
-import { fetchEmployeesClient } from '@app/_utils/fetch/queries';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import CustomSelect from '../general/select';
 import { useTranslations } from 'use-intl';
 import SelectedSelect from '../general/selected-select';
 import Button from '../general/button';
-import { revalidatePathAction } from '@app/actions';
 import { useRouter } from 'nextjs-toploader/app';
-import { AddTypeToType } from '@app/_utils/fetch/posts';
+import { fetchAvailableEmployeesToRole } from '../employees/data/queries';
+import { fetchAvailableRolesToEmployee } from '../roles/data/queries';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { getNextPage } from '@app/_utils/fetch';
+import { addEmployeesToRole } from '../roles/data/posts';
+import { addRolesToEmployee } from '../employees/data/posts';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
 
 const AddTypeToTypeModal = ({ fromType, fromId, addingType }) => {
   const { modalStack, closeModal, openModal } = useModal();
   const t = useTranslations();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const router = useRouter();
-  const isEmployee = addingType === 'employee';
+  const isAddingEmployees = addingType === 'employee';
+  const [errorText, setErrorText] = useState(null);
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
+  const queryClient = useQueryClient();
 
   const {
     data: dataValues,
     isLoading: isLoadingData,
     isFetching,
-    isError: isErrorData,
+    error,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    queryKey: [isEmployee ? 'addEmployeeToRole' : 'addRoleToEmployee'],
+    queryKey: [
+      isAddingEmployees
+        ? `addEmployeeToRole${fromId}`
+        : `addRoleToEmployee${fromId}`,
+    ],
     queryFn: ({ pageParam = 1 }) =>
-      isEmployee
-        ? fetchEmployeesClient(pageParam, 5)
-        : fetchEmployeesClient(pageParam, 5), // Adjust the API call to paginate
-    getNextPageParam: (lastPage, pages) => {
-      const hasData = lastPage.length > 0;
-      const isLastPage = lastPage.length < 5; // Assuming you're fetching 5 employees per page
-      return hasData && !isLastPage ? pages.length + 1 : undefined;
-    },
-    refetchOnWindowFocus: false,
+      isAddingEmployees
+        ? fetchAvailableEmployeesToRole(fromId, pageParam, paginationPageLimit)
+        : fetchAvailableRolesToEmployee(fromId, pageParam, paginationPageLimit), // Adjust the API call to paginate
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
   });
 
   const initialData = dataValues?.pages?.flat() || []; // Flatten the pages to get all employees in one array
 
   const data = extendSelect(
     initialData ? initialData : [],
-    isEmployee ? ['firstName', 'lastName'] : ['green'],
+    isAddingEmployees ? ['firstName', 'lastName'] : ['name'],
     'id',
   );
 
@@ -74,31 +84,46 @@ const AddTypeToTypeModal = ({ fromType, fromId, addingType }) => {
     (data) => !selectedData.some((selected) => selected.id === data.id),
   );
 
-  async function onSuccessHandler() {
-    setSelectedData([]);
-    setSelectedDataIds([]);
-    await revalidatePathAction(isEmployee ? '/roles' : '/employees');
-    router.push('/roles');
-  }
-
-  async function onClick() {
-    const res = await AddTypeToType(
-      fromType,
-      fromId,
-      addingType,
-      selectedDataIds,
-      setIsLoading,
-      setError,
-      onSuccessHandler,
-    );
-  }
-
   function handleCloseModal() {
     setSelectedData([]);
     setSelectedDataIds([]);
-    setError(null);
+    setErrorText(null);
     closeModal();
   }
+
+  async function onClick() {
+    setErrorText(null);
+    mutation.mutate();
+  }
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      isAddingEmployees
+        ? addEmployeesToRole(fromId, selectedDataIds)
+        : addRolesToEmployee(fromId, selectedDataIds),
+    onSuccess: async () => {
+      setSelectedData([]);
+      setSelectedDataIds([]);
+      await queryClient.invalidateQueries(
+        isAddingEmployees
+          ? ['roleEmployees', fromId]
+          : ['employeeRoles', fromId],
+      );
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        isAddingEmployees
+          ? `employees.errors.${error?.message}`
+          : `roles.errors.${error?.message}`,
+        isAddingEmployees
+          ? `employees.errors.EMPLOYEES_TO_ROLE_ERROR`
+          : `roles.errors.ROLES_TO_EMPLOYEE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <Modal
@@ -107,34 +132,38 @@ const AddTypeToTypeModal = ({ fromType, fromId, addingType }) => {
       innerClassName="w-[90vw] py-[140px]"
       className={clsx(contentFont.className)}>
       <CustomSelect
-        label={isEmployee ? t('roles.employeeLabel') : t('employees.roleLabel')}
+        label={
+          isAddingEmployees
+            ? t('roles.employeeLabel')
+            : t('employees.roleLabel')
+        }
         // error={errors.roles?.message}
         options={availableData}
         onChange={handleDataChange}
         // onScroll={handleScroll}
-        endPoint={isEmployee ? '/search/employees' : '/search/roles'}
-        dataToExtend={isEmployee ? ['firstName', 'lastName'] : ['name']}
+        endPoint={isAddingEmployees ? '/search/employees' : '/search/roles'}
+        dataToExtend={isAddingEmployees ? ['firstName', 'lastName'] : ['name']}
         isFetchingData={isFetching}
         isLoadingData={isLoadingData}
         selectedItems={selectedDataIds}
         hasNextData={hasNextPage}
         fetchNextData={fetchNextPage}
-        disabled={isLoading}
+        disabled={mutation.isPending}
       />
       <SelectedSelect
         items={selectedData}
-        keys={['firstName', 'lastName']}
+        keys={isAddingEmployees ? ['firstName', 'lastName'] : ['name']}
         handleChange={handleDataChange}
       />
 
       <Button
         isPendingText={t('general.adding')}
-        isPending={isLoading}
+        isPending={mutation.isPending}
         text={t('general.add')}
         disabled={selectedDataIds.length === 0}
         onClick={onClick}
       />
-      {error && <p>{error}</p>}
+      {error && <p>{errorText}</p>}
     </Modal>
   );
 };

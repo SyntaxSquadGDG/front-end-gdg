@@ -7,7 +7,16 @@ import clsx from 'clsx';
 import EditPathModal from '../modals/edit-path-modal';
 import { useModal } from '@app/_contexts/modal-provider';
 
-const FileAiResultsItem = ({ id, file, setFiles, metadata, setFilesData }) => {
+const FileAiResultsItem = ({
+  id,
+  index,
+  file,
+  files,
+  setFiles,
+  metadata,
+  filesData,
+  setFilesData,
+}) => {
   const handleClick = (file) => {
     if (file) {
       const imageURL = URL.createObjectURL(file); // Create a temporary URL for the file
@@ -24,33 +33,17 @@ const FileAiResultsItem = ({ id, file, setFiles, metadata, setFilesData }) => {
   }
 
   const handlePathChange = (newFolderId) => {
-    setFilesData((prevData) => {
-      const updatedData = [...prevData]; // Copy the current state
-      updatedData[id] = {
-        ...updatedData[id],
-        accuracy: 'manual',
-        path: selectedPath,
-        folderId: newFolderId,
-      }; // Update path and folderId
-      return updatedData; // Return the updated state
-    });
+    const newFilesData = filesData;
+    newFilesData[index].path = selectedPath;
+    newFilesData[index].folderId = newFolderId;
+    setFilesData(newFilesData);
   };
 
   const handleRemove = () => {
-    // Update the files state
-    setFiles((prevFiles) => {
-      const updatedFiles = Array.from(prevFiles); // Convert to array
-      updatedFiles.splice(id, 1); // Remove the file at the specified index
-      return updatedFiles; // Return updated ArrayList or array
-    });
-
-    // Update the filesData state
-    setFilesData((prevData) => {
-      const updatedData = Array.from(prevData); // Convert to array
-      updatedData.splice(id, 1); // Remove metadata at the specified index
-      console.log(updatedData);
-      return updatedData; // Return updated ArrayList or array
-    });
+    const newFilesData = filesData;
+    newFilesData[index].path = '';
+    newFilesData[index].folderId = -1;
+    setFilesData(newFilesData);
   };
 
   const { openModal, closeModal } = useModal();
@@ -58,6 +51,10 @@ const FileAiResultsItem = ({ id, file, setFiles, metadata, setFilesData }) => {
   const [isPathChanged, setIsPathChanged] = useState(false);
   const [selectedPath, setSelectedPath] = useState(null);
   const [selectedItem, setSelectedItem] = useState({ type: null, id: null });
+
+  if (file.folderId === -1) {
+    return null;
+  }
 
   return (
     <>

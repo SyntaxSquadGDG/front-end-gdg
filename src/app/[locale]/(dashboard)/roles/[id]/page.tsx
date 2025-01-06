@@ -1,6 +1,7 @@
 import AddTypeButton from '@app/_components/(dashboard)/employees-roles/add-type-button';
 import AddEmployeeButton from '@app/_components/(dashboard)/employees/add-employee-button';
 import HeadBar from '@app/_components/(dashboard)/general/head-bar';
+import LoadError from '@app/_components/(dashboard)/general/load-error';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
 import TryLater from '@app/_components/(dashboard)/general/try-later';
 import AddPermissionModal from '@app/_components/(dashboard)/modals/add-permission-modal';
@@ -14,6 +15,7 @@ import EmployeesSVG from '@app/_components/svgs/employees/employees';
 import ViewSVG from '@app/_components/svgs/employees/view';
 import { fetchRole } from '@app/_utils/fetch/queries';
 import { contentFont } from '@app/_utils/fonts';
+import { getErrorText } from '@app/_utils/translations';
 import clsx from 'clsx';
 import { getTranslations } from 'next-intl/server';
 import React, { Suspense } from 'react';
@@ -40,8 +42,12 @@ const page = async ({ params }) => {
         </>
       );
     } catch (error) {
-      console.error('Error fetching roles:', error);
-      return <TryLater>{t('zero.role')}</TryLater>;
+      const errorText = getErrorText(
+        t,
+        `roles.errors.${error?.message}`,
+        `roles.errors.ROLE_DATA_ERROR`,
+      );
+      return <LoadError>{errorText}</LoadError>;
     }
   };
 

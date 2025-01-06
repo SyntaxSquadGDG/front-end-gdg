@@ -3,16 +3,15 @@ export const defaultLocale = 'en';
 
 export const publicRoutes = ['/public'];
 
-export const authRoutes = [
-  '/dashboard',
-  '/sections',
-  '/sections/:id',
-  '/sections/:id/employees',
-  '/folders',
-  '/folders/:id',
-  '/files',
-  '/files/:id',
-  '/files/:id/preview',
+export const owner = [
+  '/managers',
+  '/managers/new',
+  '/managers/:id',
+  '/managers/:id/edit',
+  '/managers/:id/activity',
+];
+
+const managerOwner = [
   '/employees',
   '/employees/new',
   '/employees/:id',
@@ -26,22 +25,29 @@ export const authRoutes = [
   '/roles/:id/edit',
   '/roles/:id/permissions',
   '/roles/:id/employees',
-  '/managers',
-  '/managers/new',
-  '/managers/:id',
-  '/managers/:id/edit',
-  '/managers/:id/activity',
-  '/activities',
-  '/profile',
   '/plans',
+  '/activities',
+];
+
+const employeeManagerOwner = [
+  '/dashboard',
+  '/sections',
+  '/sections/:id',
+  '/sections/:id/employees',
+  '/folders/:id',
+  '/files/:id',
+  '/files/:id/preview',
+  '/profile',
   '/search',
   '/help',
   '/notifications',
-  '/preview',
-  '/test',
+  // '/preview',
+  // '/test',
 ];
 
-export const sharedRoutes = ['/shared'];
+export const employeeRoutes = ['/files', '/folders', ...employeeManagerOwner];
+export const managerRoutes = [...managerOwner, ...employeeManagerOwner];
+export const ownerRoutes = [...owner, ...managerOwner, ...employeeManagerOwner];
 
 export const guestRoutes = [
   '/',

@@ -1,76 +1,10 @@
-import { BASE_URL, SECOND_URL } from '@app/_components/_constants/fetch';
+import { fetchData, fetchData2 } from '@app/_utils/fetch';
 
-export const DeleteFile = async (
-  id,
-  setLoading,
-  setError,
-  onDeleteSuccess,
-  t,
-  toast,
-) => {
-  setLoading(true);
-  setError(null);
-  let errorText;
-
-  try {
-    const response = await fetch(
-      `${SECOND_URL}/Sfiles/deleteById?fileid=${id}`,
-      {
-        method: 'DELETE',
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error('DELETE');
-    }
-
-    const result = await response.json();
-    await onDeleteSuccess();
-    return result;
-  } catch (error) {
-    errorText = t(`files.errors.${error.message}`);
-    toast.error(errorText);
-    setError(errorText);
-    throw error; // Optionally re-throw the error if you want to handle it further elsewhere
-  } finally {
-    setLoading(false);
-  }
+export const deleteFile = async (id) => {
+  return await fetchData2(`/Sfiles/deleteById?fileid=${id}`, 'DELETE');
 };
 
-export const DeleteFileVersion = async (
-  fileId,
-  versionId,
-  setLoading,
-  setError,
-  onDeleteSuccess,
-  t,
-  toast,
-) => {
-  setLoading(true);
-  setError(null);
-  let errorText;
-
-  console.log(versionId);
-
-  try {
-    const response = await fetch(`${BASE_URL}/versions/${versionId}`, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      throw new Error('VERSION_DELETE');
-    }
-
-    const result = await response.json();
-    await onDeleteSuccess();
-    return result;
-  } catch (error) {
-    errorText = t(`files.errors.${error.message}`);
-    toast.error(errorText);
-    setError(errorText);
-    throw error; // Optionally re-throw the error if you want to handle it further elsewhere
-  } finally {
-    setLoading(false);
-  }
+export const deleteFileVersion = async (fileId, versionId) => {
+  return fetchData(`/versions/${versionId}`);
 };
 

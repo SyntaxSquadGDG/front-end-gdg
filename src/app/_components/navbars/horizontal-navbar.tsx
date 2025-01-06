@@ -11,7 +11,12 @@ import { formatDate } from '@/app/_utils/formats';
 import OverlayImage from '../(dashboard)/general/overlay';
 import { getLangDir } from 'rtl-detect';
 import useClickOutside from '@app/_hooks/useclickoutside';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
+import { useQuery } from '@tanstack/react-query';
+import { fetchUserData } from './data/queries';
+import DataFetching from '../(dashboard)/general/data-fetching';
+import { getErrorText } from '@app/_utils/translations';
 
 const HorizontalNavbar = () => {
   const t = useTranslations();
@@ -40,6 +45,19 @@ const HorizontalNavbar = () => {
     }
   }
 
+  const { data, isPending, error } = useQuery({
+    queryKey: ['myData'],
+    queryFn: fetchUserData,
+  });
+
+  // const errorText = getErrorText(
+  //   t,
+  //   `navbar.errors.${error?.message}`,
+  //   `navbar.errors.USER_DATA_ERROR`,
+  // );
+
+  console.log(data);
+
   return (
     <nav
       ref={navbarRef}
@@ -65,35 +83,43 @@ const HorizontalNavbar = () => {
 
         <div className="relative z-5 text-textLight flex justify-between items-center w-[100%] px-[24px] h-[100%]">
           {/* IMAGE + TEXT */}
-          <div className="flex gap-[16px] items-center">
-            {/* IMAGE */}
-            <div className="shrink-0">
-              <Link href={'/profile'}>
-                <Image
-                  src="/images/defaults/user.png"
-                  className=" w-[56px] h-[56px]"
-                  width={0}
-                  height={0}
-                  sizes="(max-width: 640px) 24px, 56px"
-                  alt=""
-                />
-              </Link>
-            </div>
+          <DataFetching
+            data={data}
+            error={error && error.message}
+            isLoading={isPending}>
+            {data && (
+              <div className="flex gap-[16px] items-center">
+                {/* IMAGE */}
+                <div className="shrink-0 rounded-full overflow-hidden">
+                  <Link href={'/profile'}>
+                    <Image
+                      src={data.img}
+                      className=" w-[56px] h-[56px]"
+                      width={0}
+                      height={0}
+                      sizes="(max-width: 640px) 24px, 56px"
+                      alt=""
+                    />
+                  </Link>
+                </div>
 
-            {/* TEXT */}
-            <div
-              className={clsx(
-                'hidden flex-col gap-[10px] xs:flex',
-                headFont.className,
-              )}>
-              <p className="text-[12px] lg:text-[24px]">
-                {t('navbar.hello')} Ahmed!
-              </p>
-              <p className="text-[12px] lg:text-[14px]">
-                {formatDate(Date.now())}
-              </p>
-            </div>
-          </div>
+                {/* TEXT */}
+                <div
+                  className={clsx(
+                    'hidden flex-col gap-[10px] xs:flex',
+                    headFont.className,
+                  )}>
+                  <p className="text-[12px] lg:text-[24px]">
+                    {t('navbar.hello')}{' '}
+                    <Link href={'/profile'}>{data.firstName}!</Link>
+                  </p>
+                  <p className="text-[12px] lg:text-[14px]">
+                    {formatDate(Date.now())}
+                  </p>
+                </div>
+              </div>
+            )}
+          </DataFetching>
 
           <button
             className="flex lg:hidden mx-[8px]"

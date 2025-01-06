@@ -7,8 +7,8 @@ const ActivityTableItem = ({ activity }) => {
   return (
     <tr key={activity.id}>
       <td>
-        <div className="w-[36px] h-[36px] shrink-0">
-          <img src="/images/defaults/user.png" alt="" />
+        <div className="w-[36px] h-[36px] shrink-0 rounded-full overflow-hidden">
+          <img src="/images/defaults/default-user.jpg" alt="" />
         </div>
       </td>
       <td>

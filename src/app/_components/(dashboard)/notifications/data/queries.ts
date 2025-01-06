@@ -1,23 +1,10 @@
-import { BASE_URL } from '@app/_utils/fetch/fetch';
-import { getCookie } from 'cookies-next';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { fetchData } from '@app/_utils/fetch';
 
-export const fetchNotifications = async (currentPage, limit) => {
-  const token = getCookie('token');
-  const response = await fetch(
-    `${BASE_URL}/notifications?page=${currentPage}&limit=${limit}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: 'include', // Ensures cookies are sent
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error('Error fetching notifications');
-  }
-
-  const data = await response.json();
-  return data;
+export const fetchNotifications = async (
+  page = 1,
+  limit = PAGINATION_PAGE_LIMIT,
+) => {
+  return await fetchData(`/notifications?page=${page}&limit=${limit}`);
 };
 

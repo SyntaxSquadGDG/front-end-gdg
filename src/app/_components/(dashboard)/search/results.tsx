@@ -7,33 +7,38 @@ import SearchTable from './search-table';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import DataFetching from '../general/data-fetching';
 import { fetchSearchResults } from './data/queries';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { getNextPage } from '@app/_utils/fetch';
+import { getErrorText } from '@app/_utils/translations';
 
-const SearchResults = () => {
+const SearchResults = ({ query }) => {
   const t = useTranslations();
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
 
-  const { data, isLoading, isFetching, isError, fetchNextPage, hasNextPage } =
+  const { data, isLoading, isFetching, error, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ['search'],
-      refetchOnWindowFocus: false,
+      queryKey: ['search', query],
       queryFn: ({ pageParam = 1 }) => {
-        return fetchSearchResults(pageParam, 5); // Fetch 5 messages per page
+        return fetchSearchResults(query, pageParam, paginationPageLimit); // Fetch 5 messages per page
       },
-      getNextPageParam: (lastPage, pages) => {
-        const hasData = lastPage.length > 0;
-        const isLastPage = !hasData || lastPage.length < 5;
-        return hasData && !isLastPage ? pages.length + 1 : undefined;
-      },
+      getNextPageParam: (lastPage, pages) =>
+        getNextPage(lastPage, pages, paginationPageLimit),
     });
 
   const results = data?.pages?.flat() || [];
-  console.log(results);
+
+  const errorText = getErrorText(
+    t,
+    `search.errors.${error?.message}`,
+    `search.errors.SEARCH_ERROR`,
+  );
 
   return (
     <DataFetching
-      data={data}
-      isError={isError}
-      isLoading={isLoading}
-      item="Results">
+      data={results}
+      emptyError={t('search.errors.SEARCH_ZERO_ERROR')}
+      error={error && errorText}
+      isLoading={isLoading}>
       <div className={clsx(contentFont.className)}>
         <div className="flex items-center justify-between mb-[32px]">
           <p className="text-[24px] font-medium">{t('search.results')}</p>

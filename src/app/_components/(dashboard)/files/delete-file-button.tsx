@@ -3,46 +3,59 @@
 import { revalidatePathAction } from '@app/actions';
 import React, { useState } from 'react';
 import { redirect } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useModal } from '@app/_contexts/modal-provider';
 import clsx from 'clsx';
 import DeleteModal from '../modals/delete-modal';
 import { useTranslations } from 'next-intl';
-import { DeleteFile } from './data/deletes';
+import { deleteFile } from './data/deletes';
 import toast from 'react-hot-toast';
 import Button from '../general/button';
+import { getErrorText } from '@app/_utils/translations';
 
 const DeleteFileButton = ({ file }) => {
   const queryClient = useQueryClient();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [error, setError] = useState(null);
+  const [errorText, setErrorText] = useState(null);
   const { openModal } = useModal();
   const t = useTranslations();
 
   async function handleDelete() {
-    await DeleteFile(file.id, setIsDeleting, setError, onSuccess, t, toast);
+    setErrorText(null);
+    deleteMutation.mutate();
   }
 
-  async function onSuccess() {
-    queryClient.invalidateQueries(['folders', file.parentFolderId]);
-    await revalidatePathAction(`/folders/${file.parentFolderId}`);
-    redirect(`/folders/${file.parentFolderId}`);
-  }
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteFile(file.id),
+    onSuccess: async () => {
+      queryClient.invalidateQueries(['folders', file.parentFolderId]);
+      await revalidatePathAction(`/folders/${file.parentFolderId}`);
+      redirect(`/folders/${file.parentFolderId}`);
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILE_DELETE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <>
       <Button
         text={t('general.delete')}
-        disabled={isDeleting}
+        disabled={deleteMutation.isPending}
         onClick={() => openModal(`deleteFileModal${file.id}`)}
         className={clsx(
           'bg-red-400 text-textLight',
-          isDeleting && 'cursor-not-allowed',
+          deleteMutation.isPending && 'cursor-not-allowed',
         )}
       />
       <DeleteModal
-        error={error}
-        isDeleting={isDeleting}
+        error={errorText}
+        isDeleting={deleteMutation.isPending}
         modalName={`deleteFileModal${file.id}`}
         head={t('files.deleteDescription')}
         onClick={handleDelete}

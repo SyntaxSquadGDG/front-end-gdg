@@ -12,13 +12,46 @@ import FolderFormPermissions from '../permissions/folder-form-permissions';
 import FileFormPermissions from '../permissions/file-form-permissions';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { fetchEmployeesClient } from '@app/_utils/fetch/queries';
+import { getNextPage } from '@app/_utils/fetch';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import {
+  fetchAvailableEmployeesToFolder,
+  fetchAvailableEmployeesToSection,
+} from '../employees/data/queries';
+import {
+  fetchAvailableRolesToFolder,
+  fetchAvailableRolesToSection,
+} from '../roles/data/queries';
 
 const ItemPermissionsEditModal = ({ id, type }) => {
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
   const t = useTranslations();
   const { modalStack, closeModal } = useModal();
   const [selectedNormal, setSelectedNormal] = useState(1);
   const isEmployees = selectedNormal === 1;
   const isOpen = modalStack.includes(`ItemPermissionsEdit${type}${id}`);
+  const [errorText, setErrorText] = useState(null);
+  let employeesFn;
+  let rolesFn;
+
+  switch (type) {
+    case 'section':
+      employeesFn = fetchAvailableEmployeesToSection;
+      rolesFn = fetchAvailableRolesToSection;
+      break;
+    case 'folder':
+      employeesFn = fetchAvailableEmployeesToFolder;
+      rolesFn = fetchAvailableRolesToFolder;
+      break;
+    case 'section':
+      employeesFn = fetchAvailableEmployeesToSection;
+      rolesFn = fetchAvailableRolesToSection;
+      break;
+    default:
+      employeesFn = fetchAvailableEmployeesToSection;
+      rolesFn = fetchAvailableRolesToSection;
+      break;
+  }
 
   const options = [
     {
@@ -35,19 +68,14 @@ const ItemPermissionsEditModal = ({ id, type }) => {
     data: rolesData,
     isLoading: isLoadingRoles,
     isFetching: isFetchingRoles,
-    isError: isErrorRoles,
+    error: rolesError,
     fetchNextPage: fetchNextRoles,
     hasNextPage: hasNextRoles,
   } = useInfiniteQuery({
     queryKey: ['roles'],
-    queryFn: ({ pageParam = 1 }) => fetchEmployeesClient(pageParam, 5),
-    getNextPageParam: (lastPage, pages) => {
-      const hasData = lastPage.length > 0;
-      const isLastPage = lastPage.length < 5; // Assuming you're fetching 5 employees per page
-      return hasData && !isLastPage ? pages.length + 1 : undefined;
-    },
+    queryFn: ({ pageParam = 1 }) => rolesFn(id, pageParam, paginationPageLimit),
+    getNextPageParam: (lastPage, pages) => getNextPage(lastPage, pages),
     enabled: isOpen && !isEmployees,
-    refetchOnWindowFocus: false,
   });
 
   const initialRoles = rolesData?.pages?.flat() || []; // Flatten the pages to get all employees in one array
@@ -82,19 +110,15 @@ const ItemPermissionsEditModal = ({ id, type }) => {
     data: employeesData,
     isLoading: isLoadingEmployees,
     isFetching: isFetchingEmployees,
-    isError: isEmployeesError,
+    error: employeesError,
     fetchNextPage: fetchNextEmployees,
     hasNextPage: hasNextEmployees,
   } = useInfiniteQuery({
     queryKey: ['employees'],
-    queryFn: ({ pageParam = 1 }) => fetchEmployeesClient(pageParam, 5), // Adjust the API call to paginate
-    getNextPageParam: (lastPage, pages) => {
-      const hasData = lastPage.length > 0;
-      const isLastPage = lastPage.length < 5; // Assuming you're fetching 5 employees per page
-      return hasData && !isLastPage ? pages.length + 1 : undefined;
-    },
+    queryFn: ({ pageParam = 1 }) => employeesFn(pageParam, paginationPageLimit), // Adjust the API call to paginate
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
     enabled: isOpen && isEmployees,
-    refetchOnWindowFocus: false,
   });
 
   const initialEmployees = employeesData?.pages?.flat() || []; // Flatten the pages to get all employees in one array
@@ -145,6 +169,15 @@ const ItemPermissionsEditModal = ({ id, type }) => {
     closeModal();
   }
 
+  function handleChange(value) {
+    setSelectedNormal(value);
+    setErrorText(null);
+  }
+
+  // useEffect(() => {
+  //   setErrorText()
+  // }, [employeesError, rolesError])
+
   return (
     <Modal
       isOpen={modalStack.includes(`ItemPermissionsEdit${type}${id}`)}
@@ -154,7 +187,7 @@ const ItemPermissionsEditModal = ({ id, type }) => {
       <div className="mb-[32px]">
         <NormalSelect
           options={options}
-          onChange={setSelectedNormal}
+          onChange={handleChange}
           label={t('permissions.select')}
           value={selectedNormal}
         />
@@ -189,18 +222,21 @@ const ItemPermissionsEditModal = ({ id, type }) => {
           <SectionFormPermissions
             id={isEmployees ? selectedEmployeeIds : selectedRoleIds}
             type={isEmployees ? 'employee' : 'role'}
+            sectionId={id}
           />
         )}
         {type === 'folder' && (
           <FolderFormPermissions
             id={isEmployees ? selectedEmployeeIds : selectedRoleIds}
             type={isEmployees ? 'employee' : 'role'}
+            folderId={id}
           />
         )}
         {type === 'file' && (
           <FileFormPermissions
             id={isEmployees ? selectedEmployeeIds : selectedRoleIds}
             type={isEmployees ? 'employee' : 'role'}
+            fileId={id}
           />
         )}
       </div>

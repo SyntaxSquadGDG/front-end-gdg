@@ -13,6 +13,10 @@ import CustomSelect from '../general/select';
 import NormalSelect from '../general/normal-select';
 import clsx from 'clsx';
 import Button from '../general/button';
+import { useQuery } from '@tanstack/react-query';
+import { fetchStructure } from '@app/_utils/fetch/queries';
+import DataFetching from '../general/data-fetching';
+import { getErrorText } from '@app/_utils/translations';
 
 const data = [
   {
@@ -92,6 +96,7 @@ const AddPermissionModal = ({ type, id }) => {
   const t = useTranslations();
   const [selectedItem, setSelectedItem] = useState({ id: null, type: null });
   const [buttonView, setButtonView] = useState(0);
+  const isOpen = modalStack.includes(`add${type}Permission${id}`);
 
   function onModalClose() {
     closeModal();
@@ -102,9 +107,22 @@ const AddPermissionModal = ({ type, id }) => {
   useEffect(() => {
     setButtonView(0);
   }, [selectedItem.id, selectedItem.type]);
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ['structure'],
+    queryFn: fetchStructure,
+    enabled: isOpen,
+  });
+
+  const textError = getErrorText(
+    t,
+    `structure.errors.${error?.message}`,
+    `structure.errors.STRUCTUR_LOAD_ERROR`,
+  );
+
   return (
     <Modal
-      isOpen={modalStack.includes(`add${type}Permission${id}`)}
+      isOpen={isOpen}
       onClose={onModalClose}
       innerClassName="w-[90vw]"
       className={clsx(contentFont.className)}>
@@ -114,11 +132,17 @@ const AddPermissionModal = ({ type, id }) => {
         </h2>
         <div className="flex items-start justify-between mt-[16px] flex-col lg:flex-row gap-[32px]">
           <div className="w-[100%]">
-            <HierarchicalView
-              selectedItem={selectedItem}
-              setSelectedItem={setSelectedItem}
+            <DataFetching
+              emptyError={t('structure.errors.STRUCTURE_ZERO_ERROR')}
               data={data}
-            />
+              error={error && textError}
+              isLoading={isPending}>
+              <HierarchicalView
+                selectedItem={selectedItem}
+                setSelectedItem={setSelectedItem}
+                data={data}
+              />
+            </DataFetching>
             {buttonView === 0 && selectedItem.id && selectedItem.type && (
               <Button
                 text={t('permissions.showPermissions')}
@@ -135,13 +159,25 @@ const AddPermissionModal = ({ type, id }) => {
             {buttonView === 1 && (
               <>
                 {selectedItem.type === 'section' && (
-                  <SectionFormPermissions type={type} id={[id]} />
+                  <SectionFormPermissions
+                    type={type}
+                    id={[id]}
+                    sectionId={selectedItem.id}
+                  />
                 )}
                 {selectedItem.type === 'folder' && (
-                  <FolderFormPermissions type={type} id={[id]} />
+                  <FolderFormPermissions
+                    type={type}
+                    id={[id]}
+                    folderId={selectedItem.id}
+                  />
                 )}
                 {selectedItem.type === 'file' && (
-                  <FileFormPermissions type={type} id={[id]} />
+                  <FileFormPermissions
+                    type={type}
+                    id={[id]}
+                    fileId={selectedItem.id}
+                  />
                 )}
               </>
             )}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UpdateFileMetadata } from './data/updates'; // Assuming this is your function to update file metadata
+import { UpdateFileMetadata, updateFileMetadata } from './data/updates'; // Assuming this is your function to update file metadata
 import Input from '../general/input';
 import NormalSelect from '../general/normal-select';
 import Checkbox from '../general/checkbox';
@@ -8,15 +8,19 @@ import toast from 'react-hot-toast';
 import { useTranslations } from 'next-intl';
 import { useBooleanValues } from '@app/_data/boolean';
 import { useModal } from '@app/_contexts/modal-provider';
+import { useMutation } from '@tanstack/react-query';
+import { revalidatePathAction } from '@app/actions';
+import { getErrorText } from '@app/_utils/translations';
 
 export default function FileMetadataForm({
+  fileId,
+  folderId,
   folderMetadata = [],
   fileMetadata = [], // The current metadata of the file that will be pre-filled
-  onUpdateFileMetadata, // Callback to update file metadata (can be passed from parent)
+  // onUpdateFileMetadata, // Callback to update file metadata (can be passed from parent)
 }) {
   const [fields, setFields] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [errorText, setErrorText] = useState(null);
   const t = useTranslations();
   const { booleanOptions } = useBooleanValues();
   const { closeModal } = useModal();
@@ -44,30 +48,39 @@ export default function FileMetadataForm({
     );
   };
 
-  const saveMetadata = async () => {
-    try {
-      const updatedFileMetadata = fields.map(
-        ({ id, value, type, required }) => ({
-          id,
-          value,
-          type,
-          required,
-        }),
-      );
-
-      console.log(updatedFileMetadata);
-      // Call the callback or the function to update the file metadata
-      // await onUpdateFileMetadata(updatedFileMetadata);
-      toast.success('Metadata updated successfully!');
-    } catch (error) {
-      toast.error('Failed to update metadata!');
-    }
-  };
-
   function cancel() {
     setFields([]);
     closeModal();
   }
+
+  async function handleSendMetadata(data) {
+    setErrorText(null);
+    // Convert fields array into key-value object
+    const metadataObject = fields.reduce((acc, field) => {
+      acc[field.name] = field.value;
+      return acc;
+    }, {});
+
+    mutation.mutate(metadataObject);
+  }
+
+  const mutation = useMutation({
+    mutationFn: (data) => updateFileMetadata(fileId, data),
+    onSuccess: async () => {
+      await revalidatePathAction(`/files/${fileId}`);
+      toast.success(t('files.metadataUpdated'));
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILE_METADATA_UPDATE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <div>
@@ -79,7 +92,7 @@ export default function FileMetadataForm({
             <Input
               label={field.name}
               value={field.value}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               onChange={(e) =>
                 handleChange(field.name, 'value', e.target.value)
               }
@@ -91,7 +104,7 @@ export default function FileMetadataForm({
               label={field.name}
               type="number"
               value={field.value}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               onChange={(e) =>
                 handleChange(field.name, 'value', e.target.value)
               }
@@ -104,7 +117,7 @@ export default function FileMetadataForm({
               label={field.name}
               onChange={(value) => handleChange(field.name, 'value', value)}
               value={field.value}
-              disabled={isLoading}
+              disabled={mutation.isPending}
             />
 
             // <Checkbox
@@ -118,7 +131,7 @@ export default function FileMetadataForm({
               label={field.name}
               type="date"
               value={field.value}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               onChange={(e) =>
                 handleChange(field.name, 'value', e.target.value)
               }
@@ -131,15 +144,15 @@ export default function FileMetadataForm({
       <div className="flex gap-[8px]">
         <Button
           text={t('general.cancel')}
-          disabled={isLoading}
+          disabled={mutation.isPending}
           onClick={cancel}
           variant="solid"
         />
         <Button
           isPendingText={t('general.updating')}
           text={t('general.update')}
-          onClick={saveMetadata}
-          isPending={isLoading}
+          onClick={handleSendMetadata}
+          isPending={mutation.isPending}
         />
       </div>
     </div>

@@ -7,8 +7,17 @@ import { revalidatePath } from 'next/cache';
 import { usePathname } from 'next/navigation';
 import { revalidatePathAction } from '@/app/actions';
 import { extractPath } from '@app/_utils/helper';
-import { UploadNewVersion } from './data/posts';
+import {
+  UploadNewVersion,
+  classifyAIFiles,
+  sendFilesToFolder,
+  uploadNewFileVersion,
+} from './data/posts';
 import { useTranslations } from 'next-intl';
+import { useMutation } from '@tanstack/react-query';
+import { getErrorText } from '@app/_utils/translations';
+import LoadingSpinner from '../general/loader';
+import ErrorAction from '../general/error-action';
 
 const DragAndDropInput = ({
   type,
@@ -21,8 +30,7 @@ const DragAndDropInput = ({
 }) => {
   const [dragActive, setDragActive] = useState(false);
   const { modalStack, setModal, openModal, closeModal } = useModal();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [errorText, setErrorText] = useState(null);
   const pathName = usePathname();
   const t = useTranslations();
 
@@ -34,6 +42,79 @@ const DragAndDropInput = ({
     setFiles(null);
     setFile(null);
   };
+
+  async function handleClassifyAI() {
+    setErrorText(null);
+    classifyAIMutation.mutate(files);
+  }
+
+  const classifyAIMutation = useMutation({
+    mutationFn: (data) => classifyAIFiles(data),
+    onSuccess: async (data) => {
+      setModal('AIResults');
+      closeModal();
+      setFilesData(data);
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILES_CLASSIFICATION_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
+
+  async function handleConfirmFolderFiles() {
+    setErrorText(null);
+    confirmFolderFilesMutation.mutate(files);
+  }
+
+  const confirmFolderFilesMutation = useMutation({
+    mutationFn: (data) => sendFilesToFolder(parentId, data),
+    onSuccess: async () => {
+      closeModal();
+      toast.success(t('files.filesUploaded'));
+      await revalidatePathAction(`/folders/${parentId}`);
+      setFiles(null);
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILES_UPLOAD_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
+
+  async function handleConfirmFileVersion() {
+    setErrorText(null);
+    confirmFileVersionMutation.mutate(file);
+  }
+
+  const confirmFileVersionMutation = useMutation({
+    mutationFn: (data) => uploadNewFileVersion(parentId, data),
+    onSuccess: async () => {
+      closeModal();
+      toast.success(t('files.versionUpdated'));
+      await revalidatePathAction(`/files/${parentId}`);
+      setFile(null);
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILE_UPLOAD_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   const handleConfirmAI = async () => {
     try {
@@ -124,7 +205,7 @@ const DragAndDropInput = ({
       console.log(res);
 
       if (response.status === 404) throw new Error('Error');
-      toast.success('Files uploaded successfully!');
+      toast.success(t('files.filesUploaded'));
       closeModal();
       setFiles(null);
       setFilesData(null);
@@ -219,8 +300,12 @@ const DragAndDropInput = ({
     // }
   }
 
-  if (isLoading) {
-    return <p>Loading...</p>;
+  if (
+    confirmFileVersionMutation.isPending ||
+    classifyAIMutation.isPending ||
+    confirmFolderFilesMutation.isPending
+  ) {
+    return <LoadingSpinner />;
   }
 
   if (type === 'version') {
@@ -271,11 +356,12 @@ const DragAndDropInput = ({
                 Change
               </button>
               <button
-                onClick={handleConfirmVersion}
+                onClick={handleConfirmFileVersion}
                 className="bg-gradient-to-r from-blue-600 to-blue-400 px-6 py-2 rounded-lg text-white text-lg font-medium">
                 Confirm
               </button>
             </div>
+            <ErrorAction>{errorText}</ErrorAction>
           </div>
         )}
       </div>
@@ -328,19 +414,28 @@ const DragAndDropInput = ({
           <div className="flex gap-4 mt-6">
             <button
               onClick={handleChange}
-              className="border border-solid border-blue-600 px-6 py-2 rounded-lg text-lg font-medium">
+              className="border border-solid border-blue-600 px-6 py-2 rounded-lg text-lg font-medium"
+              disabled={
+                classifyAIMutation.isPending ||
+                confirmFolderFilesMutation.isPending
+              }>
               Change
             </button>
             <button
               onClick={
                 type === 'AI'
-                  ? () => handleConfirmAI()
-                  : () => handleConfirmFiles()
+                  ? () => handleClassifyAI()
+                  : () => handleConfirmFolderFiles()
               }
-              className="bg-gradient-to-r from-blue-600 to-blue-400 px-6 py-2 rounded-lg text-white text-lg font-medium">
+              className="bg-gradient-to-r from-blue-600 to-blue-400 px-6 py-2 rounded-lg text-white text-lg font-medium"
+              disabled={
+                classifyAIMutation.isPending ||
+                confirmFolderFilesMutation.isPending
+              }>
               Confirm
             </button>
           </div>
+          <ErrorAction>{errorText}</ErrorAction>
         </div>
       )}
     </div>

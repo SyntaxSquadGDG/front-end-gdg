@@ -11,28 +11,38 @@ import Folders from '../folders/folders';
 import SectionTable from './section-table';
 import { contentFont } from '@app/_utils/fonts';
 import StructureView from '../general/structure-view';
+import { getNextPage } from '@app/_utils/fetch';
+import { getErrorText } from '@app/_utils/translations';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
 
 const SectionViewWrapper = ({ children, sectionName, id }) => {
   const locale = useLocale();
   const direction = getLangDir(locale);
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
+  const [errorText, setErrorText] = useState(null);
   const t = useTranslations();
 
-  const { data, isLoading, isFetching, isError, fetchNextPage, hasNextPage } =
+  const { data, isLoading, isFetching, error, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ['sections'],
-      refetchOnWindowFocus: false,
+      queryKey: ['sections', id],
       queryFn: ({ pageParam = 1 }) => {
-        return fetchSectionFolders(pageParam, 5, id); // Fetch 5 messages per page
+        return fetchSectionFolders(id, pageParam, paginationPageLimit); // Fetch 5 messages per page
       },
-      getNextPageParam: (lastPage, pages) => {
-        const hasData = lastPage.length > 0;
-        const isLastPage = !hasData || lastPage.length < 5;
-        return hasData && !isLastPage ? pages.length + 1 : undefined;
-      },
+      getNextPageParam: (lastPage, pages) =>
+        getNextPage(lastPage, pages, paginationPageLimit),
     });
 
   // Safely access messages after the data is fetched
   const folders = data?.pages?.flat() || [];
+
+  useEffect(() => {
+    const errorText = getErrorText(
+      t,
+      `sections.errors.${error?.message}`,
+      `sections.errors.SECTION_FETCH_ERROR`,
+    );
+    setErrorText(errorText);
+  }, [error]);
 
   return (
     <StructureView>
@@ -49,18 +59,23 @@ const SectionViewWrapper = ({ children, sectionName, id }) => {
               direction === 'ltr' ? 'xl:mr-[432px]' : 'xl:ml-[432px]',
             )}>
             <DataFetching
-              isError={isError}
+              error={error && errorText}
               isLoading={isLoading}
-              item="Folders"
-              data={data}>
-              <Folders folders={folders} sectionName={sectionName} />
+              emptyError={t('sections.errors.SECTION_ZERO_ERROR')}
+              data={folders}>
+              K{/* <Folders folders={folders} sectionName={sectionName} /> */}
             </DataFetching>
           </div>
         </div>
         {children}
       </div>
-
-      <SectionTable folders={folders} sectionName={sectionName} />
+      <DataFetching
+        error={error && errorText}
+        isLoading={isLoading}
+        emptyError={t('sections.errors.SECTION_ZERO_ERROR')}
+        data={folders}>
+        <SectionTable folders={folders} sectionName={sectionName} />
+      </DataFetching>
     </StructureView>
   );
 };

@@ -1,24 +1,25 @@
 import { useState } from 'react';
-import { CreateFolderMetadata } from './data/posts';
+import { createFolderMetadata } from './data/posts';
 import { useTranslations } from 'next-intl';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useModal } from '@app/_contexts/modal-provider';
 import toast from 'react-hot-toast';
-import { UpdateFolderMetadata } from './data/updates';
+import { updateFolderMetadata } from './data/updates';
 import Input from '../general/input';
 import NormalSelect from '../general/normal-select';
 import Checkbox from '../general/checkbox';
 import DeleteSVG from '@app/_components/svgs/permissions/delete';
 import Button from '../general/button';
 import Add2SVG from '@app/_components/svgs/general/add2';
-import { v4 as uuidv4 } from 'uuid'; // Import UUID library
+import { v4 as uuidv4 } from 'uuid';
+import { getErrorText } from '@app/_utils/translations';
+import ErrorAction from '../general/error-action';
 
 export default function MetadataForm({ id, initialFields = [] }) {
   const [fields, setFields] = useState(
     initialFields.map((field) => ({ ...field, id: field.id || uuidv4() })),
   );
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState(null);
   const t = useTranslations();
   const queryClient = useQueryClient();
   const mode = initialFields.length > 0 ? 'update' : 'create';
@@ -29,7 +30,6 @@ export default function MetadataForm({ id, initialFields = [] }) {
 
   const { closeModal } = useModal();
 
-  // Add a new metadata field
   const addField = () => {
     setFields([
       ...fields,
@@ -37,12 +37,10 @@ export default function MetadataForm({ id, initialFields = [] }) {
     ]);
   };
 
-  // Remove a metadata field
   const removeField = (index) => {
     setFields(fields.filter((_, i) => i !== index));
   };
 
-  // Update field values
   const updateField = (index, key, value) => {
     const updatedFields = fields.map((field, i) =>
       i === index ? { ...field, [key]: value } : field,
@@ -50,19 +48,6 @@ export default function MetadataForm({ id, initialFields = [] }) {
     setFields(updatedFields);
   };
 
-  async function onSuccess() {
-    await queryClient.invalidateQueries(['folderMetadata', id]);
-    setError(null);
-    setIsLoading(false);
-    closeModal();
-    if (mode === 'create') {
-      toast.success(t('folders.success.METADATA_CREATE'));
-    } else {
-      toast.success(t('folders.success.METADATA_UPDATE'));
-    }
-  }
-
-  // Save metadata (POST for create, PUT for update)
   const saveMetadata = async () => {
     const trimmedFields = fields.map((field) => ({
       ...field,
@@ -70,75 +55,70 @@ export default function MetadataForm({ id, initialFields = [] }) {
     }));
     const hasEmptyField = trimmedFields.some((field) => !field.name);
     if (hasEmptyField) {
-      setError(t('folders.errors.METADATA_KEY_EMPTY'));
+      setErrorText(t('folders.errors.METADATA_KEY_EMPTY'));
       return;
     }
 
     const nameSet = new Set();
     const hasDuplicate = trimmedFields.some((field) => {
       if (nameSet.has(field.name)) {
-        return true; // Duplicate found
+        return true;
       }
       nameSet.add(field.name);
       return false;
     });
 
     if (hasDuplicate) {
-      setError(t('folders.errors.METADATA_KEY_DUPLICATE'));
-      return; // Stop execution
+      setErrorText(t('folders.errors.METADATA_KEY_DUPLICATE'));
+      return;
     }
 
-    const data = {
-      folderId: id,
-      fields: fields,
-    };
+    const metadataObject = Object.fromEntries(
+      fields.map((field) => [field.name, field.type]),
+    );
 
-    if (mode === 'create') {
-      await CreateFolderMetadata(
-        data,
-        setIsLoading,
-        setError,
-        onSuccess,
-        t,
-        toast,
-      );
-    } else {
-      await UpdateFolderMetadata(
-        data,
-        setIsLoading,
-        setError,
-        onSuccess,
-        t,
-        toast,
-      );
-    }
+    metadataMutation.mutate(metadataObject);
   };
 
   function cancel() {
     setFields(initialFields);
-    setIsLoading(false);
-    setError(null);
+    setErrorText(null);
     closeModal();
   }
 
   const options = [
-    {
-      label: t('types.text'),
-      value: 'text',
-    },
-    {
-      label: t('types.number'),
-      value: 'number',
-    },
-    {
-      label: t('types.boolean'),
-      value: 'boolean',
-    },
-    {
-      label: t('types.date'),
-      value: 'date',
-    },
+    { label: t('types.text'), value: 'text' },
+    { label: t('types.number'), value: 'number' },
+    { label: t('types.boolean'), value: 'boolean' },
+    { label: t('types.date'), value: 'date' },
   ];
+
+  const metadataMutation = useMutation({
+    mutationFn: (data) =>
+      initialFields.length === 0
+        ? createFolderMetadata(id, data)
+        : updateFolderMetadata(id, data),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['folderMetadata', id]);
+      toast.success(
+        initialFields.length === 0
+          ? t('folders.metadataCreated')
+          : t('folders.metadataUpdated'),
+      );
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `folders.errors.${error?.message}`,
+        initialFields.length === 0
+          ? `folders.errors.CREATE_METADATA_ERROR`
+          : `folders.errors.UPDATE_METADATA_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <div>
@@ -147,7 +127,7 @@ export default function MetadataForm({ id, initialFields = [] }) {
         <div key={field.id} className="flex gap-4 items-center">
           <Input
             placeHolder={t('folders.metadataFieldNamePlaceholder')}
-            isPending={isLoading}
+            isPending={metadataMutation.isPending}
             type="text"
             value={field.name}
             onChange={(e) => updateField(index, 'name', e.target.value)}
@@ -155,18 +135,18 @@ export default function MetadataForm({ id, initialFields = [] }) {
           <NormalSelect
             options={options}
             value={field.type}
-            disabled={isLoading}
+            disabled={metadataMutation.isPending}
             onChange={(value) => updateField(index, 'type', value)}
           />
           <Checkbox
             onChange={(checked) => updateField(index, 'required', checked)}
             value={field.required}
-            disabled={isLoading}
+            disabled={metadataMutation.isPending}
             label={t('general.required')}
           />
           <button
             onClick={() => removeField(index)}
-            disabled={isLoading}
+            disabled={metadataMutation.isPending}
             className=" text-white px-2">
             <DeleteSVG />
           </button>
@@ -175,14 +155,14 @@ export default function MetadataForm({ id, initialFields = [] }) {
       <Button
         SVG={Add2SVG}
         text={t('folders.metadataAddField')}
-        disabled={isLoading}
+        disabled={metadataMutation.isPending}
         onClick={addField}
         variant="outline"
       />
       <div className="flex gap-[8px]">
         <Button
           text={t('general.cancel')}
-          disabled={isLoading}
+          disabled={metadataMutation.isPending}
           onClick={cancel}
           variant="solid"
         />
@@ -191,10 +171,10 @@ export default function MetadataForm({ id, initialFields = [] }) {
           text={buttonText}
           onClick={saveMetadata}
           disabled={mode === 'create' && fields.length === 0}
-          isPending={isLoading}
+          isPending={metadataMutation.isPending}
         />
       </div>
-      {error && error}
+      <ErrorAction>{errorText}</ErrorAction>
     </div>
   );
 }

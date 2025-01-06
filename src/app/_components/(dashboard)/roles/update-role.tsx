@@ -9,23 +9,20 @@ import { useUpdateRoleSchema } from '@app/_schemas/update-role';
 import { useRouter } from 'nextjs-toploader/app';
 import { revalidatePathAction } from '@app/actions';
 import { UpdateRoleFetch } from '@app/_utils/fetch/updates';
+import { useMutation } from '@tanstack/react-query';
+import { updateRole } from './data/updates';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
+import ErrorAction from '../general/error-action';
 
 const UpdateRole = ({ role }) => {
   const t = useTranslations();
   const updateRoleSchema = useUpdateRoleSchema();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const router = useRouter();
-
-  const values = {
-    name: 'HR',
-  };
+  const [errorText, setErrorText] = useState(null);
 
   const {
     register,
-    control,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(updateRoleSchema),
@@ -34,29 +31,28 @@ const UpdateRole = ({ role }) => {
     },
   });
 
-  async function onSuccessHandler() {
-    reset();
-    await revalidatePathAction('/roles');
-    router.push('/roles');
-  }
-
-  async function onSuccessUpdate(data) {
-    console.log(data);
-    const res = await UpdateRoleFetch(
-      role.id,
-      data,
-      setIsLoading,
-      setError,
-      onSuccessHandler,
-    );
-  }
-
   async function onSuccess(data) {
-    console.log(data);
-    const res = await onSuccessUpdate(data);
+    setErrorText(null);
+    mutation.mutate(data);
   }
 
   function onError() {}
+
+  const mutation = useMutation({
+    mutationFn: (data) => updateRole(role.id, data),
+    onSuccess: async () => {
+      await revalidatePathAction(`/roles/${role.id}`);
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `roles.errors.${error?.message}`,
+        `roles.errors.ROLE_UPDATE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <div>
@@ -67,7 +63,7 @@ const UpdateRole = ({ role }) => {
               label={t('roles.nameLabel')}
               placeHolder={t('roles.namePlaceholder')}
               type={'text'}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               {...register('name')}
               error={errors.name?.message}
             />
@@ -78,13 +74,13 @@ const UpdateRole = ({ role }) => {
             <Button
               className={'w-[100%] lg:w-[50%] mt-[50px]'}
               text={t('roles.updateRoleButton')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               isPendingText={t('roles.updating')}
             />
           </div>
         </div>
       </form>
-      {error && <p>{error}</p>}
+      <ErrorAction>{errorText}</ErrorAction>
     </div>
   );
 };

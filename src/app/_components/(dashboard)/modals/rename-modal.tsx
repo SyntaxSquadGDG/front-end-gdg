@@ -9,8 +9,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import useRenameSchema from '@app/_schemas/rename-schema';
 import { useForm } from 'react-hook-form';
 import Input from '../general/input';
+import ErrorAction from '../general/error-action';
 
-const RenameModal = ({ modalName, head, onClick, isRenaming }) => {
+const RenameModal = ({ modalName, head, onClick, isRenaming, error }) => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
   const renameSchema = useRenameSchema();
@@ -65,6 +66,7 @@ const RenameModal = ({ modalName, head, onClick, isRenaming }) => {
             />
           </div>
         </form>
+        <ErrorAction>{error}</ErrorAction>
       </div>
     </Modal>
   );

@@ -5,9 +5,9 @@ export const useContactSchema = () => {
   const t = useTranslations();
 
   const contactSchema = z.object({
-    name: z.string().email(t('contact.form.nameError')),
+    name: z.string().min(1, t('contact.form.nameError')),
     email: z.string().email(t('contact.form.emailError')),
-    message: z.string().email(t('contact.form.messageError')),
+    message: z.string().min(1, t('contact.form.messageError')),
   });
 
   return contactSchema;

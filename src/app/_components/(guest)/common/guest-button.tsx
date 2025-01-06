@@ -14,24 +14,22 @@ const GuestButton = ({
   variant = 'default',
 }) => {
   const commonClass = `${
-    disabled
-      ? 'bg-slate-400'
-      : variant === 'default'
+    variant === 'default'
       ? 'bg-goldLinear text-guestMainColor'
       : variant === 'outline'
       ? 'bg-transparent text-textLight border-[1px] border-solid border-textLight'
       : 'bg-textLight text-guestMainColor'
   } rounded-[16px] px-[24px] xs:px-[70px] py-[18px] text-[20px] font-medium text-center flex justify-center items-center`;
 
-  // if (link) {
-  //   return (
-  //     <Link
-  //       href={href}
-  //       className={clsx(commonClass, contentFont.className, className)}>
-  //       {children}
-  //     </Link>
-  //   );
-  // }
+  if (link) {
+    return (
+      <Link
+        href={href}
+        className={clsx(commonClass, contentFont.className, className)}>
+        {children}
+      </Link>
+    );
+  }
   return (
     <button
       className={clsx(commonClass, contentFont.className, className)}

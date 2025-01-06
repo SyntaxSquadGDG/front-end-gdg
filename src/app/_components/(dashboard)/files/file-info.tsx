@@ -8,34 +8,50 @@ import Button from '../general/button';
 import LockModal from './lock-file-modal';
 import { revalidatePathAction } from '@app/actions';
 import { useModal } from '@app/_contexts/modal-provider';
-import { LockFile } from './data/posts';
+import { LockFile, lockFile, unlockFile } from './data/posts';
 import toast from 'react-hot-toast';
+import { useMutation } from '@tanstack/react-query';
+import { getErrorText } from '@app/_utils/translations';
 
 const FileInfo = ({ id, lockType }) => {
   const t = useTranslations();
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState(null);
   const { closeModal, openModal } = useModal();
+  const willLock = lockType === 'lock';
 
   function handleClose() {
-    setError(null);
-    setIsLoading(false);
+    setErrorText(null);
   }
 
-  async function onSuccess() {
-    await revalidatePathAction(`/files/${id}`);
-    if (lockType === 'lock') {
-      toast.success(t('files.locked'));
-    } else {
-      toast.success(t('files.unlocked'));
-    }
-    handleClose();
-    closeModal();
+  async function handleLockFile() {
+    setErrorText(null);
+    lockMutation.mutate();
   }
 
-  async function lock() {
-    await LockFile(id, lockType, setIsLoading, setError, onSuccess, t, toast);
-  }
+  const lockMutation = useMutation({
+    mutationFn: () => (willLock ? lockFile(id) : unlockFile(id)),
+    onSuccess: async () => {
+      await revalidatePathAction(`/files/${id}`);
+      if (willLock) {
+        toast.success(t('files.locked'));
+      } else {
+        toast.success(t('files.unlocked'));
+      }
+      handleClose();
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        willLock
+          ? `files.errors.FILE_LOCK_ERROR`
+          : `files.errors.FILE_UNLOCK_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <div className="flex flex-col gap-[24px]">
@@ -56,13 +72,14 @@ const FileInfo = ({ id, lockType }) => {
           onClick={() => openModal(`LockFile${id}`)}
           variant="fill"
           expand={true}
+          isPending={lockMutation.isPending}
         />
         <LockModal
-          error={error}
-          isLocking={isLoading}
+          error={errorText}
+          isLocking={lockMutation.isPending}
           fileId={id}
           type={lockType}
-          onClick={lock}
+          onClick={handleLockFile}
         />
       </div>
     </div>

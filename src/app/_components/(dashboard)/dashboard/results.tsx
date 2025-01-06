@@ -7,6 +7,7 @@ import Card from '../general/card';
 import { fetchFileTypeResults } from './data/queries';
 import TryLater from '../general/try-later';
 import LoadError from '../general/load-error';
+import { getErrorText } from '@app/_utils/translations';
 
 const Results = async () => {
   const t = await getTranslations();
@@ -15,7 +16,12 @@ const Results = async () => {
   try {
     data = await fetchFileTypeResults();
   } catch (error) {
-    return <LoadError>{t('dashboard.FILE_TYPE_RESULTS_ERROR')}</LoadError>;
+    const errorText = getErrorText(
+      t,
+      `dashboard.errors.${error?.message}`,
+      `dashboard.errors.FILE_TYPE_RESULTS_ERROR`,
+    );
+    return <LoadError>{errorText}</LoadError>;
   }
 
   return (

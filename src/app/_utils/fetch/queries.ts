@@ -1,3 +1,4 @@
+import { fetchData } from '../fetch';
 import { BASE_URL } from './fetch';
 
 export const fetchRolesClient = async (currentPage, limit) => {
@@ -126,12 +127,12 @@ export const fetchTypeActivities = async (currentPage, limit, type, id) => {
 };
 
 export const fetchAvailableStructure = async () => {
-  const response = await fetch(`${BASE_URL}/structure`);
-  if (!response.ok) {
-    throw new Error('Error fetching roles');
-  }
-
-  const data = await response.json();
-  console.log(data);
-  return data;
+  const res = await fetchData('/structure');
+  return res.folders;
 };
+
+export const fetchStructure = async () => {
+  const res = await fetchData('/structure');
+  return res.folders;
+};
+

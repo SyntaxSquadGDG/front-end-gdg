@@ -9,13 +9,15 @@ import { useRouter } from 'nextjs-toploader/app';
 import { revalidatePathAction } from '@app/actions';
 import ErrorAction from '@app/_components/(dashboard)/general/error-action';
 import { useUpdateManagerSchema } from './schema/update-manager';
-import { UpdateManager } from './data/updates';
+import { UpdateManager, updateManager } from './data/updates';
+import { useMutation } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
+import { getErrorText } from '@app/_utils/translations';
 
 const UpdateEmployee = ({ manager }) => {
   const t = useTranslations();
   const updateManagerSchema = useUpdateManagerSchema();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [errorText, setErrorText] = useState(null);
   const router = useRouter();
 
   const {
@@ -34,7 +36,7 @@ const UpdateEmployee = ({ manager }) => {
 
   async function onSuccessHandler() {
     reset();
-    await revalidatePathAction('/managers');
+    await revalidatePathAction(`/managers/`);
     router.push('/managers');
   }
 
@@ -56,6 +58,22 @@ const UpdateEmployee = ({ manager }) => {
 
   function onError() {}
 
+  const mutation = useMutation({
+    mutationFn: (data) => updateManager(manager.id, data),
+    onSuccess: async () => {
+      await revalidatePathAction(`/managers/${manager.id}`);
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `managers.errors.${error?.message}`,
+        `managers.errors.MANAGER_UPDATE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
+
   return (
     <div>
       <form onSubmit={handleSubmit(onSuccess, onError)} className="">
@@ -66,7 +84,7 @@ const UpdateEmployee = ({ manager }) => {
               placeHolder={t('managers.firstNamePlaceholder')}
               type={'text'}
               {...register('firstName')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               error={errors.firstName?.message}
             />
             <Input
@@ -74,7 +92,7 @@ const UpdateEmployee = ({ manager }) => {
               placeHolder={t('managers.lastNamePlaceholder')}
               type={'text'}
               {...register('lastName')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               error={errors.lastName?.message}
             />
             <Input
@@ -82,7 +100,7 @@ const UpdateEmployee = ({ manager }) => {
               placeHolder={t('managers.emailPlaceholder')}
               type={'text'}
               {...register('email')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               error={errors.email?.message}
             />
 
@@ -96,10 +114,10 @@ const UpdateEmployee = ({ manager }) => {
             <Button
               className={'w-[100%] lg:w-[400px] mt-[50px]'}
               text={t('managers.updateManagerButton')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               isPendingText={t('managers.updating')}
             />
-            <ErrorAction>{error}</ErrorAction>
+            <ErrorAction>{errorText}</ErrorAction>
           </div>
         </div>
       </form>

@@ -4,12 +4,13 @@ import { routing } from './i18n/routing';
 import { decodeJWT } from '@app/_utils/auth';
 import { cookies } from 'next/headers';
 import {
-  authRoutes,
+  publicRoutes,
   defaultLocale,
   guestRoutes,
   locales,
-  publicRoutes,
-  sharedRoutes,
+  ownerRoutes,
+  managerRoutes,
+  employeeRoutes,
 } from '@routes';
 
 function normalizePath(pathname: string): string {
@@ -47,33 +48,51 @@ export default async function middleware(request) {
   // Extract cookies and decode the JWT token
   const cookieStore = cookies();
   const token = cookieStore.get('token');
-  const isAuth = token ? !!decodeJWT(token.value)?.payload : false;
+  const decodedToken = token ? decodeJWT(token.value) : null;
+  const isAuth = decodedToken ? !!decodedToken.payload : false;
 
-  // Check if the route is public
+  // Check if the route is public and allow access to public routes for unauthenticated users
   if (publicRoutes.includes(path)) {
     return response;
   }
 
-  // Check for shared and authenticated routes
-  if (isAuth && (sharedRoutes.includes(path) || authRoutes.includes(path))) {
+  // Handle authenticated users
+  if (isAuth) {
+    const userRole = decodedToken.payload.role;
+
+    // Restrict access based on user role
+    if (userRole === 'owner' && ownerRoutes.includes(path)) {
+      return response;
+    }
+
+    if (userRole === 'manager' && managerRoutes.includes(path)) {
+      return response;
+    }
+
+    if (userRole === 'employee' && employeeRoutes.includes(path)) {
+      return response;
+    }
+
+    // Redirect to dashboard if the user tries to access an unauthorized route
+    const locale = nextUrl.locale || defaultLocale;
+    return NextResponse.redirect(new URL(`/${locale}/dashboard`, nextUrl));
+  }
+
+  // Handle guest users
+  if (!isAuth) {
+    // Redirect guest users to login page if they try to access any non-public route
+    if (!guestRoutes.includes(path)) {
+      const locale = nextUrl.locale || defaultLocale;
+      return NextResponse.redirect(
+        new URL(`/${locale}/login?redirect=${path}`, nextUrl),
+      );
+    }
     return response;
   }
 
-  // Redirect unauthorized users to the login page, preserving the locale
+  // Default case: redirect unauthenticated users to the login page
   const locale = nextUrl.locale || defaultLocale;
-  if (!isAuth && (sharedRoutes.includes(path) || authRoutes.includes(path))) {
-    return NextResponse.redirect(
-      new URL(`/${locale}/login?redirect=${path}`, nextUrl),
-    );
-  }
-
-  // Allow guest routes
-  if (!isAuth && guestRoutes.includes(path)) {
-    return response;
-  }
-
-  // Default redirection for authenticated users
-  return NextResponse.redirect(new URL(`/${locale}/dashboard`, nextUrl));
+  return NextResponse.redirect(new URL(`/${locale}/login`, nextUrl));
 }
 
 export const config = {

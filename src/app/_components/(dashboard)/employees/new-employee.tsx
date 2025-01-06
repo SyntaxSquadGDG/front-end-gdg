@@ -8,12 +8,24 @@ import { useTranslations } from 'next-intl';
 import Input from '../general/input';
 import CustomSelect from '../general/select';
 import { extendSelect } from '@app/_utils/helper';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
+
 import LoadingSpinner from '../general/loader';
 import { CreateEmployeeFetch } from '@app/_utils/fetch/posts';
 import { useRouter } from 'nextjs-toploader/app';
 import { revalidatePathAction } from '@app/actions';
 import SelectedSelect from '../general/selected-select';
+import { fetchEmployees } from './data/queries';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { getNextPage } from '@app/_utils/fetch';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
+import { CreateEmployee, createEmployee } from './data/posts';
+import DataFetching from '../general/data-fetching';
 // import { fetchRolesClient } from '@app/_utils/queries';
 
 export const fetchRolesClient = async () => {
@@ -28,10 +40,14 @@ export const fetchRolesClient = async () => {
 };
 
 const NewEmployee = () => {
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
+  const queryClient = useQueryClient();
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [selectedRoleIds, setSelectedRoleIds] = useState([]); // Stores only the role ids
-  const [isLoadingCreate, setIsLoadingCreate] = useState(false);
-  const [errorCreate, setErrorCreate] = useState(null);
+
+  const [errorCreatingText, setErrorCreatingText] = useState(null);
+  const [errorFetchingText, setErrorFetchingText] = useState(null);
+
   const router = useRouter();
 
   const t = useTranslations();
@@ -51,18 +67,14 @@ const NewEmployee = () => {
     data: initialRoles,
     isLoading: isLoadingData,
     isFetching,
-    isError: isErrorData,
+    error,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
     queryKey: ['roles'],
-    queryFn: ({ pageParam = 1 }) => fetchEmployeesClient(pageParam, 5),
-    getNextPageParam: (lastPage, pages) => {
-      const hasData = lastPage.length > 0;
-      const isLastPage = lastPage.length < 5; // Assuming you're fetching 5 employees per page
-      return hasData && !isLastPage ? pages.length + 1 : undefined;
-    },
-    refetchOnWindowFocus: false,
+    queryFn: ({ pageParam = 1 }) => fetchRoles(pageParam, paginationPageLimit),
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
   });
 
   const roles =
@@ -91,24 +103,30 @@ const NewEmployee = () => {
     (role) => !selectedRoles.some((selected) => selected.id === role.id),
   );
 
-  async function onCreateSuccess() {
-    reset();
-    await revalidatePathAction('/employees');
-    router.push('/employees');
-  }
-
   async function onSuccess(data) {
-    console.log(data);
-    console.log(selectedRoleIds);
-    const res = await CreateEmployeeFetch(
-      data,
-      setIsLoadingCreate,
-      setErrorCreate,
-      onCreateSuccess,
-    );
+    setErrorCreatingText(null);
+    mutation.mutate(data);
   }
 
   function onError() {}
+
+  const mutation = useMutation({
+    mutationFn: (data) => createEmployee(data),
+    onSuccess: async () => {
+      reset();
+      await queryClient.invalidateQueries(['employees']);
+      router.push('/employees');
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `employees.errors.${error?.message}`,
+        `employees.errors.EMPLOYEE_CREATE_ERROR`,
+      );
+      setErrorCreatingText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <div>
@@ -119,6 +137,7 @@ const NewEmployee = () => {
               label={t('employees.firstNameLabel')}
               placeHolder={t('employees.firstNamePlaceholder')}
               type={'text'}
+              isPending={mutation.isPending}
               {...register('firstName')}
               error={errors.firstName?.message}
             />
@@ -126,6 +145,7 @@ const NewEmployee = () => {
               label={t('employees.lastNameLabel')}
               placeHolder={t('employees.lastNamePlaceholder')}
               type={'text'}
+              isPending={mutation.isPending}
               {...register('lastName')}
               error={errors.lastName?.message}
             />
@@ -133,6 +153,7 @@ const NewEmployee = () => {
               label={t('employees.emailLabel')}
               placeHolder={t('employees.emailPlaceholder')}
               type={'text'}
+              isPending={mutation.isPending}
               {...register('email')}
               error={errors.email?.message}
             />
@@ -141,41 +162,42 @@ const NewEmployee = () => {
               label={t('employees.passwordLabel')}
               placeHolder={t('employees.passwordPlaceholder')}
               type={'password'}
+              isPending={mutation.isPending}
               {...register('password')}
               error={errors.password?.message}
             />
 
-            {isLoadingData && <LoadingSpinner alignStart={true} />}
-            {!isLoadingData && (
-              <div>
-                <CustomSelect
-                  label={t('employees.roleLabel')}
-                  error={errors.roles?.message}
-                  options={availableRoles}
-                  onChange={handleRoleChange}
-                  // onScroll={handleScroll}
-                  endPoint={'/search/roles'}
-                  dataToExtend={['name']}
-                  isFetchingData={isFetching}
-                  isLoadingData={isLoadingData}
-                  selectedItems={selectedRoleIds}
-                  hasNextData={hasNextPage}
-                  fetchNextData={fetchNextPage}
-                  disabled={isLoadingCreate}
-                />
-                <SelectedSelect
-                  handleChange={handleRoleChange}
-                  items={selectedRoles}
-                  keys={['name']}
-                />
-              </div>
-            )}
+            <DataFetching
+              data={initialRoles}
+              isLoading={isLoadingData}
+              error={error && errorFetchingText}>
+              <CustomSelect
+                label={t('employees.roleLabel')}
+                error={errors.roles?.message}
+                options={availableRoles}
+                onChange={handleRoleChange}
+                // onScroll={handleScroll}
+                endPoint={'/search/roles'}
+                dataToExtend={['name']}
+                isFetchingData={isFetching}
+                isLoadingData={isLoadingData}
+                selectedItems={selectedRoleIds}
+                hasNextData={hasNextPage}
+                fetchNextData={fetchNextPage}
+                disabled={mutation.isPending}
+              />
+              <SelectedSelect
+                handleChange={handleRoleChange}
+                items={selectedRoles}
+                keys={['name']}
+              />
+            </DataFetching>
           </div>
           <div className="flex items-center justify-center">
             <Button
               className={'w-[100%] lg:w-[50%] mt-[50px]'}
               text={t('employees.addEmployeeButton')}
-              isPending={isLoadingCreate}
+              isPending={mutation.isPending}
               isPendingText={t('employees.adding')}
             />
           </div>

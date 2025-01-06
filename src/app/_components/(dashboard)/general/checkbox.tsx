@@ -28,11 +28,11 @@ const Checkbox = ({
         <div
           className={clsx(
             'w-[18px] h-[18px] border-[2px] border-solid border-mainColor1 relative rounded-[2px]',
-            !alwaysTrue && 'cursor-pointer',
             (value || alwaysTrue) && 'bg-mainColor1 border-none',
-            disabled && 'opacity-15',
+            disabled && 'opacity-35',
+            disabled || alwaysTrue ? 'cursor-not-allowed' : 'cursor-pointer',
           )}
-          onClick={alwaysTrue ? () => {} : () => onChange(!value)}>
+          onClick={alwaysTrue || disabled ? () => {} : () => onChange(!value)}>
           {(value || alwaysTrue) && (
             <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
               <CheckedCheckboxSVG />
@@ -40,7 +40,11 @@ const Checkbox = ({
           )}
         </div>
         <label
-          className="text-[16px] cursor-pointer text-mainColor1"
+          className={clsx(
+            'text-[16px] text-mainColor1',
+            disabled && 'opacity-35',
+            disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+          )}
           htmlFor={checkboxId}>
           {label}
         </label>

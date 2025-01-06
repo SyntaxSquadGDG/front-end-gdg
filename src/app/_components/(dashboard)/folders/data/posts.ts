@@ -1,44 +1,48 @@
-import { BASE_URL } from '@app/_components/_constants/fetch';
-import { getCookie } from 'cookies-next';
+import { fetchData, fetchData2 } from '@app/_utils/fetch';
 
-export const CreateFolderMetadata = async (
-  data,
-  setLoading,
-  setError,
-  onSuccess,
-  t,
-  toast,
-) => {
-  setLoading(true);
-  setError(null);
-  let errorText;
-  const token = getCookie('token');
+export const createFolderMetadata = async (id, data) => {
+  return await fetchData(`/metadata`, 'POST', data);
+};
 
-  try {
-    const response = await fetch(`${BASE_URL}/metadata`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    });
+export const moveFolderToFolder = async (folderId, toFolderId) => {
+  return await fetchData(
+    `/movefoldertofolder/${folderId}/${toFolderId}`,
+    'POST',
+  );
+};
 
-    if (!response.ok) {
-      console.log(response);
-      throw new Error('CREATE_METADATA_ERROR');
-    }
+export const moveFolderToSection = async (folderId, sectionId) => {
+  return await fetchData(
+    `/movefoldertosection/${folderId}/${sectionId}`,
+    'POST',
+  );
+};
 
-    const result = await response.json();
-    await onSuccess();
-    return result;
-  } catch (error) {
-    errorText = t(`folders.errors.${error.message}`);
-    toast.error(errorText);
-    setError(errorText);
-    throw error; // Optionally re-throw the error if you want to handle it further elsewhere
-  } finally {
-    setLoading(false);
-  }
+export const copyFolderToFolder = async (folderId, toFolderId) => {
+  return await fetchData(
+    `/copyfoldertofolder/${folderId}/${toFolderId}`,
+    'POST',
+  );
+};
+
+export const copyFolderToSection = async (folderId, sectionId) => {
+  return await fetchData(
+    `/copyfoldertosection${folderId}/${sectionId}`,
+    'POST',
+  );
+};
+
+export const createFolderToSection = async (sectionId, data) => {
+  return await fetchData2(
+    `/Folders/newfolder?name=${data.folderName}&FolderParentId&SectionParentId=${sectionId}`,
+    'POST',
+  );
+};
+
+export const createFolderToFolder = async (folderId, data) => {
+  return await fetchData2(
+    `/Folders/newfolder?name=${data.folderName}&FolderParentId=${folderId}&SectionParentId`,
+    'POST',
+  );
 };
 

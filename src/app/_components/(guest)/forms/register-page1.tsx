@@ -13,6 +13,7 @@ import GuestButton from '@app/_components/(guest)/common/guest-button';
 
 const RegisterPage1 = ({
   register,
+  isLoading,
   errors,
   handleSubmit,
   clearErrors,
@@ -57,6 +58,7 @@ const RegisterPage1 = ({
             label={t('forms.register.companyLabel')}
             placeHolder={t('forms.register.companyPlaceholder')}
             type={'text'}
+            disabled={isLoading}
             {...register('company')}
             error={errors.company?.message}
           />
@@ -65,6 +67,7 @@ const RegisterPage1 = ({
             label={t('forms.register.emailLabel')}
             placeHolder={t('forms.register.emailPlaceholder')}
             type={'text'}
+            disabled={isLoading}
             {...register('email')}
             error={errors.email?.message}
           />
@@ -73,6 +76,7 @@ const RegisterPage1 = ({
             label={t('forms.register.numberLabel')}
             placeHolder={t('forms.register.numberPlaceholder')}
             type={'text'}
+            disabled={isLoading}
             {...register('number')}
             error={errors.number?.message}
           />
@@ -81,11 +85,13 @@ const RegisterPage1 = ({
             label={t('forms.register.countryLabel')}
             placeHolder={t('forms.register.countryPlaceholder')}
             type={'text'}
+            disabled={isLoading}
             {...register('country')}
             error={errors.country?.message}
           />
         </div>
         <GuestButton
+          disabled={isLoading}
           onClick={handleSubmit(onSubmit, onFailure)}
           className={'w-[100%]'}>
           {t('general.next')}

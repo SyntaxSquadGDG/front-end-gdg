@@ -18,6 +18,8 @@ import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
 import ErrorBoundary from '@app/_components/(dashboard)/general/error-boundary';
 import { ViewProvider } from '@app/_contexts/view-provider';
 import FileSettingsModals from '@app/_components/(dashboard)/files/file-settings-modals';
+import { getErrorText } from '@app/_utils/translations';
+import LoadError from '@app/_components/(dashboard)/general/load-error';
 
 const page = async ({ params }) => {
   const id = (await params).id;
@@ -30,8 +32,12 @@ const page = async ({ params }) => {
     try {
       file = await fetchFileData(id);
     } catch (error) {
-      console.error('Error fetching employees:', error);
-      return <TryLater>Files</TryLater>;
+      const errorText = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILE_DATA_ERROR`,
+      );
+      return <LoadError>{errorText}</LoadError>;
     }
     return (
       <>
@@ -46,8 +52,12 @@ const page = async ({ params }) => {
     try {
       path = await fetchFilePath(id);
     } catch (error) {
-      console.error('Error fetching employees:', error);
-      return <TryLater>Files</TryLater>;
+      const errorText = getErrorText(
+        t,
+        `files.errors.${error?.message}`,
+        `files.errors.FILE_PATH_ERROR`,
+      );
+      return <LoadError>{errorText}</LoadError>;
     }
     return (
       <>

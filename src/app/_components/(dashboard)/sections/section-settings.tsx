@@ -2,7 +2,7 @@
 
 import SettingsSVG from '@app/_components/svgs/general/settings';
 import { useTranslations } from 'next-intl';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ItemModal from '../modals/item-modal';
 import RemoveSVG from '@app/_components/svgs/modals/remove';
 import { useModal } from '@app/_contexts/modal-provider';
@@ -19,27 +19,33 @@ import DocumentsSVG from '@app/_components/svgs/guest/documents';
 import { fetchSectionSettings } from './data/queires';
 import { useQuery } from '@tanstack/react-query';
 import LoadingSpinner from '../general/loader';
+import DataFetching from '../general/data-fetching';
+import { getErrorText } from '@app/_utils/translations';
 
 const SectionSettings = ({ id }) => {
   const t = useTranslations();
   const { modalStack, openModal, closeModal } = useModal();
   const [isOpen, setIsOpen] = useState(false);
-  const [error, setError] = useState(null);
-  const [isOpenedBefore, setIsOpenedBefore] = useState(false);
+  const [errorText, setErrorText] = useState(null);
 
   function handleSettingsClick() {
     setIsOpen(true);
-    if (!isOpenedBefore) {
-      setIsOpenedBefore(true);
-      refetch(); // Fetch only when settings is opened for the first time
-    }
   }
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['sectionSettings', id], // Unique key for the query
-    queryFn: () => fetchSectionSettings(id, isLoading, setError, t, toast), // Function to fetch the data
-    enabled: false, // Set to false if you want to fetch on user action (e.g., button click)
+    queryFn: () => fetchSectionSettings(id), // Function to fetch the data
+    enabled: isOpen, // Set to false if you want to fetch on user action (e.g., button click)
   });
+
+  useEffect(() => {
+    const errorText = getErrorText(
+      t,
+      `sections.errors.${error?.message}`,
+      `sections.errors.SECTION_SETTINGS_FETCH_ERROR`,
+    );
+    setErrorText(errorText);
+  }, [error]);
 
   return (
     <div className="relative">
@@ -48,9 +54,11 @@ const SectionSettings = ({ id }) => {
       </button>
 
       <ItemModal isOpen={isOpen} setIsOpen={setIsOpen}>
-        {isLoading && <LoadingSpinner />}
-        {error && error}
-        {!isLoading && !error && (
+        <DataFetching
+          isLoading={isLoading}
+          error={error && errorText}
+          data={data}
+          emptyError={t('sections.settings.SECTION_SETTINGS_ZERO_ERROR')}>
           <React.Fragment>
             <ItemModalItem
               SVG={EditPermissionsSVG}
@@ -58,7 +66,6 @@ const SectionSettings = ({ id }) => {
               type="button"
               onClick={() => {
                 openModal(`ItemPermissionsEdit${'section'}${id}`);
-                setIsOpen(false);
               }}
             />
             <ItemModalItem
@@ -73,7 +80,6 @@ const SectionSettings = ({ id }) => {
               text={t('modals.rename')}
               onClick={() => {
                 openModal(`renameSectionModal${id}`);
-                setIsOpen(false);
               }}
               type="button"
             />
@@ -83,12 +89,11 @@ const SectionSettings = ({ id }) => {
               text={t('general.delete')}
               onClick={() => {
                 openModal(`deleteSectionModal${id}`);
-                setIsOpen(false);
               }}
               type="button"
             />
           </React.Fragment>
-        )}
+        </DataFetching>
       </ItemModal>
     </div>
   );

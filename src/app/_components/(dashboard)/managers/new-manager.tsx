@@ -8,13 +8,16 @@ import Input from '../general/input';
 import { useRouter } from 'nextjs-toploader/app';
 import { revalidatePathAction } from '@app/actions';
 import { useNewManagerSchema } from './schema/new-manager';
-import { CreateManager } from './data/posts';
+import { CreateManager, createManager } from './data/posts';
 import ErrorAction from '../general/error-action';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
+import { getErrorText } from '@app/_utils/translations';
 
 const NewManager = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [errorText, setErrorText] = useState(null);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const t = useTranslations();
   const newManagerSchema = useNewManagerSchema();
@@ -23,25 +26,32 @@ const NewManager = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm({
     resolver: zodResolver(newManagerSchema),
   });
 
-  async function onCreateSuccess() {
-    reset();
-    await revalidatePathAction('/managers');
-    router.push('/managers');
+  async function onSuccess(data) {
+    setErrorText(null);
+    mutation.mutate(data);
   }
 
-  async function onSuccess(data) {
-    const res = await CreateManager(
-      data,
-      setIsLoading,
-      setError,
-      onCreateSuccess,
-    );
-  }
+  const mutation = useMutation({
+    mutationFn: (data) => createManager(data),
+    onSuccess: async () => {
+      reset();
+      await queryClient.invalidateQueries(['managers']);
+      router.push('/managers');
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `managers.errors.${error?.message}`,
+        `managers.errors.MANAGER_CREATE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   function onError() {}
 
@@ -88,10 +98,10 @@ const NewManager = () => {
             <Button
               className={'w-[100%] lg:w-[50%] mt-[50px]'}
               text={t('managers.addManagerButton')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               isPendingText={t('managers.adding')}
             />
-            <ErrorAction>{error}</ErrorAction>
+            <ErrorAction>{errorText}</ErrorAction>
           </div>
         </div>
       </form>

@@ -8,21 +8,36 @@ import { useModal } from '@app/_contexts/modal-provider';
 import Button from '../general/button';
 import toast from 'react-hot-toast';
 import { trainModel } from './data/posts';
+import { useMutation } from '@tanstack/react-query';
+import { getErrorText } from '@app/_utils/translations';
+import ErrorAction from '../general/error-action';
 
 const TrainModal = () => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  function onSuccess() {
-    toast.success(t('dashboard.trainSuccess'));
-    closeModal();
-  }
+  const [errorText, setErrorText] = useState(null);
 
   async function train() {
-    const res = await trainModel(toast, t, setIsLoading, setError, onSuccess);
+    setErrorText(null);
+    mutation.mutate();
   }
+
+  const mutation = useMutation({
+    mutationFn: () => trainModel(),
+    onSuccess: () => {
+      toast.success(t('dashboard.trainSuccess'));
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `dashboard.errors.${error?.message}`,
+        `dashboard.errors.TRAIN_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <Modal
@@ -38,18 +53,16 @@ const TrainModal = () => {
             onClick={() => closeModal()}
             text={t('general.cancel')}
             variant="solid"
+            isPending={mutation.isPending}
           />
           <Button
             onClick={train}
             text={t('general.yes')}
-            isPending={isLoading}
+            isPending={mutation.isPending}
             isPendingText={t('dashboard.training')}
-            disabled={isLoading}
           />
         </div>
-        {error && (
-          <p className="text-[16px] font-medium text-red-500">* {error}</p>
-        )}
+        {errorText && <ErrorAction>{errorText}</ErrorAction>}
       </div>
     </Modal>
   );

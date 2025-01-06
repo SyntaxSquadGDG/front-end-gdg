@@ -10,6 +10,8 @@ import ViewSVG from '@app/_components/svgs/managers/view';
 import { getTranslations } from 'next-intl/server';
 import React, { Suspense } from 'react';
 import { fetchManager } from '@app/_components/(dashboard)/managers/data/queries';
+import { getErrorText } from '@app/_utils/translations';
+import LoadError from '@app/_components/(dashboard)/general/load-error';
 
 const page = async ({ params }) => {
   const id = (await params).id;
@@ -34,8 +36,12 @@ const page = async ({ params }) => {
         </>
       );
     } catch (error) {
-      console.error('Error fetching managers:', error);
-      return <TryLater>{t('zero.manager')}</TryLater>;
+      const textError = getErrorText(
+        t,
+        `managers.errors.${error?.message}`,
+        `managers.errors.MANAGER_LOAD_ERROR`,
+      );
+      return <LoadError>{textError}</LoadError>;
     }
   };
 

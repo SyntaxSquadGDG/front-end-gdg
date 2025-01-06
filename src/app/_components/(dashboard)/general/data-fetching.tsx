@@ -1,29 +1,19 @@
 'use client';
 import React from 'react';
 import LoadingSpinner from './loader';
-import NoToShow from './no-to-show';
-import TryLater from './try-later';
-import { useTranslations } from 'next-intl';
 import ErrorBoundaryWrapper from './error-boundary-wrapper';
+import LoadError from './load-error';
 
-const DataFetching = ({
-  isLoading,
-  data,
-  isError,
-  children,
-  skipEmpty = false,
-  item = 'Manager',
-}) => {
-  const t = useTranslations();
-  if (isError) {
-    return <TryLater>{item}</TryLater>;
+const DataFetching = ({ isLoading, data, children, error, emptyError }) => {
+  if (error) {
+    return <LoadError>{error}</LoadError>;
   }
   if (isLoading) {
-    return <LoadingSpinner full={false} />;
+    return <LoadingSpinner />;
   }
 
-  if ((!data || data.length === 0) && !skipEmpty) {
-    return <NoToShow>{item}</NoToShow>;
+  if ((!data || data.length === 0) && emptyError) {
+    return <LoadError>{emptyError}</LoadError>;
   }
 
   return <ErrorBoundaryWrapper>{children}</ErrorBoundaryWrapper>;

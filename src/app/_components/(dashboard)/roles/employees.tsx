@@ -4,20 +4,16 @@ import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import React, { useMemo, useState } from 'react';
 import EmployeeItemTable from './employee-item-table';
-import NoToShow from '../general/no-to-show';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import {
-  fetchEmployees,
-  fetchEmployeesClient,
-  fetchRoleEmployees,
-} from '@app/_utils/fetch/queries';
-import MoreSVG from '@app/_components/svgs/general/more';
-import LoadingSpinner from '../general/loader';
-import ShowMore from '../general/show-more';
-import TryLater from '../general/try-later';
+import { getNextPage } from '@app/_utils/fetch';
+import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
+import { getErrorText } from '@app/_utils/translations';
+import DataFetching from '../general/data-fetching';
+import { fetchRoleEmployees } from '../employees/data/queries';
 
 const EmployeesTable = ({ id, full = false }) => {
   const t = useTranslations();
+  const paginationPageLimit = PAGINATION_PAGE_LIMIT;
 
   const [sortConfig, setSortConfig] = useState({
     key: 'id', // Default column to sort by
@@ -28,22 +24,16 @@ const EmployeesTable = ({ id, full = false }) => {
     data: employeesData,
     isLoading: isLoadingEmployees,
     isFetching: isFetchingEmployees,
-    isError: isEmployeesError,
+    error,
     fetchNextPage: fetchNextEmployees,
     hasNextPage: hasNextEmployees,
   } = useInfiniteQuery({
-    queryKey: ['roleEmployees'],
-    refetchOnWindowFocus: false,
+    queryKey: ['roleEmployees', id],
     queryFn: ({ pageParam = 1 }) => {
-      return fetchRoleEmployees(pageParam, 5, id); // Return initial data if provided
+      return fetchRoleEmployees(id, pageParam, paginationPageLimit); // Return initial data if provided
     },
-    getNextPageParam: (lastPage, pages) => {
-      const hasData = lastPage.length > 0;
-
-      const isLastPage = !hasData || lastPage.length < 5; // Adjust length based on how many items are expected per page
-
-      return hasData && !isLastPage ? pages.length + 1 : undefined;
-    },
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
   });
 
   let employees = employeesData?.pages?.flat() || []; // Flatten the pages to get all employees in one array
@@ -83,70 +73,70 @@ const EmployeesTable = ({ id, full = false }) => {
     });
   };
 
-  if (isLoadingEmployees) {
-    return <LoadingSpinner full={false} />;
-  }
-
-  if (isEmployeesError) {
-    return <TryLater>{t('zero.employees')}</TryLater>;
-  }
-
-  if (employees.length === 0) {
-    return <NoToShow>{t('zero.employees')}</NoToShow>;
-  }
+  const errorText = getErrorText(
+    t,
+    `employees.errors.${error?.message}`,
+    `employees.errors.EMPLOYEES_LOAD_ERROR`,
+  );
 
   return (
-    <div className="tableDiv">
-      <div>
-        <table className={clsx(contentFont.className, 'table')}>
-          <thead>
-            <tr>
-              <td></td>
-              <td
-                onClick={() => handleSort('id')}
-                style={{ cursor: 'pointer' }}>
-                {t('employees.id')}
-                {sortConfig.key === 'id' &&
-                  (sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽')}
-              </td>
-              <td
-                onClick={() => handleSort('firstName')}
-                style={{ cursor: 'pointer' }}>
-                {t('employees.name')}
-                {sortConfig.key === 'name' &&
-                  (sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽')}
-              </td>
-              <td
-                onClick={() => handleSort('email')}
-                style={{ cursor: 'pointer' }}>
-                {t('employees.email')}
-                {sortConfig.key === 'email' &&
-                  (sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽')}
-              </td>
-              <td></td>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedEmployees.map((employee) => {
-              return (
-                <EmployeeItemTable
-                  employee={employee}
-                  roleId={id}
-                  key={employee.id}
-                />
-              );
-            })}
-          </tbody>
-        </table>
+    <DataFetching
+      data={employees}
+      isLoading={isLoadingEmployees}
+      emptyError={t('employees.errors.EMPLOYEES_ZERO_ERROR')}
+      error={error && errorText}>
+      <div className="tableDiv">
+        <div>
+          <table className={clsx(contentFont.className, 'table')}>
+            <thead>
+              <tr>
+                <td></td>
+                <td
+                  onClick={() => handleSort('id')}
+                  style={{ cursor: 'pointer' }}>
+                  {t('employees.id')}
+                  {sortConfig.key === 'id' &&
+                    (sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽')}
+                </td>
+                <td
+                  onClick={() => handleSort('firstName')}
+                  style={{ cursor: 'pointer' }}>
+                  {t('employees.name')}
+                  {sortConfig.key === 'name' &&
+                    (sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽')}
+                </td>
+                <td
+                  onClick={() => handleSort('email')}
+                  style={{ cursor: 'pointer' }}>
+                  {t('employees.email')}
+                  {sortConfig.key === 'email' &&
+                    (sortConfig.direction === 'asc' ? ' 🔼' : ' 🔽')}
+                </td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedEmployees.map((employee) => {
+                return (
+                  <EmployeeItemTable
+                    employee={employee}
+                    roleId={id}
+                    key={employee.id}
+                  />
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        {full && (
+          <ShowMore
+            hasNext={hasNextEmployees}
+            isFetching={isFetchingEmployees}
+            onClick={fetchNextEmployees}
+          />
+        )}
       </div>
-      {full && (
-        <ShowMore
-          hasNext={hasNextEmployees}
-          isFetching={isFetchingEmployees}
-          onClick={fetchNextEmployees}
-        />
-      )}
-    </div>
+    </DataFetching>
   );
 };
 

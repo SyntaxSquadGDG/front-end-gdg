@@ -12,17 +12,19 @@ import DeleteRoleModal from '../modals/remove-role-modal';
 import { useModal } from '@app/_contexts/modal-provider';
 import DeleteModal from '../modals/delete-modal';
 import { DeleteRoleFetch } from '@app/_utils/fetch/deletes';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'nextjs-toploader/app';
+import { deleteRole } from './data/deletes';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
 
 const RoleItemTable = ({ role }) => {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [errorDeleting, setErrorDeleting] = useState(null);
   const { openModal, closeModal } = useModal();
   const queryClient = useQueryClient();
   const router = useRouter();
+  const [errorText, setErrorText] = useState(null);
 
   const handleRowClick = (e) => {
     // Prevent navigation if a button or link was clicked
@@ -33,18 +35,26 @@ const RoleItemTable = ({ role }) => {
   };
 
   async function handleDelete() {
-    await DeleteRoleFetch(
-      role.id,
-      setIsDeleting,
-      setErrorDeleting,
-      onDeleteSuccess,
-    );
+    setErrorText(null);
+    mutation.mutate(role.id);
   }
 
-  async function onDeleteSuccess() {
-    closeModal();
-    queryClient.invalidateQueries(['roles']);
-  }
+  const mutation = useMutation({
+    mutationFn: (id) => deleteRole(id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['roles']);
+      closeModal();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `roles.errors.${error?.message}`,
+        `roles.errors.ROLE_DELETE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <tr className="cursor-pointer" onClick={handleRowClick}>
@@ -89,8 +99,8 @@ const RoleItemTable = ({ role }) => {
             <DeleteModal
               modalName={`deleteRoleModal${role.id}`}
               head={t('roles.removeRoleText')}
-              isDeleting={isDeleting}
-              error={errorDeleting}
+              isDeleting={mutation.isPending}
+              error={errorText}
               onClick={handleDelete}
             />
             {/* <DeleteFolderModal id={folder.id} /> */}

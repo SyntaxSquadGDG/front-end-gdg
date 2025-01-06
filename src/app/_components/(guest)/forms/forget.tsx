@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import FormSection from '../common/form-section';
 import { useTranslations } from 'next-intl';
 import EmailSVG from '@app/_components/svgs/guest/forms/email';
@@ -12,22 +12,49 @@ import clsx from 'clsx';
 import GuestButton from '@app/_components/(guest)/common/guest-button';
 import Input from '../common/input';
 import { useForgetSchema } from '@app/_schemas/forget';
+import ErrorAction from '../common/error-action';
+import { useMutation } from '@tanstack/react-query';
+import { forgetPassword } from './data/posts';
+import toast from 'react-hot-toast';
+import { getErrorText } from '@app/_utils/translations';
 
 const Forget = () => {
   const t = useTranslations();
   const forgetSchema = useForgetSchema();
+  const [errorText, setErrorText] = useState(null);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(forgetSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  async function onSubmit(data) {
+    setErrorText(null);
+    mutation.mutate(data);
+  }
+
+  function onError() {}
+
+  const mutation = useMutation({
+    mutationFn: (data) => forgetPassword(data),
+    onSuccess: async () => {
+      reset();
+      toast.success(t('forms.forget.success'));
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `forms.errors.${error?.message}`,
+        `forms.errors.FORGET_PASSWORD_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <FormSection>
@@ -51,6 +78,7 @@ const Forget = () => {
               label={t('forms.forget.emailLabel')}
               placeHolder={t('forms.forget.emailPlaceholder')}
               type={'text'}
+              disabled={mutation.isPending}
               {...register('email')}
               error={errors.email?.message}
             />
@@ -58,9 +86,12 @@ const Forget = () => {
               {t('forms.forget.notifications')}
             </p>
           </div>
-          <GuestButton className={'w-[100%] mt-[40px] mb-[32px]'}>
-            {t('general.send')}
+          <GuestButton
+            className={'w-[100%] mt-[40px] mb-[32px]'}
+            disabled={mutation.isPending}>
+            {mutation.isPending ? t('general.sending') : t('general.send')}
           </GuestButton>
+          <ErrorAction>{errorText}</ErrorAction>
         </div>
       </form>
     </FormSection>

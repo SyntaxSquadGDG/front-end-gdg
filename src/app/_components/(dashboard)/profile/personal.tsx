@@ -12,16 +12,17 @@ import { UpdatePersonalInfo } from './data/updates';
 import toast from 'react-hot-toast';
 import { revalidatePathAction } from '@app/actions';
 import ErrorAction from '../general/error-action';
+import { useMutation } from '@tanstack/react-query';
+import { getErrorText } from '@app/_utils/translations';
+import { showErrorMessage } from '@app/_utils/fetch';
 
 const PersonalInfo = ({ data }) => {
   const t = useTranslations();
   const personalInfoSchema = usePersonalInfoSchema();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [errorText, setErrorText] = useState(null);
 
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -33,24 +34,27 @@ const PersonalInfo = ({ data }) => {
     },
   });
 
-  async function onSuccessHandler() {
-    await revalidatePathAction('/profile');
-    toast.success(t('profile.updatedDataSuccessfully'));
-  }
-
   async function onSuccess(data) {
-    console.log(data);
-    await UpdatePersonalInfo(
-      data,
-      setIsLoading,
-      setError,
-      onSuccessHandler,
-      toast,
-      t,
-    );
+    setErrorText(null);
+    mutation.mutate(data);
   }
 
-  function onError() {}
+  const mutation = useMutation({
+    mutationFn: (data) => UpdatePersonalInfo(data),
+    onSuccess: async () => {
+      await revalidatePathAction('/profile');
+      toast.success(t('profile.updatedDataSuccessfully'));
+    },
+    onError: (error) => {
+      showErrorMessage(
+        t,
+        `profile.errors.${error?.message}`,
+        `profile.errors.UPDATE_PERSONAL_INFO_ERROR`,
+        setErrorText,
+        toast,
+      );
+    },
+  });
 
   return (
     <div>
@@ -68,7 +72,7 @@ const PersonalInfo = ({ data }) => {
             label={t('profile.personalInfo.firstNameLabel')}
             placeHolder={t('profile.personalInfo.firstNamePlaceholder')}
             type={'text'}
-            isPending={isLoading}
+            isPending={mutation.isPending}
             {...register('firstName')}
             error={errors.firstName?.message}
           />
@@ -76,7 +80,7 @@ const PersonalInfo = ({ data }) => {
             label={t('profile.personalInfo.lastNameLabel')}
             placeHolder={t('profile.personalInfo.lastNamePlaceholder')}
             type={'text'}
-            isPending={isLoading}
+            isPending={mutation.isPending}
             {...register('lastName')}
             error={errors.lastName?.message}
           />
@@ -84,7 +88,7 @@ const PersonalInfo = ({ data }) => {
             label={t('profile.personalInfo.emailLabel')}
             placeHolder={t('profile.personalInfo.emailPlaceholder')}
             type={'text'}
-            isPending={isLoading}
+            isPending={mutation.isPending}
             {...register('email')}
             error={errors.email?.message}
           />
@@ -93,10 +97,10 @@ const PersonalInfo = ({ data }) => {
           <Button
             className={'w-[100%] lg:w-fit lg:px-[77px] lg:py-[14px] mt-[32px]'}
             text={t('profile.personalInfo.updateButton')}
-            isPending={isLoading}
+            isPending={mutation.isPending}
             isPendingText={t('general.updating')}
           />
-          <ErrorAction>{error}</ErrorAction>
+          <ErrorAction>{errorText}</ErrorAction>
         </div>
       </form>
     </div>

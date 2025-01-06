@@ -10,11 +10,17 @@ import OverlaySection from '../common/overlay-section';
 import { contentFont } from '@app/_utils/fonts';
 import { useDemoSchema } from '@app/_schemas/demo';
 import DemoFormSuccess from './demo-form-success';
+import { useMutation } from '@tanstack/react-query';
+import { demo } from './data/posts';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
+import ErrorAction from '../common/error-action';
 
 const DemoForm = () => {
   const t = useTranslations();
   const demoSchema = useDemoSchema();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorText, setErrorText] = useState(null);
 
   const shows = [
     t('demo.form.show1'),
@@ -33,18 +39,37 @@ const DemoForm = () => {
 
   const {
     register,
-    control,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(demoSchema),
   });
 
-  function onSuccess() {
-    setIsSuccess(true);
+  async function onSuccess(data) {
+    setErrorText(null);
+    mutation.mutate(data);
   }
 
   function onError() {}
+
+  const mutation = useMutation({
+    mutationFn: (data) => demo(data),
+    onSuccess: async () => {
+      setIsSuccess(true);
+      toast.success(t('demo.form.successHead'));
+      reset();
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `demo.errors.${error?.message}`,
+        `demo.errors.DEMO_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <section
@@ -94,6 +119,7 @@ const DemoForm = () => {
                   label={t('demo.form.nameLabel')}
                   placeHolder={t('demo.form.namePlaceholder')}
                   type={'text'}
+                  disabled={mutation.isPending}
                   {...register('name')}
                   error={errors.name?.message}
                 />
@@ -102,6 +128,7 @@ const DemoForm = () => {
                   label={t('demo.form.emailLabel')}
                   placeHolder={t('demo.form.emailPlaceholder')}
                   type={'text'}
+                  disabled={mutation.isPending}
                   {...register('email')}
                   error={errors.email?.message}
                 />
@@ -110,6 +137,7 @@ const DemoForm = () => {
                   label={t('demo.form.companyLabel')}
                   placeHolder={t('demo.form.companyPlaceholder')}
                   type={'text'}
+                  disabled={mutation.isPending}
                   {...register('company')}
                   error={errors.company?.message}
                 />
@@ -118,6 +146,7 @@ const DemoForm = () => {
                   label={t('demo.form.countryLabel')}
                   placeHolder={t('demo.form.countryPlaceholder')}
                   type={'text'}
+                  disabled={mutation.isPending}
                   {...register('country')}
                   error={errors.country?.message}
                 />
@@ -126,13 +155,19 @@ const DemoForm = () => {
                   label={t('demo.form.messageLabel')}
                   placeHolder={t('demo.form.messagePlaceholder')}
                   type={'textarea'}
+                  disabled={mutation.isPending}
                   {...register('message')}
                   error={errors.message?.message}
                 />
 
-                <GuestButton className={'w-[100%] mt-[32px]'}>
-                  {t('demo.form.demoButton')}
+                <GuestButton
+                  className={'w-[100%] mt-[32px]'}
+                  disabled={mutation.isPending}>
+                  {mutation.isPending
+                    ? t('demo.form.demoing')
+                    : t('demo.form.demoButton')}
                 </GuestButton>
+                <ErrorAction>{errorText}</ErrorAction>
               </form>
             </div>
           </>

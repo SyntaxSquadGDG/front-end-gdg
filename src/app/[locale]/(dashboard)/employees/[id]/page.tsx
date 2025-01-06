@@ -15,10 +15,11 @@ import AddPermissionButton from '@app/_components/(dashboard)/permissions/add-pe
 import AddPermissionModal from '@app/_components/(dashboard)/modals/add-permission-modal';
 import AddTypeButton from '@app/_components/(dashboard)/employees-roles/add-type-button';
 import AddTypeToTypeModal from '@app/_components/(dashboard)/modals/add-type-to-type-modal';
+import LoadError from '@app/_components/(dashboard)/general/load-error';
+import { getErrorText } from '@app/_utils/translations';
 
 const page = async ({ params }) => {
   const id = (await params).id;
-  // const employeeFirstName = 'Amr';
   const t = await getTranslations();
 
   const EmployeeDataWrapper = async () => {
@@ -40,8 +41,12 @@ const page = async ({ params }) => {
         </>
       );
     } catch (error) {
-      console.error('Error fetching employees:', error);
-      return <TryLater>{t('zero.employee')}</TryLater>;
+      const errorText = getErrorText(
+        t,
+        `employees.errors.${error?.message}`,
+        `employees.errors.EMPLOYEE_DATA_ERROR`,
+      );
+      return <LoadError>{errorText}</LoadError>;
     }
   };
 

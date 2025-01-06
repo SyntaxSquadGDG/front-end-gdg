@@ -1,30 +1,27 @@
 'use client';
-import { useNewEmployeeSchema } from '@app/_schemas/new-employee';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Button from '../general/button';
 import { useTranslations } from 'next-intl';
 import Input from '../general/input';
-import CustomSelect from '../general/select';
 import { useUpdateEmployeeSchema } from '@app/_schemas/update-employee';
-import { useRouter } from 'nextjs-toploader/app';
 import { revalidatePathAction } from '@app/actions';
-import { UpdateEmployeeFetch } from '@app/_utils/fetch/updates';
+import { useMutation } from '@tanstack/react-query';
+import { updateEmployee } from './data/updates';
+import { getErrorText } from '@app/_utils/translations';
+import toast from 'react-hot-toast';
+import ErrorAction from '../general/error-action';
 
 const UpdateEmployee = ({ employee }) => {
   const t = useTranslations();
   const updateEmployeeSchema = useUpdateEmployeeSchema();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const router = useRouter();
+  const [errorText, setErrorText] = useState(null);
 
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({
     resolver: zodResolver(updateEmployeeSchema),
     defaultValues: {
@@ -34,29 +31,28 @@ const UpdateEmployee = ({ employee }) => {
     },
   });
 
-  async function onSuccessHandler() {
-    reset();
-    await revalidatePathAction('/employees');
-    router.push('/employees');
-  }
-
-  async function onSuccessUpdate(data) {
-    console.log(data);
-    const res = await UpdateEmployeeFetch(
-      employee.id,
-      data,
-      setIsLoading,
-      setError,
-      onSuccessHandler,
-    );
-  }
-
   async function onSuccess(data) {
     console.log(data);
-    const res = await onSuccessUpdate(data);
+    mutation.mutate(data);
   }
 
   function onError() {}
+
+  const mutation = useMutation({
+    mutationFn: (data) => updateEmployee(employee.id, data),
+    onSuccess: async () => {
+      await revalidatePathAction(`/employees/${employee.id}`);
+    },
+    onError: (error) => {
+      const textError = getErrorText(
+        t,
+        `employees.errors.${error?.message}`,
+        `employees.errors.EMPLOYEE_UPDATE_ERROR`,
+      );
+      setErrorText(textError);
+      toast.error(textError);
+    },
+  });
 
   return (
     <div>
@@ -68,7 +64,7 @@ const UpdateEmployee = ({ employee }) => {
               placeHolder={t('employees.firstNamePlaceholder')}
               type={'text'}
               {...register('firstName')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               error={errors.firstName?.message}
             />
             <Input
@@ -76,7 +72,7 @@ const UpdateEmployee = ({ employee }) => {
               placeHolder={t('employees.lastNamePlaceholder')}
               type={'text'}
               {...register('lastName')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               error={errors.lastName?.message}
             />
             <Input
@@ -84,7 +80,7 @@ const UpdateEmployee = ({ employee }) => {
               placeHolder={t('employees.emailPlaceholder')}
               type={'text'}
               {...register('email')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               error={errors.email?.message}
             />
 
@@ -98,13 +94,13 @@ const UpdateEmployee = ({ employee }) => {
             <Button
               className={'w-[100%] lg:w-[400px] mt-[50px]'}
               text={t('employees.updateEmployeeButton')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               isPendingText={t('employees.updating')}
             />
           </div>
         </div>
       </form>
-      {error && <p>{error}</p>}
+      <ErrorAction>{errorText}</ErrorAction>
     </div>
   );
 };

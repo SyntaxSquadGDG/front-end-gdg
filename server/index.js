@@ -12,6 +12,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const delayMiddleware = require('./middlewares/delay');
 
 const Employee = require('./models/employeeModel');
+const jwt = require('jsonwebtoken');
 
 dotenv.config();
 connectDB();
@@ -223,6 +224,10 @@ app.get('/api/storage-results', async (req, res) => {
 });
 
 app.post('/api/trains', async (req, res) => {
+  return res.status(500).json({
+    error: 'ah',
+  });
+
   return res.status(200).json({
     message: 'trained',
   });
@@ -232,6 +237,10 @@ app.get('/api/categorization-results', async (req, res) => {
   return res.status(200).json(barData);
 });
 
+const error = {
+  error: 'FAILED',
+};
+
 app.get('/api/user/activities', async (req, res) => {
   console.log('RE');
   const myItems = [
@@ -240,6 +249,8 @@ app.get('/api/user/activities', async (req, res) => {
       time: '2024/5/8',
     },
   ];
+
+  return res.status(500).json(error);
   return res.status(200).json(myItems);
 });
 
@@ -447,78 +458,120 @@ const versions = [
   },
 ];
 
-const moveData = [
-  {
-    id: 1,
-    name: 'Section 1',
-    folders: [
-      {
-        id: 1,
-        name: 'Folder 1',
-        files: [
-          { id: 1, name: 'File 1' },
-          { id: 2, name: 'File 2' },
-        ],
-        folders: [
-          {
-            id: 101,
-            name: 'Folder 1-1',
-            files: [
-              { id: 7, name: 'File 7' },
-              { id: 8, name: 'File 8' },
-            ],
-            folders: [
-              {
-                id: 201,
-                name: 'Folder 1-1-1',
-                files: [{ id: 9, name: 'File 9' }],
-                folders: [], // No further subfolders
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: 2,
-        name: 'Folder 2',
-        files: [
-          { id: 3, name: 'File 3' },
-          { id: 4, name: 'File 4' },
-        ],
-        folders: [], // No subfolders
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: 'Section 2',
-    folders: [
-      {
-        id: 3,
-        name: 'Folder 3',
-        files: [
-          { id: 5, name: 'File 5' },
-          { id: 6, name: 'File 6' },
-        ],
-        folders: [
-          {
-            id: 102,
-            name: 'Folder 3-1',
-            files: [{ id: 10, name: 'File 10' }],
-            folders: [
-              {
-                id: 401,
-                name: 'Folder 3-1-1',
-                files: [{ id: 19, name: 'File 19' }],
-                folders: [], // No further subfolders
-              },
-            ], // No further subfolders
-          },
-        ],
-      },
-    ],
-  },
-];
+const moveData = {
+  name: 'all',
+  type: null,
+  id: 0,
+  folders: [
+    {
+      name: 'SyntaxSquad',
+      type: 'Section',
+      id: 4,
+      folders: [
+        {
+          name: 'Advertisement',
+          type: 'Folder',
+          id: 4,
+          folders: [],
+        },
+        {
+          name: 'Email',
+          type: 'Folder',
+          id: 5,
+          folders: [
+            {
+              name: 'asd',
+              type: 'Folder',
+              id: 16,
+              folders: [
+                {
+                  name: 'asd3',
+                  type: 'Folder',
+                  id: 19,
+                  folders: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Form',
+          type: 'Folder',
+          id: 6,
+          folders: [
+            {
+              name: 'asd2',
+              type: 'Folder',
+              id: 17,
+              folders: [],
+            },
+          ],
+        },
+        {
+          name: 'Letter',
+          type: 'Folder',
+          id: 7,
+          folders: [],
+        },
+        {
+          name: 'Memo',
+          type: 'Folder',
+          id: 8,
+          folders: [],
+        },
+        {
+          name: 'News',
+          type: 'Folder',
+          id: 9,
+          folders: [],
+        },
+        {
+          name: 'Note',
+          type: 'Folder',
+          id: 10,
+          folders: [],
+        },
+        {
+          name: 'Report',
+          type: 'Folder',
+          id: 11,
+          folders: [],
+        },
+        {
+          name: 'Resume',
+          type: 'Folder',
+          id: 12,
+          folders: [],
+        },
+        {
+          name: 'Scientific',
+          type: 'Folder',
+          id: 13,
+          folders: [
+            {
+              name: 'asd3',
+              type: 'Folder',
+              id: 18,
+              folders: [],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'smile please',
+      type: 'Section',
+      id: 8,
+      folders: [],
+    },
+    {
+      name: 'happy day brother',
+      type: 'Section',
+      id: 9,
+      folders: [],
+    },
+  ],
+};
 
 app.get('/api/messages', async (req, res) => {
   const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
@@ -712,5 +765,61 @@ app.put('/api/metadata', (req, res) => {
   metadata = fields;
 
   return res.status(200).json({ success: true, metadata: metadata });
+});
+
+app.get('/api/me', (req, res) => {
+  console.log('ADS');
+  return res.status(200).json({
+    firstName: 'Amr',
+    lastName: 'Shoukry',
+    email: 'amr@gmail.com',
+    img: 'https://i.pravatar.cc/150?img=3',
+  });
+});
+
+const SECRET_KEY = 'your_secret_key'; // Replace with a strong secret key
+
+app.post('/api/login', (req, res) => {
+  const { company, email, password } = req.body;
+  console.log(company);
+
+  let userData;
+  switch (company) {
+    case 'owner':
+      userData = {
+        firstName: 'owner',
+        lastName: 'Amr',
+        email: 'owner@gmail.com',
+        role: 'owner',
+        img: 'https://picsum.photos/200',
+      };
+      break;
+    case 'manager':
+      userData = {
+        firstName: 'manager',
+        lastName: 'Amr',
+        email: 'manager@gmail.com',
+        role: 'manager',
+        img: 'https://picsum.photos/200',
+      };
+      break;
+    case 'employee':
+      userData = {
+        firstName: 'employee',
+        lastName: 'Amr',
+        email: 'employee@gmail.com',
+        role: 'employee',
+        img: 'https://picsum.photos/200',
+      };
+      break;
+    default:
+      return res.status(400).json({ error: 'Invalid company type' });
+  }
+
+  // Generate JWT
+  console.log('TOKEN?');
+  const token = jwt.sign(userData, SECRET_KEY, { expiresIn: '1h' });
+
+  res.json({ token });
 });
 

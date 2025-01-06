@@ -12,6 +12,7 @@
     "profile": "Profile",
     "help": "Help",
     "logout": "Logout",
+    "loggingOut": "Logging out...",
 
     "hello": "Hello",
     "search": "Search",
@@ -22,7 +23,11 @@
     "pricing": "Pricing",
     "contact": "Contact",
     "login": "Login",
-    "register": "Register"
+    "register": "Register",
+
+    "errors": {
+      "USER_DATA_ERROR": "Failed to fetch user's data"
+    }
   },
   "footer": {
     "slogan": "Smarter Document Management Starts Here",
@@ -232,8 +237,12 @@
       "messagePlaceholder": "Enter your message",
       "messageError": "Invalid Message",
       "demoButton": "Schedule Your Demo",
+      "demoing": "Scheduling...",
       "successHead": "Your Request Sent Successfully!",
       "successDescription": "We Will Send You An Email Include All Details."
+    },
+    "errors": {
+      "DEMO_ERROR": "Couldn't send data"
     }
   },
   "tour": {
@@ -268,7 +277,11 @@
       "emailError": "Invalid Email",
       "messageLabel": "Message",
       "messagePlaceholder": "Enter your message",
-      "messageError": "Invalid Message"
+      "messageError": "Invalid Message",
+      "success": "sent successfully"
+    },
+    "errors": {
+      "CONTACT_ERROR": "Couldn't send data"
     }
   },
   "forms": {
@@ -283,7 +296,9 @@
       "remember": "Remember me",
       "forget": "Forget password ?",
       "login": "Login",
+      "logging": "Logging in...",
       "not": "Don't have an account ?",
+      "success": "Logged in successfully!",
       "register": "Register",
       "companyError": "Company name is required",
       "emailError": "Invalid email address",
@@ -342,14 +357,16 @@
         "nonPersonal": "Non-Personal"
       },
       "registerSuccessHead": "Your Request Sent Successfully!",
-      "registerSuccessDescription": "Your form has been sent successfully. We will contact you soon !"
+      "registerSuccessDescription": "Your form has been sent successfully. We will contact you soon !",
+      "success": "Email sent successfully"
     },
     "forget": {
       "head": "Find your account",
       "emailLabel": "Email",
       "emailPlaceholder": "Enter Your Email",
       "emailError": "Invalid email address",
-      "notifications": "You may receive Mobile notifications for security and login purposes"
+      "notifications": "You may receive Mobile notifications for security and login purposes",
+      "success": "Email sent successfully"
     },
     "new": {
       "head": "Create New Password",
@@ -361,6 +378,12 @@
       "confirmPlaceholder": "Confirm Password",
       "confirmError": "Password doesn't match",
       "newSuccessHead": "Your Password Changed Successfully!"
+    },
+    "errors": {
+      "FORGET_PASSWORD_ERROR": "Couldn't send Data",
+      "NEW_PASSWORD_ERROR": "Couldn't send Data",
+      "LOGIN_ERROR": "Couldn't login",
+      "REGISTER_ERROR": "Couldn't register"
     }
   },
   "sections": {
@@ -376,7 +399,16 @@
     "delete": "Delete a Section",
     "deleteDescription": "Are you sure you want to delete this Section?",
     "errors": {
-      "SECTION_SETTINGS_ERROR": "Couldn't load settings"
+      "SECTION_SETTINGS_FETCH_ERROR": "Couldn't load settings",
+      "SECTION_SETTINGS_ZERO_ERROR": "Couldn't load settings",
+      "SECTION_PATH_ERROR": "Couldn't load section path",
+      "SECTIONS_FETCH_ERROR": "Couldn't load section data",
+      "SECTIONS_ZERO_ERROR": "There's no folders to show",
+      "SECTION_FETCH_ERROR": "Couldn't load section folders",
+      "SECTION_ZERO_ERROR": "There's no folders to show",
+      "SECTION_DELETE_ERROR": "Couldn't delete section",
+      "SECTION_RENAME_ERROR": "Couldn't rename section",
+      "SECTION_CREATE_ERROR": "Couldn't create section"
     }
   },
   "general": {
@@ -389,7 +421,9 @@
     "next": "Next",
     "submit": "Submit",
     "send": "Send",
+    "sending": "Sending...",
     "confirm": "Confirm",
+    "confirming": "Confirming",
     "error": "Something went wrong !",
     "notFound": "Page Not Found!",
     "home": "Go to home",
@@ -419,7 +453,8 @@
     "create": "Create",
     "creating": "Creating...",
     "update": "Update",
-    "required": "Required"
+    "required": "Required",
+    "submitting": "Submitting..."
   },
   "zero": {
     "thereNo": "There's no",
@@ -443,7 +478,11 @@
     "action": "Action",
     "lastModified": "Last Modified",
     "employeeName": "Employee Name",
-    "ACTIVITY_LOAD_ERROR": "Couldn't load activities"
+    "errors": {
+      "ACTIVITY_LOAD_ERROR": "Couldn't load activities",
+      "ACTIVITY_ZERO_ERROR": "No activities to show!",
+      "FAILED": "gail"
+    }
   },
   "permissions": {
     "id": "ID",
@@ -467,7 +506,13 @@
     "updateButton": "Update",
     "employees": "Employees",
 
-    "select": "Select an option"
+    "select": "Select an option",
+    "errors": {
+      "PERMISSIONS_LOAD_ERROR": "Couldn't load permissions",
+      "PERMISSIONS_ZERO_ERROR": "No permissions to show!",
+      "PERMISSION_DELETE_ERROR": "Couldn't delete permission",
+      "PERMISSIONS_UPDATE_ERROR": "Couldn't update permissions"
+    }
   },
   "folders": {
     "name": "Folder Name",
@@ -483,13 +528,25 @@
     "deleteDescription": "Are you sure you want to delete this folder?",
     "metadataFieldNamePlaceholder": "Field Name",
     "metadataAddField": "Add Field",
+    "metadataUpdated": "Metadata updated successfully!",
+    "metadataCreated": "Metadata created successfully!",
+    "renamed": "Folder renamed successfully!",
+    "created": "Folder created successfully!",
     "errors": {
-      "FOLDER_SETTINGS_ERROR": "Couldn't load settings",
-      "FOLDER_METADATA_ERROR": "Couldn't load metadata",
+      "FOLDER_DELETE_ERROR": "Error Deleting Folder!",
+      "FOLDER_RENAME_ERROR": "Error Renaming Folder!",
+      "FOLDER_SETTINGS_LOAD_ERROR": "Couldn't load settings",
+      "FOLDER_SETTINGS_ZERO_ERROR": "There's no settings to show!",
+      "FOLDER_METADATA_FETCH_ERROR": "Couldn't load folder metadata",
+      "FOLDERS_FETCH_ERROR": "Couldn't load folders",
+      "FOLDERS_ZERO_ERROR": "Couldn't load folders",
+      "FOLDER_METADATA_ZERO_ERROR": "There's no metadata to show!",
       "CREATE_METADATA_ERROR": "Couldn't Create metadata",
       "UPDATE_METADATA_ERROR": "Couldn't Update metadata",
       "METADATA_KEY_EMPTY": "You Must fill all the fields before saving!",
-      "METADATA_KEY_DUPLICATE": "You can't have duplicate keys!"
+      "METADATA_KEY_DUPLICATE": "You can't have duplicate keys!",
+      "FOLDER_PATH_ERROR": "Couldn't load folder path",
+      "FOLDER_CREATE_ERROR": "Couldn't create folder"
     },
     "success": {
       "METADATA_UPDATE": "Metadata updated successfully!",
@@ -529,17 +586,36 @@
     "size": "File Size",
     "permissions": "Permissions",
     "versionUpdated": "Version Updated Successfully",
+    "versionDeleted": "Version Deleted Successfully",
+    "versionRestored": "Version Restored Successfully",
+
+    "filesUploaded": "Files uploaded successfully!",
+    "metadataUpdated": "Metadata updated successfully!",
+    "classified": "Classified Successfully!",
     "errors": {
-      "DELETE": "Error Deleting File!",
-      "VERSION_DELETE": "Error Deleting Version!",
-      "RESTORE_ERROR": "Error Restoring File Version!",
-      "VERSION_FETCH_ERROR": "Error Fetcing Version!",
-      "VERSION_NEW_ERROR": "Error Setting New Version!",
-      "LOCK_ERROR": "Error locking file",
-      "UNLOCK_ERROR": "Error Unlocking file",
-      "FILE_SETTINGS_ERROR": "Couldn't load settings",
+      "FILE_DELETE_ERROR": "Error Deleting File!",
+      "FILE_RENAME_ERROR": "Error Deleting File!",
+      "FILE_VERSION_DELETE_ERROR": "Error Deleting Version!",
+      "FILE_VERSIONS_LOAD_ERROR": "Error Loading Version!",
+      "FILE_VERSIONS_ZERO_ERROR": "There's no versions to show!",
+      "FILE_RESTORE_ERROR": "Error Restoring File Version!",
+      "FILE_VERSION_FETCH_ERROR": "Error Fetcing Version!",
+      "FILE_VERSION_NEW_ERROR": "Error Setting New Version!",
+      "FILE_VERSION_RESTORED_ERROR": "Error Restoring Version!",
+      "FILE_LOCK_ERROR": "Error locking file",
+      "FILE_UNLOCK_ERROR": "Error Unlocking file",
+      "FILE_SETTINGS_LOAD_ERROR": "Couldn't load settings",
+      "FILE_SETTINGS_ZERO_ERROR": "Couldn't load settings",
       "FILE_METADATA_FETCH_ERROR": "Couldn't load file metadata",
-      "FILE_METADATA_UPDATE_ERROR": "Couldn't update file metadata"
+      "FILE_METADATA_UPDATE_ERROR": "Couldn't update file metadata",
+      "FILES_CLASSIFICATION_ERROR": "Couldn't classify the given files",
+      "FILES_UPLOAD_ERROR": "Couldn't upload files!",
+      "FILE_UPLOAD_ERROR": "Couldn't upload file!",
+      "FILE_DATA_ERROR": "Couldn't load file data",
+      "FILE_PATH_ERROR": "Couldn't load file path",
+      "FILE_PREVIEW_ERROR": "Couldn't load file preview",
+      "FILES_LOAD_ERROR": "Couldn't load files",
+      "FILES_ZERO_ERROR": "There's no files to show!"
     }
   },
   "dashboard": {
@@ -551,13 +627,15 @@
     "accuracy": "Categorization Accuracy",
     "available": "Available",
     "used": "Used",
-    "FILE_TYPE_RESULTS_ERROR": "couldn't load file type results",
-    "STORAGE_RESULTS_ERROR": "couldn't load file type results",
-    "CATEGORIZATION_RESULTS_ERROR": "couldn't load categorization results",
     "trainModalHead": "Are you sure you want to start training your models?",
     "trainSuccess": "Trained Successfully!",
     "training": "Training...",
-    "errors": {}
+    "errors": {
+      "FILE_TYPE_RESULTS_ERROR": "couldn't load file type results",
+      "STORAGE_RESULTS_ERROR": "couldn't load file type results",
+      "CATEGORIZATION_RESULTS_ERROR": "couldn't load categorization results",
+      "TRAIN_ERROR": "couldn't train"
+    }
   },
   "types": {
     "pdf": "PDF",
@@ -604,7 +682,17 @@
     "removeEmployeeFromRoleText": "Are You Sure You Want to Delete This Employee from the role?",
     "removeEmployeeText": "Are You Sure You Want to Delete This Employee?",
     "editEmployee": "Edit Employee",
-    "removeEmployee": "Remove Employee"
+    "removeEmployee": "Remove Employee",
+    "createdEmployee": "Employee Created Successfully!",
+    "errors": {
+      "EMPLOYEES_LOAD_ERROR": "Couldn't load employees",
+      "EMPLOYEES_ZERO_ERROR": "No employees to show!",
+      "EMPLOYEE_DELETE_ERROR": "Couldn't delete employee",
+      "EMPLOYEE_CREATE_ERROR": "Couldn't create employee",
+      "EMPLOYEE_DATA_ERROR": "Couldn't load employee data",
+      "EMPLOYEE_UPDATE_ERROR": "Couldn't update employee data",
+      "EMPLOYEES_TO_ROLE_ERROR": "Couldn't add employees to the role"
+    }
   },
   "roles": {
     "roles": "Roles",
@@ -628,7 +716,16 @@
     "editRole": "Edit Role",
     "removeRole": "Remove Role",
     "removeRoleText": "Are You Sure You Want to Delete This Role?",
-    "removeRoleFromEmployeeText": "Are You Sure You Want to Delete This Role? from this employee"
+    "removeRoleFromEmployeeText": "Are You Sure You Want to Delete This Role? from this employee",
+    "errors": {
+      "ROLES_LOAD_ERROR": "Couldn't load roles",
+      "ROLES_ZERO_ERROR": "No employees to show!",
+      "ROLE_DELETE_ERROR": "Couldn't delete role",
+      "ROLE_CREATE_ERROR": "Couldn't create role",
+      "ROLE_DATA_ERROR": "Couldn't load role data",
+      "ROLE_UPDATE_ERROR": "Couldn't update role data",
+      "ROLES_TO_EMPLOYEE_ERROR": "Couldn't add roles to the employee"
+    }
   },
   "managers": {
     "managers": "Managers",
@@ -656,7 +753,16 @@
     "passwordPlaceholder": "Enter Password",
     "idLabel": "Id",
     "adding": "Adding...",
-    "updating": "Updating..."
+    "updating": "Updating...",
+    "errors": {
+      "MANAGERS_LOAD_ERROR": "Couldn't load managers",
+      "MANAGERS_ZERO_ERROR": "No managers to show!",
+      "MANAGER_DELETE_ERROR": "Couldn't delete manager",
+      "MANAGER_CREATE_ERROR": "Couldn't create manager",
+      "MANAGER_DATA_ERROR": "Couldn't load manager data",
+      "MANAGER_UPDATE_ERROR": "Couldn't update manager data",
+      "MANAGERS_TO_ROLE_ERROR": "Couldn't add managers to the role"
+    }
   },
   "profile": {
     "profile": "Profile",
@@ -671,7 +777,8 @@
       "deleting": "Deleting...",
       "noUploaded": "No Image Uploaded yet.",
       "updatedSuccessfully": "Image updated successfully",
-      "deletedSuccessfully": "Image deleted successfully"
+      "deletedSuccessfully": "Image deleted successfully",
+      "removeImageDescription": "Are you sure you want to delete your image?"
     },
     "personalInfo": {
       "head": "Personal Info",
@@ -695,6 +802,13 @@
       "newPlaceholder": "New Password",
       "newError": "Error in new Password",
       "updateButton": "Update"
+    },
+    "errors": {
+      "PERSONAL_INFO_ERROR": "Couldn't fetch personal data",
+      "UPDATE_PERSONAL_INFO_ERROR": "Couldn't update personal data",
+      "UPDATE_PASSWORD_INFO_ERROR": "Couldn't update personal password",
+      "IMAGE_UPDATE_ERROR": "Couldn't update your image",
+      "IMAGE_DELETE_ERROR": "Couldn't delete your image"
     }
   },
   "plans": {
@@ -739,6 +853,11 @@
       "emailError": "Invalid Email",
       "subscribeButton": "Send",
       "unsubscribing": "unsubscribing..."
+    },
+    "errors": {
+      "FETCH_PLANS_ERROR": "Couldn't fetch plans",
+      "SUBSCRIBE_ERROR": "Couldn't subscribe",
+      "UNSUBSCRIBE_ERROR": "Couldn't unsubscribe"
     }
   },
   "search": {
@@ -747,17 +866,28 @@
     "file": "File",
     "fileName": "File Name",
     "similarityScore": "Similarity Score",
-    "path": "Path"
+    "path": "Path",
+    "errors": {
+      "SEARCH_ERROR": "Couldn't search currently!",
+      "SEARCH_ZERO_ERROR": "No results available!"
+    }
   },
   "help": {
     "head": "Help",
     "description": "Find support and solutions to help resolve issues quickly and efficiently",
     "messageError": "Invalid Message",
-    "support": "Support Team"
+    "support": "Support Team",
+    "errors": {
+      "MESSAGE_SEND_ERROR": "Couldn't send message"
+    }
   },
   "notifications": {
     "head": "Notifications",
-    "markAsReadButton": "Mark all as read"
+    "markAsReadButton": "Mark all as read",
+    "errors": {
+      "NOTIFICATIONS_ERROR": "Couldn't load notifications",
+      "NOTIFICATIONS_ZERO_ERROR": "No Notifications available!"
+    }
   },
   "modals": {
     "rename": "Rename",
@@ -793,6 +923,14 @@
   },
   "placeholders": {
     "rename": "Rename your item"
+  },
+  "structure": {
+    "errors": {
+      "STRUCTURE_LOAD_ERROR": "Couldn't load structure",
+      "STRUCTURE_ZERO_ERROR": "No structure to preview!",
+      "MOVE_ERROR": "Couldn't move to the specified path",
+      "COPY_ERROR": "Couldn't copy to the specified path"
+    }
   }
 }
 
