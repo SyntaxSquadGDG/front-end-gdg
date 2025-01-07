@@ -6,11 +6,13 @@ import {
 import ErrorBoundary from '@app/_components/(dashboard)/general/error-boundary';
 import HeadBar from '@app/_components/(dashboard)/general/head-bar';
 import LoadError from '@app/_components/(dashboard)/general/load-error';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
 import ToolBar from '@app/_components/navbars/toolbar';
 import ImageViewer from '@app/_components/previewers/image-viewer';
 import MarkdownRenderer from '@app/_components/previewers/markdown-preview';
-import { fetcher } from '@app/_utils/fetch/fetch';
+import { ViewProvider } from '@app/_contexts/view-provider';
 import { contentFont } from '@app/_utils/fonts';
 import { getErrorText } from '@app/_utils/translations';
 import clsx from 'clsx';
@@ -20,55 +22,6 @@ import React, { Suspense } from 'react';
 const page = async ({ params }) => {
   const id = (await params).id;
   const t = await getTranslations();
-  let data;
-  let file;
-  let path;
-
-  try {
-    data = await fetcher(`/sfiles/filebyidpreview?fileid=${id}`, {
-      next: { revalidate: 0, tags: ['filePreview', id] },
-    });
-    console.log('DATA IS ');
-    console.log(data);
-  } catch (e) {
-    console.log(e);
-  } finally {
-  }
-
-  try {
-    file = await fetcher(`/Sfiles/filebyid?fileid=${id}`, {
-      next: { revalidate: 0, tags: ['fileId', id] },
-    });
-    console.log(data);
-  } catch (e) {
-    console.log(e);
-  } finally {
-  }
-
-  try {
-    path = await fetcher(`/Sfiles/Path/${id}`, {
-      next: { revalidate: 0, tags: ['filepath', id] },
-    });
-  } catch (e) {
-    console.log(e);
-  } finally {
-  }
-
-  const pathArray = [];
-  const reversedPath = path ? [...path].reverse() : null;
-
-  for (const item of reversedPath) {
-    const href =
-      item.type === 'folder'
-        ? `/folders/${item.id}`
-        : item.type === 'file'
-        ? `/files/${item.id}`
-        : `/sections/${item.id}`;
-
-    pathArray.push({ text: item.name, href: href });
-  }
-
-  console.log(data);
 
   const PathDataWrapper = async () => {
     try {
@@ -85,7 +38,12 @@ const page = async ({ params }) => {
         `files.errors.${error?.message}`,
         `files.errors.FILE_PATH_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`file${id}Path`} />
+        </LoadErrorDiv>
+      );
     }
   };
 
@@ -98,7 +56,7 @@ const page = async ({ params }) => {
         <>
           <div className="flex flex-col lg:flex-row gap-[48px]">
             <div className="w-[100%]">
-              <ImageViewer src={`data:image/png;base64,${data.f}`} />
+              <ImageViewer src={`data:image/png;base64,${preview.f}`} />
             </div>
             <div className="w-[100%] p-[16px] overflow-hidden bg-slate-200">
               <h2
@@ -119,12 +77,17 @@ const page = async ({ params }) => {
         `files.errors.${error?.message}`,
         `files.errors.FILE_PREVIEW_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`file${id}Preview`} />
+        </LoadErrorDiv>
+      );
     }
   };
 
   return (
-    <div>
+    <ViewProvider>
       <ErrorBoundary>
         <Suspense fallback={<LoadingSpinner />}>
           <PathDataWrapper />
@@ -135,7 +98,7 @@ const page = async ({ params }) => {
           <FileDataWrapper />
         </Suspense>
       </ErrorBoundary>
-    </div>
+    </ViewProvider>
   );
 };
 

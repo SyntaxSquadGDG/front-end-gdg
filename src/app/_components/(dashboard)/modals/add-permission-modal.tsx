@@ -108,7 +108,7 @@ const AddPermissionModal = ({ type, id }) => {
     setButtonView(0);
   }, [selectedItem.id, selectedItem.type]);
 
-  const { isPending, error, data } = useQuery({
+  const { isPending, error, data, refetch } = useQuery({
     queryKey: ['structure'],
     queryFn: fetchStructure,
     enabled: isOpen,
@@ -117,7 +117,7 @@ const AddPermissionModal = ({ type, id }) => {
   const textError = getErrorText(
     t,
     `structure.errors.${error?.message}`,
-    `structure.errors.STRUCTUR_LOAD_ERROR`,
+    `structure.errors.STRUCTURE_LOAD_ERROR`,
   );
 
   return (
@@ -136,6 +136,7 @@ const AddPermissionModal = ({ type, id }) => {
               emptyError={t('structure.errors.STRUCTURE_ZERO_ERROR')}
               data={data}
               error={error && textError}
+              refetch={refetch}
               isLoading={isPending}>
               <HierarchicalView
                 selectedItem={selectedItem}
@@ -163,6 +164,7 @@ const AddPermissionModal = ({ type, id }) => {
                     type={type}
                     id={[id]}
                     sectionId={selectedItem.id}
+                    mode={'single'}
                   />
                 )}
                 {selectedItem.type === 'folder' && (
@@ -170,6 +172,7 @@ const AddPermissionModal = ({ type, id }) => {
                     type={type}
                     id={[id]}
                     folderId={selectedItem.id}
+                    mode={'single'}
                   />
                 )}
                 {selectedItem.type === 'file' && (
@@ -177,6 +180,7 @@ const AddPermissionModal = ({ type, id }) => {
                     type={type}
                     id={[id]}
                     fileId={selectedItem.id}
+                    mode={'single'}
                   />
                 )}
               </>

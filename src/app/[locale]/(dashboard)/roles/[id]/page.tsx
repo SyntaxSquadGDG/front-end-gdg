@@ -2,18 +2,20 @@ import AddTypeButton from '@app/_components/(dashboard)/employees-roles/add-type
 import AddEmployeeButton from '@app/_components/(dashboard)/employees/add-employee-button';
 import HeadBar from '@app/_components/(dashboard)/general/head-bar';
 import LoadError from '@app/_components/(dashboard)/general/load-error';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
 import TryLater from '@app/_components/(dashboard)/general/try-later';
 import AddPermissionModal from '@app/_components/(dashboard)/modals/add-permission-modal';
 import AddTypeToTypeModal from '@app/_components/(dashboard)/modals/add-type-to-type-modal';
 import AddPermissionButton from '@app/_components/(dashboard)/permissions/add-permission-button';
 import Permissions from '@app/_components/(dashboard)/permissions/permissions';
+import { fetchRole } from '@app/_components/(dashboard)/roles/data/queries';
 import Employees from '@app/_components/(dashboard)/roles/employees';
 import RoleHead from '@app/_components/(dashboard)/roles/head';
 import UpdateRole from '@app/_components/(dashboard)/roles/update-role';
 import EmployeesSVG from '@app/_components/svgs/employees/employees';
 import ViewSVG from '@app/_components/svgs/employees/view';
-import { fetchRole } from '@app/_utils/fetch/queries';
 import { contentFont } from '@app/_utils/fonts';
 import { getErrorText } from '@app/_utils/translations';
 import clsx from 'clsx';
@@ -47,7 +49,12 @@ const page = async ({ params }) => {
         `roles.errors.${error?.message}`,
         `roles.errors.ROLE_DATA_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`role${id}`} />
+        </LoadErrorDiv>
+      );
     }
   };
 

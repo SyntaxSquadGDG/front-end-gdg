@@ -7,7 +7,16 @@ export const fetchAllFolders = async () => {
 };
 
 export const fetchFolderPath = async (id) => {
-  return await fetchData2(`/Folders/path?id=${id}`);
+  return await fetchData2(
+    `/Folders/path?id=${id}`,
+    'GET',
+    {},
+    {
+      next: {
+        tags: [`folder${id}`],
+      },
+    },
+  );
 };
 
 export const fetchFolderSectionName = async (id) => {
@@ -31,11 +40,15 @@ export const fetchFolderSectionName = async (id) => {
 };
 
 export const fetchFolderFolders = async (id, page, limit) => {
-  return await fetchData2(`/Folders/FoldersByParentId?id=${id}`);
+  const res = await fetchData2(`/Folders/FoldersByParentId?id=${id}`);
+  // console.log(res);
+  return res.folders;
 };
 
 export const fetchFolderFiles = async (id, page, limit) => {
-  return await fetchData2(`/Folders/FoldersByParentId?id=${id}`);
+  const res = await fetchData2(`/Folders/FoldersByParentId?id=${id}`);
+  console.log(res);
+  return res.files;
 };
 
 export const fetchFolderSettings = async (id) => {

@@ -17,6 +17,21 @@ const jwt = require('jsonwebtoken');
 dotenv.config();
 connectDB();
 
+let shouldFail = true; // Flag to toggle between success and failure
+
+const toggleRequestMiddleware = (req, res, next) => {
+  console.log(shouldFail);
+  if (shouldFail) {
+    shouldFail = false; // Set flag to false after failing
+    return res
+      .status(500)
+      .json({ message: 'Request failed for testing purposes.' });
+  }
+
+  shouldFail = true; // Set flag to true for next failure
+  next(); // Proceed to the next middleware or route handler
+};
+
 const app = express();
 app.use(cookieParser());
 
@@ -28,6 +43,7 @@ app.use(
 );
 app.use(express.json()); // For parsing JSON
 app.use(delayMiddleware);
+app.use(toggleRequestMiddleware);
 
 // Routes
 app.use('/api/employees', employeeRoutes);
@@ -123,7 +139,18 @@ app.get('/api/data', async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
+let number = 1;
+
 app.get('/api/active-plan', async (req, res) => {
+  console.log(number);
+  if (number === 2) {
+    number -= 1;
+    return res.status(200).json({ active: 'pro' });
+  } else {
+    number += 1;
+    return res.status(500).send('NO ACTIVE');
+  }
+
   try {
     res.json({ active: 'pro' });
   } catch (e) {
@@ -823,3 +850,10 @@ app.post('/api/login', (req, res) => {
   res.json({ token });
 });
 
+app.get('/api/online', async (req, res) => {
+  return res.status(200).json({ status: 'online' });
+});
+
+app.get('/api/section', async (req, res) => {
+  return res.status(200).json([0, 1]);
+});

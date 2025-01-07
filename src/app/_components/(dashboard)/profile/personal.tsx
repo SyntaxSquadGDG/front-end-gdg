@@ -66,7 +66,7 @@ const PersonalInfo = ({ data }) => {
         {t('profile.personalInfo.head')}
       </h2>
 
-      <form onSubmit={handleSubmit(onSuccess, onError)}>
+      <form onSubmit={handleSubmit(onSuccess)}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-[32px] gap-y-[32px]">
           <Input
             label={t('profile.personalInfo.firstNameLabel')}

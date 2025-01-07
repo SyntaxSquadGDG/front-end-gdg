@@ -20,6 +20,8 @@ import { ViewProvider } from '@app/_contexts/view-provider';
 import FileSettingsModals from '@app/_components/(dashboard)/files/file-settings-modals';
 import { getErrorText } from '@app/_utils/translations';
 import LoadError from '@app/_components/(dashboard)/general/load-error';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
 
 const page = async ({ params }) => {
   const id = (await params).id;
@@ -37,7 +39,12 @@ const page = async ({ params }) => {
         `files.errors.${error?.message}`,
         `files.errors.FILE_DATA_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`file${id}Data`} />
+        </LoadErrorDiv>
+      );
     }
     return (
       <>
@@ -57,11 +64,16 @@ const page = async ({ params }) => {
         `files.errors.${error?.message}`,
         `files.errors.FILE_PATH_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`file${id}Path`} />
+        </LoadErrorDiv>
+      );
     }
     return (
       <>
-        <ToolBar path={path} views={false} id={id} type={'file'} />;
+        <ToolBar path={path} views={false} id={id} type={'file'} />
         <FileSettingsModals
           id={id}
           name={path[0].name}
@@ -99,7 +111,7 @@ const page = async ({ params }) => {
           {/* FILE P3 */}
           <FileVersions />
         </div>
-        <ActivitySection />
+        <ActivitySection type={'file'} id={id} />
       </div>
     </ViewProvider>
   );

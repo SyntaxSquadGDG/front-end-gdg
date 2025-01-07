@@ -12,6 +12,10 @@ import React, { Suspense } from 'react';
 import { fetchManager } from '@app/_components/(dashboard)/managers/data/queries';
 import { getErrorText } from '@app/_utils/translations';
 import LoadError from '@app/_components/(dashboard)/general/load-error';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
+import RefetchButton from '@app/_components/(dashboard)/general/refetch';
+import { refetchManager } from '@app/actions';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
 
 const page = async ({ params }) => {
   const id = (await params).id;
@@ -41,7 +45,12 @@ const page = async ({ params }) => {
         `managers.errors.${error?.message}`,
         `managers.errors.MANAGER_LOAD_ERROR`,
       );
-      return <LoadError>{textError}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{textError}</LoadError>
+          <RefetchWrapper tag={`manager${id}`} />
+        </LoadErrorDiv>
+      );
     }
   };
 

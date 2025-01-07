@@ -21,7 +21,6 @@ import DataFetching from '../general/data-fetching';
 const RolesTable = ({ my = false }) => {
   const t = useTranslations();
   const paginationPageLimit = PAGINATION_PAGE_LIMIT;
-  const [errorText, setErrorText] = useState(null);
 
   const {
     data: rolesData,
@@ -30,6 +29,7 @@ const RolesTable = ({ my = false }) => {
     error,
     fetchNextPage: fetchNextRoles,
     hasNextPage: hasNextRoles,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ['roles'],
     queryFn: ({ pageParam = 1 }) => {
@@ -43,20 +43,18 @@ const RolesTable = ({ my = false }) => {
 
   const roles = rolesData?.pages?.flat() || []; // Flatten the pages to get all roles in one array
 
-  useEffect(() => {
-    const errorText = getErrorText(
-      t,
-      `roles.errors.${error?.message}`,
-      `roles.errors.ROLES_LOAD_ERROR`,
-    );
-    setErrorText(errorText);
-  }, [error]);
+  const errorText = getErrorText(
+    t,
+    `roles.errors.${error?.message}`,
+    `roles.errors.ROLES_LOAD_ERROR`,
+  );
 
   return (
     <DataFetching
       data={roles}
       emptyError={t('roles.errors.ROLES_ZERO_ERROR')}
       error={error && errorText}
+      refetch={refetch}
       isLoading={isLoadingRoles}>
       <div className="tableDiv">
         <div>

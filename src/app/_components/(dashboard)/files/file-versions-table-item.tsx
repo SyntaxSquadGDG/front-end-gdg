@@ -116,7 +116,7 @@ const FileVersionsTableItem = ({ fileId, version }) => {
         <td>{version.uploaded}</td>
         <td>
           <button onClick={handleFetchVersion}>
-            {isFetchingVersion ? <LoadingSpinner /> : version.name}
+            {versionMutation.isPending ? <LoadingSpinner /> : version.name}
           </button>
         </td>
         <td>

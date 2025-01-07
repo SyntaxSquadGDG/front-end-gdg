@@ -11,6 +11,15 @@ export const fetchManagerActivities = async (id, page, limit) => {
 };
 
 export const fetchManager = async (id) => {
-  return await fetchData(`/employees/${id}`);
+  return await fetchData(
+    `/employees/${id}`,
+    'GET',
+    {},
+    {
+      next: {
+        tags: [`manager${id}`],
+      },
+    },
+  );
 };
 

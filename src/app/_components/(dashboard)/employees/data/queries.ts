@@ -1,5 +1,18 @@
 import { fetchData } from '@app/_utils/fetch';
 
+export const fetchEmployee = async (id) => {
+  return await fetchData(
+    `/employees/${id}`,
+    'GET',
+    {},
+    {
+      next: {
+        tags: [`employee${id}`],
+      },
+    },
+  );
+};
+
 export const fetchEmployees = async (page, limit) => {
   return await fetchData(`/employees?page=${page}&limit=${limit}`);
 };

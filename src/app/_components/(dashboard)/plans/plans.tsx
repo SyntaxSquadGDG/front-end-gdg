@@ -9,6 +9,7 @@ import TempSection from '../general/temp-section';
 import { useModal } from '@app/_contexts/modal-provider';
 import UnsubscribeModal from './unsubscribe-modal';
 import SubscribeModal from './subscribe-modal';
+import useOnlineStatus from '@app/_hooks/useonline';
 
 const Plans = ({ activePlan }) => {
   const t = useTranslations();

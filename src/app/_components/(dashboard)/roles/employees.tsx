@@ -27,6 +27,7 @@ const EmployeesTable = ({ id, full = false }) => {
     error,
     fetchNextPage: fetchNextEmployees,
     hasNextPage: hasNextEmployees,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ['roleEmployees', id],
     queryFn: ({ pageParam = 1 }) => {
@@ -84,6 +85,7 @@ const EmployeesTable = ({ id, full = false }) => {
       data={employees}
       isLoading={isLoadingEmployees}
       emptyError={t('employees.errors.EMPLOYEES_ZERO_ERROR')}
+      refetch={refetch}
       error={error && errorText}>
       <div className="tableDiv">
         <div>

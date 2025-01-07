@@ -8,7 +8,6 @@ import TryLater from '@app/_components/(dashboard)/general/try-later';
 import RoleHead from '@app/_components/(dashboard)/roles/head';
 import EmployeesSVG from '@app/_components/svgs/employees/employees';
 import ViewSVG from '@app/_components/svgs/employees/view';
-import { fetchEmployee } from '@app/_utils/fetch/queries';
 import { getTranslations } from 'next-intl/server';
 import React, { Suspense } from 'react';
 import AddPermissionButton from '@app/_components/(dashboard)/permissions/add-permission-button';
@@ -17,6 +16,9 @@ import AddTypeButton from '@app/_components/(dashboard)/employees-roles/add-type
 import AddTypeToTypeModal from '@app/_components/(dashboard)/modals/add-type-to-type-modal';
 import LoadError from '@app/_components/(dashboard)/general/load-error';
 import { getErrorText } from '@app/_utils/translations';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
+import { fetchEmployee } from '@app/_components/(dashboard)/employees/data/queries';
 
 const page = async ({ params }) => {
   const id = (await params).id;
@@ -46,7 +48,12 @@ const page = async ({ params }) => {
         `employees.errors.${error?.message}`,
         `employees.errors.EMPLOYEE_DATA_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`employee${id}`} />
+        </LoadErrorDiv>
+      );
     }
   };
 

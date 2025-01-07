@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchUserData } from './data/queries';
 import DataFetching from '../(dashboard)/general/data-fetching';
 import { getErrorText } from '@app/_utils/translations';
+import useNetworkStatus from '@app/_hooks/useonline';
 
 const HorizontalNavbar = () => {
   const t = useTranslations();
@@ -24,39 +25,41 @@ const HorizontalNavbar = () => {
   const direction = getLangDir(locale);
   const [isOpen, setIsOpen] = useState(false);
   const navbarRef = useRef(null);
-  const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
   const fullPathname = usePathname();
   const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
 
   useClickOutside(navbarRef, () => setIsOpen(false));
 
-  useEffect(() => {
-    if (!pathName.startsWith('/search')) {
-      setSearchValue('');
-    }
-  }, [fullPathname]);
+  // useEffect(() => {
+  //   if (!pathName.startsWith('/search')) {
+  //     setSearchValue('');
+  //   }
+  // }, [fullPathname]);
 
   function handleSubmit(e) {
     e.preventDefault();
+    const searchValue = e.target.elements.searchInput.value;
+
     if (searchValue) {
       console.log(searchValue);
       router.push(`/search?q=${searchValue}`);
     }
   }
 
-  const { data, isPending, error } = useQuery({
+  const { data, isPending, error, refetch } = useQuery({
     queryKey: ['myData'],
     queryFn: fetchUserData,
   });
 
-  // const errorText = getErrorText(
-  //   t,
-  //   `navbar.errors.${error?.message}`,
-  //   `navbar.errors.USER_DATA_ERROR`,
-  // );
+  const errorText = getErrorText(
+    t,
+    `navbar.errors.${error?.message}`,
+    `navbar.errors.USER_DATA_ERROR`,
+  );
 
   console.log(data);
+  const isOnline = useNetworkStatus();
 
   return (
     <nav
@@ -65,7 +68,7 @@ const HorizontalNavbar = () => {
         direction === 'rtl'
           ? 'right-[calc(var(--verticalNavSmallWidth))] lg:right-[calc(var(--verticalNavWidth))]'
           : 'left-[calc(var(--verticalNavSmallWidth))] lg:left-[calc(var(--verticalNavWidth))]',
-        'text-textLight h-horizontalNavHeight  w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] fixed top-0 items-center flex z-[9999] bg-white px-[32px]',
+        'text-textLight h-horizontalNavHeight  w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] fixed top-0 items-center flex flex-col z-[9999] px-[32px] bg-whiteBackground',
       )}>
       <div className="rounded-bl-navsRadius rounded-br-navsRadius h-[100%] bg-mainDashboardLinear w-[100%] relative">
         {/* <nav
@@ -83,44 +86,47 @@ const HorizontalNavbar = () => {
 
         <div className="relative z-5 text-textLight flex justify-between items-center w-[100%] px-[24px] h-[100%]">
           {/* IMAGE + TEXT */}
-          <DataFetching
-            data={data}
-            error={error && error.message}
-            isLoading={isPending}>
-            {data && (
-              <div className="flex gap-[16px] items-center">
-                {/* IMAGE */}
-                <div className="shrink-0 rounded-full overflow-hidden">
-                  <Link href={'/profile'}>
-                    <Image
-                      src={data.img}
-                      className=" w-[56px] h-[56px]"
-                      width={0}
-                      height={0}
-                      sizes="(max-width: 640px) 24px, 56px"
-                      alt=""
-                    />
-                  </Link>
-                </div>
+          <div className="">
+            <DataFetching
+              data={data}
+              error={error && errorText}
+              refetch={refetch}
+              className={'text-green-400'}
+              isLoading={isPending}>
+              {data && (
+                <div className="flex gap-[16px] items-center">
+                  {/* IMAGE */}
+                  <div className="shrink-0 rounded-full overflow-hidden">
+                    <Link href={'/profile'}>
+                      <Image
+                        src={data.img}
+                        className=" w-[56px] h-[56px]"
+                        width={0}
+                        height={0}
+                        sizes="(max-width: 640px) 24px, 56px"
+                        alt=""
+                      />
+                    </Link>
+                  </div>
 
-                {/* TEXT */}
-                <div
-                  className={clsx(
-                    'hidden flex-col gap-[10px] xs:flex',
-                    headFont.className,
-                  )}>
-                  <p className="text-[12px] lg:text-[24px]">
-                    {t('navbar.hello')}{' '}
-                    <Link href={'/profile'}>{data.firstName}!</Link>
-                  </p>
-                  <p className="text-[12px] lg:text-[14px]">
-                    {formatDate(Date.now())}
-                  </p>
+                  {/* TEXT */}
+                  <div
+                    className={clsx(
+                      'hidden flex-col gap-[10px] xs:flex',
+                      headFont.className,
+                    )}>
+                    <p className="text-[12px] lg:text-[24px]">
+                      {t('navbar.hello')}{' '}
+                      <Link href={'/profile'}>{data.firstName}!</Link>
+                    </p>
+                    <p className="text-[12px] lg:text-[14px]">
+                      {formatDate(Date.now())}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </DataFetching>
-
+              )}
+            </DataFetching>
+          </div>
           <button
             className="flex lg:hidden mx-[8px]"
             onClick={() => setIsOpen((old) => !old)}>
@@ -140,30 +146,26 @@ const HorizontalNavbar = () => {
               !isOpen && 'hidden lg:flex',
             )}>
             {/* SEARCH */}
-            <div
+            <form
+              onSubmit={handleSubmit}
               className={clsx(
                 'flex items-center gap-[8px] px-[16px] rounded-[16px] border-[1px] border-white border-solid w-[100%]',
               )}>
-              <Link
-                href={`/search?q=${searchValue}`}
-                className="flex py-[10px]">
+              <div className="flex py-[10px]">
                 <SearchSVG />
-              </Link>
-              <form
-                onSubmit={handleSubmit}
-                className="flex items-center justify-center h-fit">
+              </div>
+              <div className="flex items-center justify-center h-fit">
                 <input
                   type="text"
                   placeholder={t('navbar.search')}
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
+                  name="searchInput"
                   className={clsx(
                     'bg-transparent outline-none flex-shrink w-[100%] text-[16px] py-[10px] ',
                     headFont.className,
                   )}
                 />
-              </form>
-            </div>
+              </div>
+            </form>
             <Link href={'/notifications'}>
               <NotificationsSVG
                 active={pathName.startsWith('/notifications')}
@@ -172,6 +174,19 @@ const HorizontalNavbar = () => {
           </div>
         </div>
       </div>
+      {!isOnline && (
+        <div
+          className={clsx(
+            direction === 'rtl'
+              ? 'right-[calc(var(--verticalNavSmallWidth))] lg:right-[calc(var(--verticalNavWidth))]'
+              : 'left-[calc(var(--verticalNavSmallWidth))] lg:left-[calc(var(--verticalNavWidth))]',
+            'text-textLight h-horizontalNavHeight  w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] fixed top-[32px] items-center flex flex-col z-[-1] px-[32px]',
+          )}>
+          <div className="relative z-5 text-textLight flex justify-center items-end w-[100%] px-[24px] h-[100%] bg-red-400 rounded-br-navsRadius rounded-bl-navsRadius">
+            {t('general.offline')}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

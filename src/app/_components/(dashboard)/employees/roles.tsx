@@ -28,6 +28,7 @@ const RolesTable = ({ id, full = false }) => {
     error,
     fetchNextPage: fetchNextRoles,
     hasNextPage: hasNextRoles,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ['employeeRoles', id],
     refetchOnWindowFocus: false,
@@ -54,6 +55,7 @@ const RolesTable = ({ id, full = false }) => {
       data={rolesData}
       emptyError={t('roles.errors.ROLES_ZERO_ERROR')}
       error={error && errorText}
+      refetch={refetch}
       isLoading={isLoadingRoles}>
       <div className="tableDiv">
         <div>

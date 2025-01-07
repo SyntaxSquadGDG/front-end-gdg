@@ -2,7 +2,9 @@ import SectionPage from '@/app/_components/(dashboard)/section-page/section-page
 import ActivitySection from '@app/_components/(dashboard)/activity-logs/activity-section';
 import ErrorBoundary from '@app/_components/(dashboard)/general/error-boundary';
 import LoadError from '@app/_components/(dashboard)/general/load-error';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
 import TryLater from '@app/_components/(dashboard)/general/try-later';
 import { fetchSectionName } from '@app/_components/(dashboard)/sections/data/queires';
 import SectionSettingsModals from '@app/_components/(dashboard)/sections/section-settings-modals';
@@ -22,7 +24,7 @@ const page = async ({ params }) => {
     let path;
     try {
       const sectionName = await fetchSectionName(id);
-      path = [{ name: sectionName.name, type: 'section', id: id }];
+      path = [{ name: sectionName, type: 'section', id: id }];
     } catch (error) {
       console.error('Error fetching employees:', error);
       const errorText = getErrorText(
@@ -30,7 +32,12 @@ const page = async ({ params }) => {
         `sections.errors.${error?.message}`,
         `sections.errors.SECTION_PATH_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`section${id}`} />
+        </LoadErrorDiv>
+      );
     }
     return (
       <>
@@ -56,11 +63,16 @@ const page = async ({ params }) => {
         `sections.errors.${error?.message}`,
         `sections.errors.SECTION_PATH_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`section${id}`} />
+        </LoadErrorDiv>
+      );
     }
     return (
       <SectionViewWrapper id={id} sectionName={sectionName.name}>
-        {/* <ActivitySection /> */}
+        <ActivitySection type={'section'} id={id} />
       </SectionViewWrapper>
     );
   };

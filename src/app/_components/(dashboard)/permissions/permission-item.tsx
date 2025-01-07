@@ -112,23 +112,24 @@ const PermissionItem = ({ item, type, id }) => {
                 <SectionFormPermissions
                   id={[id]}
                   type={type}
-                  defaultPermissions={item.sectionPermissions}
+                  sectionId={item.id}
+                  mode={'single'}
                 />
               )}
               {item.type === 'folder' && (
                 <FolderFormPermissions
                   id={[id]}
                   type={type}
-                  defaultFolderPermissions={item.folderPermissions}
-                  defaultSubFolderPermissions={item.subFolderPermissions}
-                  defaultFilePermissions={item.filePermissions}
+                  folderId={item.id}
+                  mode={'single'}
                 />
               )}
               {item.type === 'file' && (
                 <FileFormPermissions
                   id={[id]}
                   type={type}
-                  defaultPermissions={item.filePermissions}
+                  fileId={item.id}
+                  mode={'single'}
                 />
               )}
             </PermissionItemEditModal>

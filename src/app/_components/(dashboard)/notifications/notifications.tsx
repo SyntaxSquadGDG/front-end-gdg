@@ -15,15 +15,22 @@ import { useTranslations } from 'use-intl';
 const Notifications = () => {
   const paginationPageLimit = PAGINATION_PAGE_LIMIT;
   const t = useTranslations();
-  const { data, isLoading, isFetching, error, fetchNextPage, hasNextPage } =
-    useInfiniteQuery({
-      queryKey: ['notifications'],
-      queryFn: ({ pageParam = 1 }) => {
-        return fetchNotifications(pageParam, paginationPageLimit); // Fetch 5 messages per page
-      },
-      getNextPageParam: (lastPage, pages) =>
-        getNextPage(lastPage, pages, paginationPageLimit),
-    });
+  const {
+    data,
+    isLoading,
+    isFetching,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ['notifications'],
+    queryFn: ({ pageParam = 1 }) => {
+      return fetchNotifications(pageParam, paginationPageLimit); // Fetch 5 messages per page
+    },
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
+  });
 
   function getNext() {
     if (hasNextPage) {
@@ -45,6 +52,7 @@ const Notifications = () => {
       data={notifications}
       error={error && errorText}
       isLoading={isLoading}
+      refetch={refetch}
       emptyError={t('notifications.errors.NOTIFICATIONS_ZERO_ERROR')}>
       <div className="flex flex-col gap-[32px]">
         {notifications.map((notification, index) => {

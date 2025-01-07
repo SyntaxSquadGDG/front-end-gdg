@@ -4,6 +4,7 @@ import FolderItem from './folder-item';
 import { contentFont } from '@/app/_utils/fonts';
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
+import { isManagerOwner } from '@app/_utils/auth';
 
 const Folders = ({ folders, sectionName, sectionNameRequired = true }) => {
   const t = useTranslations();

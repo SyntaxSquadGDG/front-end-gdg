@@ -17,7 +17,6 @@ import { getErrorText } from '@app/_utils/translations';
 const FolderMetadataModal = ({ id, onClose = () => {} }) => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
-  const [errorText, setErrorText] = useState(null);
   const isOpen = modalStack.includes(`FolderMetadata${id}`);
 
   function handleClose() {
@@ -25,20 +24,17 @@ const FolderMetadataModal = ({ id, onClose = () => {} }) => {
     closeModal();
   }
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['folderMetadata', id], // Unique key for the query
     queryFn: () => fetchFolderMetadata(id), // Function to fetch the data
     enabled: isOpen, // Set to false if you want to fetch on user action (e.g., button click)
   });
 
-  useEffect(() => {
-    const textError = getErrorText(
-      t,
-      `folders.errors.${error?.message}`,
-      `folders.errors.FOLDER_METADATA_FETCH_ERROR`,
-    );
-    setErrorText(textError);
-  }, [error]);
+  const textError = getErrorText(
+    t,
+    `folders.errors.${error?.message}`,
+    `folders.errors.FOLDER_METADATA_FETCH_ERROR`,
+  );
 
   return (
     <Modal
@@ -49,7 +45,8 @@ const FolderMetadataModal = ({ id, onClose = () => {} }) => {
       <DataFetching
         data={data}
         isLoading={isLoading}
-        error={error && errorText}>
+        refetch={refetch}
+        error={error && textError}>
         <MetadataForm id={id} initialFields={data} />
       </DataFetching>
     </Modal>

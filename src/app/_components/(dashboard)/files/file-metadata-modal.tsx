@@ -7,13 +7,17 @@ import Modal from '../modals/modal';
 import toast from 'react-hot-toast';
 import MetadataForm from './metadata-form';
 import { useQuery } from '@tanstack/react-query';
-import { FetchFileMetadata, fetchFileMetadata } from './data/queries';
+import {
+  FetchFileMetadata,
+  fetchFileFolderMetadata,
+  fetchFileMetadata,
+} from './data/queries';
 import DataFetching from '../general/data-fetching';
 import FileMetadataForm from './file-metadata-form';
 import { fetchFolderMetadata } from '../folders/data/queries';
 import { getErrorText } from '@app/_utils/translations';
 
-const FileMetadataModal = ({ fileId, folderId, onClose = () => {} }) => {
+const FileMetadataModal = ({ fileId, onClose = () => {} }) => {
   const { modalStack, closeModal } = useModal();
   const t = useTranslations();
   const [errorTextFolderMetadata, setErrorTextFolderMetadata] = useState(null);
@@ -26,15 +30,14 @@ const FileMetadataModal = ({ fileId, folderId, onClose = () => {} }) => {
     closeModal();
   }
 
-  console.log(folderId);
-
   const {
     data,
     isLoading,
     error: folderError,
+    refetch: refetchFolder,
   } = useQuery({
-    queryKey: ['folderMetadata', folderId], // Unique key for the query
-    queryFn: () => fetchFolderMetadata(folderId), // Function to fetch the data
+    queryKey: ['folderMetadata'], // Unique key for the query
+    queryFn: () => fetchFileFolderMetadata(fileId), // Function to fetch the data
     enabled: isOpen, // Set to false if you want to fetch on user action (e.g., button click)
   });
 
@@ -42,29 +45,24 @@ const FileMetadataModal = ({ fileId, folderId, onClose = () => {} }) => {
     data: fileData,
     isLoading: isLoadingFile,
     error: fileError,
+    refetch: refetchFile,
   } = useQuery({
     queryKey: ['fileMetadata', fileId], // Unique key for the query
     queryFn: () => fetchFileMetadata(fileId), // Function to fetch the data
     enabled: isOpen, // Set to false if you want to fetch on user action (e.g., button click)
   });
 
-  useEffect(() => {
-    const textError = getErrorText(
-      t,
-      `folders.errors.${folderError.message}`,
-      `folders.errors.FOLDER_METADATA_FETCH_ERROR`,
-    );
-    setErrorTextFolderMetadata(textError);
-  }, [folderError]);
+  const errorFolder = getErrorText(
+    t,
+    `folders.errors.${folderError?.message}`,
+    `folders.errors.FOLDER_METADATA_FETCH_ERROR`,
+  );
 
-  useEffect(() => {
-    const textError = getErrorText(
-      t,
-      `files.errors.${fileError.message}`,
-      `files.errors.FILE_METADATA_FETCH_ERROR`,
-    );
-    setErrorTextFileMetadata(textError);
-  }, [fileError]);
+  const errorFile = getErrorText(
+    t,
+    `files.errors.${fileError?.message}`,
+    `files.errors.FILE_METADATA_FETCH_ERROR`,
+  );
 
   return (
     <Modal
@@ -75,15 +73,16 @@ const FileMetadataModal = ({ fileId, folderId, onClose = () => {} }) => {
       <DataFetching
         data={data}
         isLoading={isLoading}
-        error={folderError && errorTextFolderMetadata}
+        error={folderError && errorFolder}
+        refetch={refetchFolder}
         emptyError={t('folders.errors.FOLDER_METADATA_ZERO_ERROR')}>
         <DataFetching
           data={fileData}
           isLoading={isLoadingFile}
-          error={fileError && errorTextFileMetadata}>
+          refetch={refetchFile}
+          error={fileError && errorFile}>
           <FileMetadataForm
             fileId={fileId}
-            folderId={folderId}
             fileMetadata={[]}
             folderMetadata={data}
           />

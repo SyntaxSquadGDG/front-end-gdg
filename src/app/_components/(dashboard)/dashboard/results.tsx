@@ -8,6 +8,9 @@ import { fetchFileTypeResults } from './data/queries';
 import TryLater from '../general/try-later';
 import LoadError from '../general/load-error';
 import { getErrorText } from '@app/_utils/translations';
+import LoadErrorDiv from '../general/load-error-div';
+import RefetchButton from '../general/refetch';
+import { refetchTypeResults } from '@app/actions';
 
 const Results = async () => {
   const t = await getTranslations();
@@ -21,7 +24,12 @@ const Results = async () => {
       `dashboard.errors.${error?.message}`,
       `dashboard.errors.FILE_TYPE_RESULTS_ERROR`,
     );
-    return <LoadError>{errorText}</LoadError>;
+    return (
+      <LoadErrorDiv>
+        <LoadError>{errorText}</LoadError>
+        <RefetchButton refetch={refetchTypeResults} />
+      </LoadErrorDiv>
+    );
   }
 
   return (

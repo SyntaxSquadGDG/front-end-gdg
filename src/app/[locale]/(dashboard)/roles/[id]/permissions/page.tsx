@@ -1,11 +1,16 @@
+import ErrorBoundary from '@app/_components/(dashboard)/general/error-boundary';
 import HeadBar from '@app/_components/(dashboard)/general/head-bar';
+import LoadError from '@app/_components/(dashboard)/general/load-error';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
 import TryLater from '@app/_components/(dashboard)/general/try-later';
 import AddPermissionModal from '@app/_components/(dashboard)/modals/add-permission-modal';
 import AddPermissionButton from '@app/_components/(dashboard)/permissions/add-permission-button';
 import Permissions from '@app/_components/(dashboard)/permissions/permissions';
 import EmployeesSVG from '@app/_components/svgs/navbars/employees';
 import { fetchRole } from '@app/_utils/fetch/queries';
+import { getErrorText } from '@app/_utils/translations';
 import { getTranslations } from 'next-intl/server';
 import React, { Suspense } from 'react';
 
@@ -39,16 +44,27 @@ const page = async ({ params }) => {
         </>
       );
     } catch (error) {
-      console.error('Error fetching employees:', error);
-      return <TryLater>{t('zero.role')}</TryLater>;
+      const errorText = getErrorText(
+        t,
+        `roles.errors.${error?.message}`,
+        `roles.errors.ROLE_DATA_ERROR`,
+      );
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`role${id}`} />
+        </LoadErrorDiv>
+      );
     }
   };
 
   return (
     <div>
-      <Suspense fallback={<LoadingSpinner />}>
-        <RoleDataWrapper />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingSpinner />}>
+          <RoleDataWrapper />
+        </Suspense>
+      </ErrorBoundary>
       <Permissions id={id} type="role" full={true} />
     </div>
   );

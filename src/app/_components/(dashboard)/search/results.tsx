@@ -15,15 +15,22 @@ const SearchResults = ({ query }) => {
   const t = useTranslations();
   const paginationPageLimit = PAGINATION_PAGE_LIMIT;
 
-  const { data, isLoading, isFetching, error, fetchNextPage, hasNextPage } =
-    useInfiniteQuery({
-      queryKey: ['search', query],
-      queryFn: ({ pageParam = 1 }) => {
-        return fetchSearchResults(query, pageParam, paginationPageLimit); // Fetch 5 messages per page
-      },
-      getNextPageParam: (lastPage, pages) =>
-        getNextPage(lastPage, pages, paginationPageLimit),
-    });
+  const {
+    data,
+    isLoading,
+    isFetching,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ['search', query],
+    queryFn: ({ pageParam = 1 }) => {
+      return fetchSearchResults(query, pageParam, paginationPageLimit); // Fetch 5 messages per page
+    },
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
+  });
 
   const results = data?.pages?.flat() || [];
 
@@ -38,6 +45,7 @@ const SearchResults = ({ query }) => {
       data={results}
       emptyError={t('search.errors.SEARCH_ZERO_ERROR')}
       error={error && errorText}
+      refetch={refetch}
       isLoading={isLoading}>
       <div className={clsx(contentFont.className)}>
         <div className="flex items-center justify-between mb-[32px]">

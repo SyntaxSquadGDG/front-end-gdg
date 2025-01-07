@@ -5,11 +5,29 @@ export const fetchAllFiles = async (id) => {
 };
 
 export const fetchFileData = async (id) => {
-  return await fetchData2(`/Sfiles/filebyid?fileid=${id}`);
+  return await fetchData2(
+    `/Sfiles/filebyid?fileid=${id}`,
+    'GET',
+    {},
+    {
+      next: {
+        tags: [`file${id}Data`],
+      },
+    },
+  );
 };
 
 export const fetchFilePath = async (id) => {
-  return await fetchData2(`/Sfiles/Path/${id}`);
+  return await fetchData2(
+    `/Sfiles/Path/${id}`,
+    'GET',
+    {},
+    {
+      next: {
+        tags: [`file${id}Path`],
+      },
+    },
+  );
 };
 
 export const fetchFileVersions = async (id, page, limit) => {
@@ -33,5 +51,19 @@ export const fetchFileMoveAvailableStructure = async (id) => {
 };
 
 export const fetchFilePreview = async (id) => {
-  return await fetchData2(`/sfiles/filebyidpreview?fileid=${id}`);
+  return await fetchData2(
+    `/sfiles/filebyidpreview?fileid=${id}`,
+    'GET',
+    {},
+    {
+      next: {
+        tags: [`file${id}Preview`],
+      },
+    },
+  );
 };
+
+export const fetchFileFolderMetadata = async (id) => {
+  return await fetchData(`/metadata/${id}`);
+};
+

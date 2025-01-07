@@ -10,7 +10,9 @@ import FolderSettingsModals from '@app/_components/(dashboard)/folders/folder-se
 import FoldersViewWrapper from '@app/_components/(dashboard)/folders/folders-view-wrapper';
 import ErrorBoundary from '@app/_components/(dashboard)/general/error-boundary';
 import LoadError from '@app/_components/(dashboard)/general/load-error';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
 import TryLater from '@app/_components/(dashboard)/general/try-later';
 import ToolBar from '@app/_components/navbars/toolbar';
 import { HeightProvider } from '@app/_contexts/toolbar-height-provider';
@@ -35,7 +37,12 @@ const page = async ({ params }) => {
         `folders.errors.${error?.message}`,
         `folders.errors.FOLDER_PATH_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`folder${id}`} />
+        </LoadErrorDiv>
+      );
     }
 
     console.log(path);
@@ -58,15 +65,20 @@ const page = async ({ params }) => {
         `folders.errors.${error?.message}`,
         `folders.errors.FOLDER_PATH_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`folder${id}`} />
+        </LoadErrorDiv>
+      );
     }
 
     return (
       <FoldersViewWrapper
         id={id}
-        sectionName={path[0].name}
-        folderName={path.slice(-1)[0].name}>
-        <ActivitySection />
+        sectionName={'path[0].name'}
+        folderName={'path.slice(-1)[0].name'}>
+        <ActivitySection type={'folder'} id={id} />
       </FoldersViewWrapper>
     );
   };

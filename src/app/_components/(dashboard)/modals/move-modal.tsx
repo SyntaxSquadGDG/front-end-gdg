@@ -26,7 +26,6 @@ const MoveModal = ({ move, type, id, itemName }) => {
   const t = useTranslations();
   const name = `${move ? 'move' : 'copy'}${type}${id}`;
   const isOpen = modalStack.includes(name);
-  const [errorTextLoading, setErrorTextLoading] = useState(null);
   const [errorTextMutation, setErrorTextMutation] = useState(null);
 
   const queryClient = useQueryClient();
@@ -35,13 +34,13 @@ const MoveModal = ({ move, type, id, itemName }) => {
 
   switch (type) {
     case 'file':
-      queryFn = fetchFileMoveAvailableStructure(id);
+      queryFn = fetchFileMoveAvailableStructure;
       break;
     case 'folder':
-      queryFn = fetchFolderMoveAvailableStructure(id);
+      queryFn = fetchFolderMoveAvailableStructure;
       break;
     default:
-      queryFn = fetchFileMoveAvailableStructure(id);
+      queryFn = fetchFileMoveAvailableStructure;
       break;
   }
 
@@ -69,10 +68,10 @@ const MoveModal = ({ move, type, id, itemName }) => {
     }
   }
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['availableStructure', type, id], // Unique key for the query
-    queryFn: queryFn, // Function to fetch the data
-    enabled: false, // Set to false if you want to fetch on user action (e.g., button click)
+    queryFn: () => queryFn(id), // Function to fetch the data
+    enabled: isOpen, // Set to false if you want to fetch on user action (e.g., button click)
   });
 
   const mutation = useMutation({
@@ -97,14 +96,11 @@ const MoveModal = ({ move, type, id, itemName }) => {
     },
   });
 
-  useEffect(() => {
-    const textError = getErrorText(
-      t,
-      `structure.errors.${error?.message}`,
-      `structure.errors.STRUCTURE_LOAD_ERROR`,
-    );
-    setErrorTextLoading(textError);
-  }, [error]);
+  const textError = getErrorText(
+    t,
+    `structure.errors.${error?.message}`,
+    `structure.errors.STRUCTURE_LOAD_ERROR`,
+  );
 
   function handleClose() {
     closeModal();
@@ -130,7 +126,8 @@ const MoveModal = ({ move, type, id, itemName }) => {
       <DataFetching
         data={data}
         isLoading={isLoading}
-        error={error && errorTextLoading}
+        error={error && textError}
+        refetch={refetch}
         emptyError={t('structure.errors.STRUCTURE_ZERO_ERROR')}>
         <HierarchicalView
           data={data}

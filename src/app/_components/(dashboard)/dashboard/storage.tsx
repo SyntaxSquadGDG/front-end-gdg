@@ -7,6 +7,9 @@ import { contentFont } from '@app/_utils/fonts';
 import { fetchStoragePercentages } from './data/queries';
 import LoadError from '../general/load-error';
 import { getErrorText } from '@app/_utils/translations';
+import { refetchStorage } from '@app/actions';
+import RefetchButton from '../general/refetch';
+import LoadErrorDiv from '../general/load-error-div';
 
 const Storage = async () => {
   const t = await getTranslations();
@@ -22,7 +25,12 @@ const Storage = async () => {
       `dashboard.errors.STORAGE_RESULTS_ERROR`,
     );
 
-    return <LoadError>{errorText}</LoadError>;
+    return (
+      <LoadErrorDiv>
+        <LoadError>{errorText}</LoadError>
+        <RefetchButton refetch={refetchStorage} />
+      </LoadErrorDiv>
+    );
   }
 
   return (

@@ -1,7 +1,9 @@
 import ErrorBoundary from '@app/_components/(dashboard)/general/error-boundary';
 import HeadBar from '@app/_components/(dashboard)/general/head-bar';
 import LoadError from '@app/_components/(dashboard)/general/load-error';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
+import RefetchButton from '@app/_components/(dashboard)/general/refetch';
 import TryLater from '@app/_components/(dashboard)/general/try-later';
 import ChangePassword from '@app/_components/(dashboard)/profile/change-password';
 import { fetchUserPersonalInfo } from '@app/_components/(dashboard)/profile/data/queries';
@@ -10,6 +12,7 @@ import ImageUpload from '@app/_components/(dashboard)/profile/image-upload';
 import PersonalInfo from '@app/_components/(dashboard)/profile/personal';
 import HelpSVG from '@app/_components/svgs/profile/help';
 import { getErrorText } from '@app/_utils/translations';
+import { refetchProfile } from '@app/actions';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import React, { Suspense } from 'react';
@@ -35,7 +38,12 @@ const page = async () => {
         `profile.errors.${error?.message}`,
         `profile.errors.PERSONAL_INFO_ERROR`,
       );
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchButton refetch={refetchProfile} />
+        </LoadErrorDiv>
+      );
     }
   };
 

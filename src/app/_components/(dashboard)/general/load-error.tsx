@@ -4,12 +4,13 @@ import clsx from 'clsx';
 import React from 'react';
 import { useTranslations } from 'use-intl';
 
-const LoadError = ({ children }) => {
+const LoadError = ({ children, className = '' }) => {
   const t = useTranslations();
   return (
     <h2
       className={clsx(
         'text-center text-mainColor1 text-[20px] font-bold my-[32px]',
+        className,
         contentFont.className,
       )}>
       {children}

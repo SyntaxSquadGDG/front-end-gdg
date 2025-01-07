@@ -24,6 +24,7 @@ import { useQuery } from '@tanstack/react-query';
 import LoadingSpinner from '../general/loader';
 import DataFetching from '../general/data-fetching';
 import { getErrorText } from '@app/_utils/translations';
+import { isManagerOwner } from '@app/_utils/auth';
 
 const FileSettings = ({ id }) => {
   const { modalStack, openModal } = useModal();
@@ -31,8 +32,7 @@ const FileSettings = ({ id }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  const [errorText, setErrorText] = useState(null);
+  const isSettingsFullAuth = isManagerOwner();
 
   function handleSettingsClick() {
     setIsOpen(true);
@@ -41,17 +41,14 @@ const FileSettings = ({ id }) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['fileSettings', id], // Unique key for the query
     queryFn: () => fetchFileSettings(id), // Function to fetch the data
-    enabled: isOpen, // Set to false if you want to fetch on user action (e.g., button click)
+    enabled: isOpen && !isSettingsFullAuth, // Set to false if you want to fetch on user action (e.g., button click)
   });
 
-  useEffect(() => {
-    const textError = getErrorText(
-      t,
-      `files.errors.${error?.message}`,
-      `files.errors.FILE_SETTINGS_LOAD_ERROR`,
-    );
-    setErrorText(textError);
-  }, [error]);
+  const textError = getErrorText(
+    t,
+    `files.errors.${error?.message}`,
+    `files.errors.FILE_SETTINGS_LOAD_ERROR`,
+  );
 
   return (
     <div className="relative flex justify-end">
@@ -61,54 +58,69 @@ const FileSettings = ({ id }) => {
 
       <ItemModal isOpen={isOpen} setIsOpen={setIsOpen}>
         <DataFetching
-          data={data}
-          error={error && errorText}
-          isLoading={isLoading}
-          emptyError={t('files.errors.FILE_SETTINGS_LOAD_ERROR')}>
+          data={isSettingsFullAuth ? [] : data}
+          error={isSettingsFullAuth ? null : error && textError}
+          isLoading={isSettingsFullAuth ? false : isLoading}>
           <React.Fragment>
-            <ItemModalItem
-              SVG={EditPermissionsSVG}
-              text={t('modals.editPermissions')}
-              onClick={() => openModal(`ItemPermissionsEdit${'file'}${id}`)}
-            />
-            <ItemModalItem
-              SVG={EditSVG}
-              text={t('modals.rename')}
-              onClick={() => openModal(`renameFileModal${id}`)}
-            />
-            <ItemModalItem
-              SVG={ShowVersionSVG}
-              text={t('modals.showVersions')}
-              onClick={() => openModal(`ShowVersionsModal${id}`)}
-              // onClick={() => openModal(`renameFileModal${id}`)}
-            />
-            <ItemModalItem
-              SVG={UpdateSVG}
-              text={t('modals.update')}
-              onClick={() => openModal(`uploadNewFile${id}Version`)}
-              // onClick={() => openModal(`renameFileModal${id}`)}
-            />
-            <ItemModalItem
-              SVG={MetadataSVG}
-              text={t('modals.viewMetadata')}
-              onClick={() => openModal(`FileMetadata${id}`)}
-              // onClick={() => openModal(`renameFileModal${id}`)}
-            />
-            <ItemModalItem
-              SVG={MoveSVG}
-              text={t('modals.move')}
-              onClick={() => openModal(`move${'file'}${id}`)}
-            />
-            <ItemModalItem
-              SVG={CopySVG}
-              text={t('modals.copy')}
-              onClick={() => openModal(`copy${'file'}${id}`)}
-            />
-            <ItemModalItem
-              SVG={RemoveSVG}
-              text={t('modals.delete')}
-              onClick={() => openModal(`deleteFileModal${id}`)}
-            />
+            {isSettingsFullAuth && (
+              <ItemModalItem
+                SVG={EditPermissionsSVG}
+                text={t('modals.editPermissions')}
+                onClick={() => openModal(`ItemPermissionsEdit${'file'}${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth || (data && data.length >= 4)) && (
+              <ItemModalItem
+                SVG={EditSVG}
+                text={t('modals.rename')}
+                onClick={() => openModal(`renameFileModal${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth || (data && data.length >= 4)) && (
+              <ItemModalItem
+                SVG={ShowVersionSVG}
+                text={t('modals.showVersions')}
+                onClick={() => openModal(`ShowVersionsModal${id}`)}
+                // onClick={() => openModal(`renameFileModal${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth || (data && data.length >= 4)) && (
+              <ItemModalItem
+                SVG={UpdateSVG}
+                text={t('modals.update')}
+                onClick={() => openModal(`uploadNewFile${id}Version`)}
+                // onClick={() => openModal(`renameFileModal${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth || (data && data.length >= 4)) && (
+              <ItemModalItem
+                SVG={MetadataSVG}
+                text={t('modals.viewMetadata')}
+                onClick={() => openModal(`FileMetadata${id}`)}
+                // onClick={() => openModal(`renameFileModal${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth || (data && data.length >= 4)) && (
+              <ItemModalItem
+                SVG={MoveSVG}
+                text={t('modals.move')}
+                onClick={() => openModal(`move${'file'}${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth || (data && data.length >= 4)) && (
+              <ItemModalItem
+                SVG={CopySVG}
+                text={t('modals.copy')}
+                onClick={() => openModal(`copy${'file'}${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth || (data && data.length >= 4)) && (
+              <ItemModalItem
+                SVG={RemoveSVG}
+                text={t('modals.delete')}
+                onClick={() => openModal(`deleteFileModal${id}`)}
+              />
+            )}
           </React.Fragment>
         </DataFetching>
       </ItemModal>

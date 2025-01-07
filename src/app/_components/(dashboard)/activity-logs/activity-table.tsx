@@ -23,6 +23,7 @@ const ActivityTable = () => {
     error,
     fetchNextPage: fetchNextActivities,
     hasNextPage: hasNextActivities,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ['activities'],
     queryFn: ({ pageParam = 1 }) => {
@@ -45,6 +46,7 @@ const ActivityTable = () => {
       data={activities}
       emptyError={t('activity.errors.ACTIVITY_ZERO_ERROR')}
       error={error && errorText}
+      refetch={refetch}
       isLoading={isLoadingActivities}>
       <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
         <table className={clsx(contentFont.className, 'table')}>

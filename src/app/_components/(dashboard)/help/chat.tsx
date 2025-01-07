@@ -23,6 +23,7 @@ import toast from 'react-hot-toast';
 import { getNextPage } from '@app/_utils/fetch';
 import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
 import { getErrorText } from '@app/_utils/translations';
+import DataFetching from '../general/data-fetching';
 
 const Chat = ({ user }) => {
   const t = useTranslations();
@@ -80,15 +81,22 @@ const Chat = ({ user }) => {
     console.log(errors);
   };
 
-  const { data, isLoading, isFetching, isError, fetchNextPage, hasNextPage } =
-    useInfiniteQuery({
-      queryKey: ['messages'],
-      queryFn: ({ pageParam = 1 }) => {
-        return fetchMessages(pageParam, paginationPageLimit); // Fetch 5 messages per page
-      },
-      getNextPageParam: (lastPage, pages) =>
-        getNextPage(lastPage, pages, paginationPageLimit),
-    });
+  const {
+    data,
+    isLoading,
+    isFetching,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ['messages'],
+    queryFn: ({ pageParam = 1 }) => {
+      return fetchMessages(pageParam, paginationPageLimit); // Fetch 5 messages per page
+    },
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
+  });
 
   // Safely access messages after the data is fetched
   const messages = data?.pages?.flat() || [];
@@ -99,6 +107,12 @@ const Chat = ({ user }) => {
       fetchNextPage();
     }
   };
+
+  const errorTextMessages = getErrorText(
+    t,
+    `help.errors.${error?.message}`,
+    `help.errors.MESSAGES_FETCH_ERROR`,
+  );
 
   return (
     <section
@@ -115,63 +129,71 @@ const Chat = ({ user }) => {
           ref={messagesContainerRef}
           onScroll={handleScroll}>
           {/* {isLoading && <LoadingSpinner />} */}
-          {messages?.map((message) => (
-            <div key={message.id} className="flex flex-col gap-[8px]">
-              <div
-                className={`flex w-fit gap-[16px] items-end ${
-                  message.type === 'customer'
-                    ? dir === 'rtl'
-                      ? 'mr-auto'
-                      : 'ml-auto'
-                    : dir === 'rtl'
-                    ? 'ml-auto'
-                    : 'mr-auto'
-                }`}>
+          <DataFetching
+            data={messages}
+            error={error && errorTextMessages}
+            isLoading={isLoading}
+            refetch={refetch}>
+            {messages?.map((message) => (
+              <div key={message.id} className="flex flex-col gap-[8px]">
                 <div
-                  className={`w-[48px] h-[48px] rounded-full overflow-hidden flex-shrink-0 sm:flex hidden ${
+                  className={`flex w-fit gap-[16px] items-end ${
                     message.type === 'customer'
                       ? dir === 'rtl'
-                        ? 'mr-auto order-2'
-                        : 'ml-auto order-2'
+                        ? 'mr-auto'
+                        : 'ml-auto'
                       : dir === 'rtl'
                       ? 'ml-auto'
                       : 'mr-auto'
                   }`}>
-                  {message.type === 'customer' && <img src={user.img} alt="" />}
-                  {message.type !== 'customer' && (
-                    <img src="/images/defaults/bot.png" alt="" />
-                  )}
+                  <div
+                    className={`w-[48px] h-[48px] rounded-full overflow-hidden flex-shrink-0 sm:flex hidden ${
+                      message.type === 'customer'
+                        ? dir === 'rtl'
+                          ? 'mr-auto order-2'
+                          : 'ml-auto order-2'
+                        : dir === 'rtl'
+                        ? 'ml-auto'
+                        : 'mr-auto'
+                    }`}>
+                    {message.type === 'customer' && (
+                      <img src={user.img} alt="" />
+                    )}
+                    {message.type !== 'customer' && (
+                      <img src="/images/defaults/bot.png" alt="" />
+                    )}
+                  </div>
+
+                  <div
+                    className={`w-fit p-[24px] rounded-[16px] text-[16px] font-medium ${
+                      message.type === 'customer'
+                        ? dir === 'rtl'
+                          ? 'mr-auto rounded-bl-none bg-mainColor1 text-textLight'
+                          : 'ml-auto rounded-br-none bg-mainColor1 text-textLight'
+                        : dir === 'rtl'
+                        ? 'ml-auto rounded-br-none border-solid border-[1px] border-mainColor1 text-mainColor1'
+                        : 'mr-auto rounded-bl-none border-solid border-[1px] border-mainColor1 text-mainColor1'
+                    }`}>
+                    {message.content}
+                  </div>
                 </div>
 
-                <div
-                  className={`w-fit p-[24px] rounded-[16px] text-[16px] font-medium ${
+                <p
+                  className={`w-fit text-textBodyPrimary text-[12px] ${
                     message.type === 'customer'
                       ? dir === 'rtl'
-                        ? 'mr-auto rounded-bl-none bg-mainColor1 text-textLight'
-                        : 'ml-auto rounded-br-none bg-mainColor1 text-textLight'
+                        ? 'mr-auto'
+                        : 'ml-auto'
                       : dir === 'rtl'
-                      ? 'ml-auto rounded-br-none border-solid border-[1px] border-mainColor1 text-mainColor1'
-                      : 'mr-auto rounded-bl-none border-solid border-[1px] border-mainColor1 text-mainColor1'
+                      ? 'ml-auto'
+                      : 'mr-auto'
                   }`}>
-                  {message.content}
-                </div>
+                  {convertToChatTime(message.time)}
+                </p>
               </div>
-
-              <p
-                className={`w-fit text-textBodyPrimary text-[12px] ${
-                  message.type === 'customer'
-                    ? dir === 'rtl'
-                      ? 'mr-auto'
-                      : 'ml-auto'
-                    : dir === 'rtl'
-                    ? 'ml-auto'
-                    : 'mr-auto'
-                }`}>
-                {convertToChatTime(message.time)}
-              </p>
-            </div>
-          ))}
-          {(isFetching || isLoading) && <LoadingSpinner />}
+            ))}
+          </DataFetching>
+          {isFetching && !isLoading && <LoadingSpinner />}
         </div>
       </div>
       <form

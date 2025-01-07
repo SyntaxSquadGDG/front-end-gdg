@@ -70,6 +70,7 @@ const NewEmployee = () => {
     error,
     fetchNextPage,
     hasNextPage,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ['roles'],
     queryFn: ({ pageParam = 1 }) => fetchRoles(pageParam, paginationPageLimit),
@@ -170,6 +171,7 @@ const NewEmployee = () => {
             <DataFetching
               data={initialRoles}
               isLoading={isLoadingData}
+              refetch={refetch}
               error={error && errorFetchingText}>
               <CustomSelect
                 label={t('employees.roleLabel')}

@@ -32,3 +32,30 @@ export async function redirectFromServer(path: string): Promise<void> {
   }
 }
 
+export async function refetchPlans() {
+  await revalidatePath('/plans');
+}
+
+export async function refetchProfile() {
+  await revalidatePath('/profile');
+}
+
+export async function refetchCategory() {
+  await revalidateTag('category');
+}
+
+export async function refetchTypeResults() {
+  await revalidateTag('typeResults');
+}
+
+export async function refetchStorage() {
+  await revalidateTag('storage');
+}
+
+export async function refetchManager(id) {
+  await revalidateTag(`manager${id}`);
+}
+
+export async function refetchTag(tag) {
+  await revalidateTag(tag);
+}

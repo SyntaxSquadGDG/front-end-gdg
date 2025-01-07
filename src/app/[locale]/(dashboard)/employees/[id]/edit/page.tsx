@@ -1,9 +1,13 @@
+import { fetchEmployee } from '@app/_components/(dashboard)/employees/data/queries';
 import UpdateEmployee from '@app/_components/(dashboard)/employees/update-employee';
 import HeadBar from '@app/_components/(dashboard)/general/head-bar';
+import LoadError from '@app/_components/(dashboard)/general/load-error';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
 import TryLater from '@app/_components/(dashboard)/general/try-later';
 import EmployeesSVG from '@app/_components/svgs/navbars/employees';
-import { fetchEmployee } from '@app/_utils/fetch/queries';
+import { getErrorText } from '@app/_utils/translations';
 import { getTranslations } from 'next-intl/server';
 import React, { Suspense } from 'react';
 
@@ -30,8 +34,17 @@ const page = async ({ params }) => {
         </>
       );
     } catch (error) {
-      console.error('Error fetching employees:', error);
-      return <TryLater>{t('zero.employee')}</TryLater>;
+      const errorText = getErrorText(
+        t,
+        `employees.errors.${error?.message}`,
+        `employees.errors.EMPLOYEE_DATA_ERROR`,
+      );
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`employee${id}`} />
+        </LoadErrorDiv>
+      );
     }
   };
 

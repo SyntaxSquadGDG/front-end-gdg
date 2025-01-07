@@ -22,6 +22,7 @@ const Permissions = ({ id, type, full = false }) => {
     error,
     fetchNextPage: fetchNextPermissions,
     hasNextPage: hasNextPermissions,
+    refetch,
   } = useInfiniteQuery({
     queryKey: [`${type}${id}Permissions`],
     queryFn: ({ pageParam = 1 }) => {
@@ -51,11 +52,13 @@ const Permissions = ({ id, type, full = false }) => {
       data={permissionsData}
       emptyError={t('permissions.errors.PERMISSIONS_ZERO_ERROR')}
       error={error && errorText}
+      refetch={refetch}
       isLoading={isLoadingPermissions}>
       <div className="rounded-[16px] overflow-x-auto border-[1px] border-solid border-black">
         <table className="permissionsTable">
           <tbody>
             {permissions.map((item) => {
+              console.log(item);
               return (
                 <PermissionItem
                   item={item}

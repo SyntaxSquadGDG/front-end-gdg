@@ -13,6 +13,7 @@ import {
   fetchFolderActivities,
   fetchMyActivities,
   fetchSectionActivities,
+  fetchSectionsActivities,
 } from './data/queries';
 import LoadError from '../general/load-error';
 import LoadingSpinner from '../general/loader';
@@ -35,17 +36,22 @@ const ActivitySection = ({ type, id, fixed = true }) => {
       hrefValue = '/profile/activities';
       query = fetchMyActivities(1, paginationPageLimit);
       break;
+    case 'sections':
+      hrefValue = `/sections/activities`;
+      query = fetchSectionsActivities(id, 1, paginationPageLimit);
+      break;
     case 'section':
       hrefValue = `/sections/${id}/activities`;
       query = fetchSectionActivities(id, 1, paginationPageLimit);
       break;
     case 'folder':
+      console.log('OOOOOOOOOOOOOOOOOOOO');
       hrefValue = `/folders/${id}/activities`;
       query = fetchFolderActivities(id, 1, paginationPageLimit);
       break;
     case 'file':
       hrefValue = `/files/${id}/activities`;
-      query = fetchFileActivities(id, 1, paginationPageLimit, id);
+      query = fetchFileActivities(id, 1, paginationPageLimit);
       break;
     default:
       hrefValue = '/profile/activities';
@@ -54,7 +60,7 @@ const ActivitySection = ({ type, id, fixed = true }) => {
   }
 
   // Use useQuery for data fetching
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery({
     queryKey: ['activities', type, id], // queryKey is now an object property
     queryFn: () => query,
   });
@@ -64,6 +70,8 @@ const ActivitySection = ({ type, id, fixed = true }) => {
     `activity.errors.${error?.message}`,
     `activity.errors.ACTIVITY_LOAD_ERROR`,
   );
+
+  console.log(data);
 
   return (
     <div
@@ -95,6 +103,7 @@ const ActivitySection = ({ type, id, fixed = true }) => {
           data={data}
           emptyError={t('activity.errors.ACTIVITY_ZERO_ERROR')}
           error={error && errorText}
+          refetch={refetch}
           isLoading={isLoading}>
           {data &&
             data.map((item, index) => <ActivityItem key={index} item={item} />)}

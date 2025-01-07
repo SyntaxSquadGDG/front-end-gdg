@@ -14,7 +14,6 @@ import { getErrorText } from '@app/_utils/translations';
 
 export default function FileMetadataForm({
   fileId,
-  folderId,
   folderMetadata = [],
   fileMetadata = [], // The current metadata of the file that will be pre-filled
   // onUpdateFileMetadata, // Callback to update file metadata (can be passed from parent)

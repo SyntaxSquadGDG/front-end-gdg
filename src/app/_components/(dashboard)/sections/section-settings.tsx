@@ -21,21 +21,23 @@ import { useQuery } from '@tanstack/react-query';
 import LoadingSpinner from '../general/loader';
 import DataFetching from '../general/data-fetching';
 import { getErrorText } from '@app/_utils/translations';
+import { isManagerOwner } from '@app/_utils/auth';
 
 const SectionSettings = ({ id }) => {
   const t = useTranslations();
   const { modalStack, openModal, closeModal } = useModal();
   const [isOpen, setIsOpen] = useState(false);
   const [errorText, setErrorText] = useState(null);
+  const isSettingsFullAuth = isManagerOwner();
 
   function handleSettingsClick() {
     setIsOpen(true);
   }
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['sectionSettings', id], // Unique key for the query
     queryFn: () => fetchSectionSettings(id), // Function to fetch the data
-    enabled: isOpen, // Set to false if you want to fetch on user action (e.g., button click)
+    enabled: isOpen && !isSettingsFullAuth, // Set to false if you want to fetch on user action (e.g., button click)
   });
 
   useEffect(() => {
@@ -55,43 +57,49 @@ const SectionSettings = ({ id }) => {
 
       <ItemModal isOpen={isOpen} setIsOpen={setIsOpen}>
         <DataFetching
-          isLoading={isLoading}
-          error={error && errorText}
-          data={data}
-          emptyError={t('sections.settings.SECTION_SETTINGS_ZERO_ERROR')}>
+          isLoading={isSettingsFullAuth ? false : isLoading}
+          error={isSettingsFullAuth ? null : error && errorText}
+          refetch={refetch}
+          data={isSettingsFullAuth ? [] : data}>
           <React.Fragment>
-            <ItemModalItem
-              SVG={EditPermissionsSVG}
-              text={t('modals.editPermissions')}
-              type="button"
-              onClick={() => {
-                openModal(`ItemPermissionsEdit${'section'}${id}`);
-              }}
-            />
-            <ItemModalItem
-              SVG={PermittedEmployeesSVG}
-              text={t('modals.permittedEmployees')}
-              type="link"
-              href={`/sections/${id}/employees`}
-            />
-
-            <ItemModalItem
-              SVG={EditSVG}
-              text={t('modals.rename')}
-              onClick={() => {
-                openModal(`renameSectionModal${id}`);
-              }}
-              type="button"
-            />
-
-            <ItemModalItem
-              SVG={RemoveSVG}
-              text={t('general.delete')}
-              onClick={() => {
-                openModal(`deleteSectionModal${id}`);
-              }}
-              type="button"
-            />
+            {isSettingsFullAuth && (
+              <>
+                <ItemModalItem
+                  SVG={EditPermissionsSVG}
+                  text={t('modals.editPermissions')}
+                  type="button"
+                  onClick={() => {
+                    openModal(`ItemPermissionsEdit${'section'}${id}`);
+                  }}
+                />
+                <ItemModalItem
+                  SVG={PermittedEmployeesSVG}
+                  text={t('modals.permittedEmployees')}
+                  type="link"
+                  href={`/sections/${id}/employees`}
+                />
+              </>
+            )}
+            {(isSettingsFullAuth || (data && data.length >= 2)) && (
+              <ItemModalItem
+                SVG={EditSVG}
+                text={t('modals.rename')}
+                onClick={() => {
+                  openModal(`renameSectionModal${id}`);
+                }}
+                type="button"
+              />
+            )}
+            {(isSettingsFullAuth || (data && data.length >= 4)) && (
+              <ItemModalItem
+                SVG={RemoveSVG}
+                text={t('general.delete')}
+                onClick={() => {
+                  openModal(`deleteSectionModal${id}`);
+                }}
+                type="button"
+              />
+            )}
           </React.Fragment>
         </DataFetching>
       </ItemModal>

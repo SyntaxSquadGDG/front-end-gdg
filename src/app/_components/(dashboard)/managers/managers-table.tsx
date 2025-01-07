@@ -16,7 +16,6 @@ import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
 const ManagersTable = () => {
   const t = useTranslations();
   const paginationPageLimit = PAGINATION_PAGE_LIMIT;
-  const [errorText, setErrorText] = useState(null);
 
   const [sortConfig, setSortConfig] = useState({
     key: 'id', // Default column to sort by
@@ -30,6 +29,7 @@ const ManagersTable = () => {
     error,
     fetchNextPage: fetchNextManagers,
     hasNextPage: hasNextManagers,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ['managers'],
     refetchOnWindowFocus: false,
@@ -73,20 +73,18 @@ const ManagersTable = () => {
     });
   };
 
-  useEffect(() => {
-    const errorText = getErrorText(
-      t,
-      `managers.errors.${error?.message}`,
-      `managers.errors.MANAGERS_LOAD_ERROR`,
-    );
-    setErrorText(errorText);
-  }, [error]);
+  const errorText = getErrorText(
+    t,
+    `managers.errors.${error?.message}`,
+    `managers.errors.MANAGERS_LOAD_ERROR`,
+  );
 
   return (
     <DataFetching
       data={managers}
       emptyError={t('managers.errors.MANAGERS_ZERO_ERROR')}
       error={error && errorText}
+      refetch={refetch}
       isLoading={isLoadingManagers}>
       <div className="tableDiv">
         <div>

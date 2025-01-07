@@ -1,3 +1,5 @@
+import { getCookie } from 'cookies-next';
+
 export function decodeJWT(token) {
   // Split the token into its 3 parts
   const [header, payload, signature] = token.split('.');
@@ -21,3 +23,11 @@ export function decodeJWT(token) {
   };
 }
 
+export function isManagerOwner() {
+  const token = getCookie('token');
+  const decodedToken = token ? decodeJWT(token) : null;
+  const isAuth =
+    decodedToken.payload.role === 'owner' ||
+    decodedToken.payload.role === 'manager';
+  return isAuth;
+}

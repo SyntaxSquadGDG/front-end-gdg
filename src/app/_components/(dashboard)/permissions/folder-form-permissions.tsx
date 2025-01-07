@@ -1,11 +1,11 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Checkbox from '../general/checkbox';
 import Button from '../general/button';
 import PermissionsHeadText from './permissions-head-text';
 import { useTranslations } from 'next-intl';
 import PermissionsDiv from './permissions-div';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useModal } from '@app/_contexts/modal-provider';
 import {
   updateEmployeesFolderPermissions,
@@ -14,31 +14,25 @@ import {
 import { getErrorText } from '@app/_utils/translations';
 import toast from 'react-hot-toast';
 import ErrorAction from '../general/error-action';
+import {
+  fetchEmployeeFolderPermissions,
+  fetchRoleFolderPermissions,
+} from './data/queries';
+import DataFetching from '../general/data-fetching';
 
-const FolderFormPermissions = ({
-  type,
-  id,
-  folderId,
-  defaultFolderPermissions = [],
-  defaultSubFolderPermissions = [],
-  defaultFilePermissions = [],
-}) => {
+const FolderFormPermissions = ({ type, id, folderId, mode }) => {
   const t = useTranslations();
 
-  const [folderPermissions, setFolderPermissions] = useState(
-    defaultFolderPermissions,
-  );
-  const [subFolderPermissions, setSubFolderPermissions] = useState(
-    defaultSubFolderPermissions,
-  );
-  const [filePermissions, setFilePermissions] = useState(
-    defaultFilePermissions,
-  );
+  const [folderPermissions, setFolderPermissions] = useState([]);
+  const [subFolderPermissions, setSubFolderPermissions] = useState([]);
+  const [filePermissions, setFilePermissions] = useState([]);
+  const isSingle = mode === 'single';
 
-  const disabledCondition =
-    filePermissions.length === 0 &&
-    subFolderPermissions.length === 0 &&
-    folderPermissions.length === 0;
+  const disabledCondition = false;
+  // const disabledCondition =
+  //   filePermissions.length === 0 &&
+  //   subFolderPermissions.length === 0 &&
+  //   folderPermissions.length === 0;
 
   // Handles toggling for any permission type
   const handleToggle = (type, index) => {
@@ -89,7 +83,20 @@ const FolderFormPermissions = ({
         ? updateEmployeesFolderPermissions(folderId, data)
         : updateRolesFolderPermissions(folderId, data),
     onSuccess: async () => {
-      queryClient.invalidateQueries([`${type}${id}Permissions`]);
+      if (mode === 'single') {
+        queryClient.invalidateQueries([
+          `${type}${id[0]}${folderId}Permissions`,
+          `${type}${id[0]}Permissions`,
+        ]);
+      } else {
+        id.map((itemId) => {
+          queryClient.invalidateQueries([
+            `${type}${itemId}${folderId}Permissions`,
+            `${type}${itemId}Permissions`,
+          ]);
+        });
+      }
+      toast.success(t('general.updated'));
       closeModal();
     },
     onError: (error) => {
@@ -103,78 +110,107 @@ const FolderFormPermissions = ({
     },
   });
 
-  return (
-    <div>
-      <div className="grid grid-cols-2 gap-[24px]">
-        <div className="">
-          <PermissionsHeadText>
-            {t('permissions.foldersPermissions')}
-          </PermissionsHeadText>
-          <PermissionsDiv>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Checkbox
-                key={`folder-${index}`}
-                value={folderPermissions.includes(index)}
-                disabled={
-                  (index > 0 && !folderPermissions.includes(index - 1)) ||
-                  mutation.isPending
-                }
-                onChange={() => handleToggle('folder', index)}
-                label={`Folder Permission ${index}`}
-              />
-            ))}
-          </PermissionsDiv>
-        </div>
-        <div>
-          <PermissionsHeadText>
-            {t('permissions.subFoldersPermissions')}
-          </PermissionsHeadText>
-          <PermissionsDiv>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Checkbox
-                key={`subFolder-${index}`}
-                value={subFolderPermissions.includes(index)}
-                disabled={
-                  (index > 0 && !subFolderPermissions.includes(index - 1)) ||
-                  mutation.isPending
-                }
-                onChange={() => handleToggle('subFolder', index)}
-                label={`Subfolder Permission ${index}`}
-              />
-            ))}
-          </PermissionsDiv>
-        </div>
-        <div>
-          <PermissionsHeadText>
-            {t('permissions.filesPermissions')}
-          </PermissionsHeadText>
-          <PermissionsDiv>
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Checkbox
-                key={`file-${index}`}
-                value={filePermissions.includes(index)}
-                disabled={
-                  (index > 0 && !filePermissions.includes(index - 1)) ||
-                  mutation.isPending
-                }
-                onChange={() => handleToggle('file', index)}
-                label={`File Permission ${index}`}
-              />
-            ))}
-          </PermissionsDiv>
-        </div>
-      </div>
+  const { isPending, error, data, refetch } = useQuery({
+    queryKey: [`${type}${id[0]}${folderId}Permissions`],
+    queryFn:
+      type === 'employee'
+        ? () => fetchEmployeeFolderPermissions(id[0], folderId)
+        : () => fetchRoleFolderPermissions(id[0], folderId),
+    enabled: mode === 'single',
+  });
 
-      <Button
-        text={t('permissions.updateButton')}
-        disabled={disabledCondition || id.length === 0}
-        isPending={mutation.isPending}
-        isPendingText={t('general.updating')}
-        className={'mt-[32px] w-[100%]'}
-        onClick={() => handleUpdate()}
-      />
-      <ErrorAction>{errorText}</ErrorAction>
-    </div>
+  useEffect(() => {
+    if (data) {
+      setFolderPermissions(data.folderPermissions);
+      setSubFolderPermissions(data.subFolderPermissions);
+      setFilePermissions(data.filePermissions);
+    }
+  }, [data]);
+
+  const textError = getErrorText(
+    t,
+    `permissions.errors.${error?.message}`,
+    `permissions.errors.PERMISSIONS_LOAD_ERROR`,
+  );
+
+  return (
+    <DataFetching
+      isLoading={isSingle ? isPending : false}
+      data={isSingle ? data : []}
+      error={isSingle ? error && textError : null}
+      refetch={isSingle ? refetch : () => {}}>
+      <div>
+        <div className="grid grid-cols-2 gap-[24px]">
+          <div className="">
+            <PermissionsHeadText>
+              {t('permissions.foldersPermissions')}
+            </PermissionsHeadText>
+            <PermissionsDiv>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Checkbox
+                  key={`folder-${index}`}
+                  value={folderPermissions.includes(index)}
+                  disabled={
+                    (index > 0 && !folderPermissions.includes(index - 1)) ||
+                    mutation.isPending
+                  }
+                  onChange={() => handleToggle('folder', index)}
+                  label={`Folder Permission ${index}`}
+                />
+              ))}
+            </PermissionsDiv>
+          </div>
+          <div>
+            <PermissionsHeadText>
+              {t('permissions.subFoldersPermissions')}
+            </PermissionsHeadText>
+            <PermissionsDiv>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Checkbox
+                  key={`subFolder-${index}`}
+                  value={subFolderPermissions.includes(index)}
+                  disabled={
+                    (index > 0 && !subFolderPermissions.includes(index - 1)) ||
+                    mutation.isPending
+                  }
+                  onChange={() => handleToggle('subFolder', index)}
+                  label={`Subfolder Permission ${index}`}
+                />
+              ))}
+            </PermissionsDiv>
+          </div>
+          <div>
+            <PermissionsHeadText>
+              {t('permissions.filesPermissions')}
+            </PermissionsHeadText>
+            <PermissionsDiv>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Checkbox
+                  key={`file-${index}`}
+                  value={filePermissions.includes(index)}
+                  disabled={
+                    (index > 0 && !filePermissions.includes(index - 1)) ||
+                    mutation.isPending
+                  }
+                  onChange={() => handleToggle('file', index)}
+                  label={`File Permission ${index}`}
+                />
+              ))}
+            </PermissionsDiv>
+          </div>
+        </div>
+
+        <Button
+          text={t('permissions.updateButton')}
+          disabled={disabledCondition || id.length === 0}
+          isPending={mutation.isPending}
+          isPendingText={t('general.updating')}
+          className={'mt-[32px] w-[100%]'}
+          onClick={() => handleUpdate()}
+        />
+        <ErrorAction>{errorText}</ErrorAction>
+      </div>
+    </DataFetching>
   );
 };
 

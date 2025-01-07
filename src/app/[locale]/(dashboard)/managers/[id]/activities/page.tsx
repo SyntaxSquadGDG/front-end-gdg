@@ -6,6 +6,12 @@ import TryLater from '@app/_components/(dashboard)/general/try-later';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
 import { fetchManager } from '@app/_components/(dashboard)/managers/data/queries';
 import Activity from '@app/_components/(dashboard)/managers/activity';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
+import RefetchButton from '@app/_components/(dashboard)/general/refetch';
+import { getErrorText } from '@app/_utils/translations';
+import { refetchManager } from '@app/actions';
+import LoadError from '@app/_components/(dashboard)/general/load-error';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
 
 const page = async ({ params }) => {
   const id = (await params).id;
@@ -32,8 +38,17 @@ const page = async ({ params }) => {
         </>
       );
     } catch (error) {
-      console.error('Error fetching manager:', error);
-      return <TryLater>{t('zero.manager')}</TryLater>;
+      const textError = getErrorText(
+        t,
+        `managers.errors.${error?.message}`,
+        `managers.errors.MANAGER_LOAD_ERROR`,
+      );
+      return (
+        <LoadErrorDiv>
+          <LoadError>{textError}</LoadError>
+          <RefetchWrapper tag={`manager${id}`} />
+        </LoadErrorDiv>
+      );
     }
   };
 
@@ -44,7 +59,7 @@ const page = async ({ params }) => {
       <Suspense fallback={<LoadingSpinner />}>
         <ManagerDataWrapper />
       </Suspense>
-      <Activity id={id} full={true} />
+      <Activity type="manager" id={id} full={true} />
     </div>
   );
 };

@@ -223,6 +223,7 @@ const ItemPermissionsEditModal = ({ id, type }) => {
             id={isEmployees ? selectedEmployeeIds : selectedRoleIds}
             type={isEmployees ? 'employee' : 'role'}
             sectionId={id}
+            mode={'multiple'}
           />
         )}
         {type === 'folder' && (
@@ -230,6 +231,7 @@ const ItemPermissionsEditModal = ({ id, type }) => {
             id={isEmployees ? selectedEmployeeIds : selectedRoleIds}
             type={isEmployees ? 'employee' : 'role'}
             folderId={id}
+            mode={'multiple'}
           />
         )}
         {type === 'file' && (
@@ -237,6 +239,7 @@ const ItemPermissionsEditModal = ({ id, type }) => {
             id={isEmployees ? selectedEmployeeIds : selectedRoleIds}
             type={isEmployees ? 'employee' : 'role'}
             fileId={id}
+            mode={'multiple'}
           />
         )}
       </div>

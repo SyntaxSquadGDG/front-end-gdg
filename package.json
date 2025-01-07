@@ -28,6 +28,7 @@
     "nextjs-toploader": "^3.7.15",
     "pdfjs-dist": "^3.4.120",
     "react": "19.0.0-rc-66855b96-20241106",
+    "react-detect-offline": "^2.4.5",
     "react-doc-viewer": "^0.1.14",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-hook-form": "^7.53.2",

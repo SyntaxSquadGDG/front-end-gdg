@@ -1,11 +1,11 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Checkbox from '../general/checkbox';
 import PermissionsHeadText from './permissions-head-text';
 import { useTranslations } from 'next-intl';
 import Button from '../general/button';
 import PermissionsDiv from './permissions-div';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   updateEmployeesSectionPermissions,
   updateRolesSectionPermissions,
@@ -14,19 +14,20 @@ import toast from 'react-hot-toast';
 import { useModal } from '@app/_contexts/modal-provider';
 import { getErrorText } from '@app/_utils/translations';
 import ErrorAction from '../general/error-action';
+import {
+  fetchEmployeeSectionPermissions,
+  fetchRoleSectionPermissions,
+} from './data/queries';
+import DataFetching from '../general/data-fetching';
 
-const SectionFormPermissions = ({
-  type,
-  id,
-  defaultPermissions,
-  sectionId,
-}) => {
-  const [permissions, setPermissions] = useState(defaultPermissions || []); // Stores selected permissions
+const SectionFormPermissions = ({ type, id, sectionId, mode }) => {
+  const [permissions, setPermissions] = useState([]); // Stores selected permissions
   const t = useTranslations();
-  const disabledCondition = permissions.length === 0;
+  const disabledCondition = false;
   const queryClient = useQueryClient();
   const [errorText, setErrorText] = useState(null);
   const { closeModal } = useModal();
+  const isSingle = mode === 'single';
 
   const handleToggle = (index) => {
     setPermissions((prev) => {
@@ -60,7 +61,20 @@ const SectionFormPermissions = ({
         ? updateEmployeesSectionPermissions(sectionId, data)
         : updateRolesSectionPermissions(sectionId, data),
     onSuccess: async () => {
-      queryClient.invalidateQueries([`${type}${id}Permissions`]);
+      if (isSingle) {
+        queryClient.invalidateQueries([
+          `${type}${id[0]}${sectionId}Permissions`,
+          `${type}${id[0]}Permissions`,
+        ]);
+      } else {
+        id.map((itemId) => {
+          queryClient.invalidateQueries([
+            `${type}${itemId}${sectionId}Permissions`,
+            `${type}${itemId}Permissions`,
+          ]);
+        });
+      }
+      toast.success(t('general.updated'));
       closeModal();
     },
     onError: (error) => {
@@ -74,37 +88,64 @@ const SectionFormPermissions = ({
     },
   });
 
+  const { isPending, error, data, refetch } = useQuery({
+    queryKey: [`${type}${id[0]}${sectionId}Permissions`],
+    queryFn:
+      type === 'employee'
+        ? () => fetchEmployeeSectionPermissions(id[0], sectionId)
+        : () => fetchRoleSectionPermissions(id[0], sectionId),
+    enabled: isSingle,
+  });
+
+  useEffect(() => {
+    if (data) {
+      setPermissions(data);
+    }
+  }, [data]);
+
+  const textError = getErrorText(
+    t,
+    `permissions.errors.${error?.message}`,
+    `permissions.errors.PERMISSIONS_LOAD_ERROR`,
+  );
+
   return (
-    <div>
-      <div className="">
-        <PermissionsHeadText>
-          {t('permissions.sectionPermissions')}
-        </PermissionsHeadText>
-        <PermissionsDiv>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Checkbox
-              key={index}
-              value={permissions.includes(index)}
-              disabled={
-                (index > 0 && !permissions.includes(index - 1)) ||
-                mutation.isPending
-              }
-              onChange={() => handleToggle(index)}
-              label={`Permission ${index}`}
-            />
-          ))}
-        </PermissionsDiv>
+    <DataFetching
+      isLoading={isSingle ? isPending : false}
+      data={isSingle ? data : []}
+      error={isSingle ? error && textError : null}
+      refetch={isSingle ? refetch : () => {}}>
+      <div>
+        <div className="">
+          <PermissionsHeadText>
+            {t('permissions.sectionPermissions')}
+          </PermissionsHeadText>
+          <PermissionsDiv>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Checkbox
+                key={index}
+                value={permissions.includes(index)}
+                disabled={
+                  (index > 0 && !permissions.includes(index - 1)) ||
+                  mutation.isPending
+                }
+                onChange={() => handleToggle(index)}
+                label={`Permission ${index}`}
+              />
+            ))}
+          </PermissionsDiv>
+        </div>
+        <Button
+          text={t('permissions.updateButton')}
+          disabled={disabledCondition || id.length === 0}
+          isPending={mutation.isPending}
+          isPendingText={t('general.updating')}
+          className={'mt-[32px] w-[100%]'}
+          onClick={() => handleUpdate()}
+        />
+        <ErrorAction>{errorText}</ErrorAction>
       </div>
-      <Button
-        text={t('permissions.updateButton')}
-        disabled={disabledCondition || id.length === 0}
-        isPending={mutation.isPending}
-        isPendingText={t('general.updating')}
-        className={'mt-[32px] w-[100%]'}
-        onClick={() => handleUpdate()}
-      />
-      <ErrorAction>{errorText}</ErrorAction>
-    </div>
+    </DataFetching>
   );
 };
 

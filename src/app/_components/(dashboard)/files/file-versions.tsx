@@ -18,37 +18,44 @@ import { getErrorText } from '@app/_utils/translations';
 const FileVersions = ({ id, enabled = true }) => {
   const t = useTranslations();
   const paginationPageLimit = PAGINATION_PAGE_LIMIT;
-  const [errorText, setErrorText] = useState(null);
 
-  const { data, isLoading, isFetching, error, fetchNextPage, hasNextPage } =
-    useInfiniteQuery({
-      queryKey: ['fileVersions', id],
-      queryFn: ({ pageParam = 1 }) => {
-        return fetchFileVersions(id, pageParam, paginationPageLimit); // Fetch 5 messages per page
-      },
-      getNextPageParam: (lastPage, pages) => getNextPage,
-      enabled: enabled,
-    });
+  const {
+    data,
+    isLoading,
+    isFetching,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ['fileVersions', id],
+    queryFn: ({ pageParam = 1 }) => {
+      return fetchFileVersions(id, pageParam, paginationPageLimit); // Fetch 5 messages per page
+    },
+    getNextPageParam: (lastPage, pages) => getNextPage,
+    enabled: enabled,
+  });
 
   // Safely access messages after the data is fetched
   const versions = data?.pages?.flat() || [];
 
-  useEffect(() => {
-    const textError = getErrorText(
-      t,
-      `files.errors.${error?.message}`,
-      `files.errors.FILE_VERSIONS_LOAD_ERROR`,
-    );
-    setErrorText(textError);
-  }, [error]);
+  const textError = getErrorText(
+    t,
+    `files.errors.${error?.message}`,
+    `files.errors.FILE_VERSIONS_LOAD_ERROR`,
+  );
+
+  console.log(versions);
+  console.log(textError);
 
   return (
     <div>
       <HeadText>{t('files.otherVersions')}</HeadText>
       <DataFetching
         data={versions}
-        error={error && errorText}
+        error={error && textError}
         emptyError={t('files.errors.FILE_VERSIONS_ZERO_ERROR')}
+        refetch={refetch}
         isLoading={isLoading}>
         <FileVersionsTable
           fileId={id}

@@ -5,6 +5,12 @@ import TryLater from '@app/_components/(dashboard)/general/try-later';
 import { getTranslations } from 'next-intl/server';
 import React, { Suspense } from 'react';
 import { fetchManager } from '@app/_components/(dashboard)/managers/data/queries';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
+import LoadError from '@app/_components/(dashboard)/general/load-error';
+import RefetchButton from '@app/_components/(dashboard)/general/refetch';
+import { refetchManager } from '@app/actions';
+import { getErrorText } from '@app/_utils/translations';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
 
 const page = async ({ params }) => {
   const id = (await params).id;
@@ -29,8 +35,17 @@ const page = async ({ params }) => {
         </>
       );
     } catch (error) {
-      console.error('Error fetching managers:', error);
-      return <TryLater>{t('zero.manager')}</TryLater>;
+      const textError = getErrorText(
+        t,
+        `managers.errors.${error?.message}`,
+        `managers.errors.MANAGER_LOAD_ERROR`,
+      );
+      return (
+        <LoadErrorDiv>
+          <LoadError>{textError}</LoadError>
+          <RefetchWrapper tag={`manager${id}`} />
+        </LoadErrorDiv>
+      );
     }
   };
 

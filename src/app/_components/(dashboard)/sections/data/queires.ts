@@ -7,11 +7,22 @@ export const fetchSections = async (page, limit) => {
 };
 
 export const fetchSectionName = async (id) => {
-  return await fetchData2(`/Sections/SectioNameById?id=${id}`);
+  const res = await fetchData2(
+    `/Sections/SectioNameById?id=${id}`,
+    'GET',
+    {},
+    {
+      next: {
+        tags: [`section${id}`],
+      },
+    },
+  );
+  return res.name;
 };
 
 export const fetchSectionFolders = async (id, page, limit) => {
-  return await fetchData2(`/Secations/FoldersByParentId?id=${id}`);
+  const res = await fetchData2(`/Sections/FoldersByParentId?id=${id}`);
+  return res;
 };
 
 export const fetchSectionSettings = async (id) => {

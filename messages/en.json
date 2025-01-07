@@ -402,7 +402,7 @@
       "SECTION_SETTINGS_FETCH_ERROR": "Couldn't load settings",
       "SECTION_SETTINGS_ZERO_ERROR": "Couldn't load settings",
       "SECTION_PATH_ERROR": "Couldn't load section path",
-      "SECTIONS_FETCH_ERROR": "Couldn't load section data",
+      "SECTIONS_FETCH_ERROR": "Couldn't load sections data",
       "SECTIONS_ZERO_ERROR": "There's no folders to show",
       "SECTION_FETCH_ERROR": "Couldn't load section folders",
       "SECTION_ZERO_ERROR": "There's no folders to show",
@@ -450,11 +450,13 @@
     "add": "Add",
     "successfully": "Successfully",
     "deleted": "Deleted Successfully!",
+    "updated": "Updated Successfully!",
     "create": "Create",
     "creating": "Creating...",
     "update": "Update",
     "required": "Required",
-    "submitting": "Submitting..."
+    "submitting": "Submitting...",
+    "offline": "Offline"
   },
   "zero": {
     "thereNo": "There's no",
@@ -539,7 +541,7 @@
       "FOLDER_SETTINGS_ZERO_ERROR": "There's no settings to show!",
       "FOLDER_METADATA_FETCH_ERROR": "Couldn't load folder metadata",
       "FOLDERS_FETCH_ERROR": "Couldn't load folders",
-      "FOLDERS_ZERO_ERROR": "Couldn't load folders",
+      "FOLDERS_ZERO_ERROR": "No Folders to show!",
       "FOLDER_METADATA_ZERO_ERROR": "There's no metadata to show!",
       "CREATE_METADATA_ERROR": "Couldn't Create metadata",
       "UPDATE_METADATA_ERROR": "Couldn't Update metadata",
@@ -758,6 +760,7 @@
       "MANAGERS_LOAD_ERROR": "Couldn't load managers",
       "MANAGERS_ZERO_ERROR": "No managers to show!",
       "MANAGER_DELETE_ERROR": "Couldn't delete manager",
+      "MANAGER_LOAD_ERROR": "Couldn't load manager",
       "MANAGER_CREATE_ERROR": "Couldn't create manager",
       "MANAGER_DATA_ERROR": "Couldn't load manager data",
       "MANAGER_UPDATE_ERROR": "Couldn't update manager data",
@@ -878,7 +881,8 @@
     "messageError": "Invalid Message",
     "support": "Support Team",
     "errors": {
-      "MESSAGE_SEND_ERROR": "Couldn't send message"
+      "MESSAGE_SEND_ERROR": "Couldn't send message",
+      "MESSAGES_FETCH_ERROR": "Couldn't load messages"
     }
   },
   "notifications": {

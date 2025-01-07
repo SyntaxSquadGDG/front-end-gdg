@@ -1,5 +1,18 @@
 import { fetchData } from '@app/_utils/fetch';
 
+export const fetchRole = async (id) => {
+  return await fetchData(
+    `/roles/${id}`,
+    'GET',
+    {},
+    {
+      next: {
+        tags: [`role${id}`],
+      },
+    },
+  );
+};
+
 export const fetchRoles = async (page, limit) => {
   return await fetchData(`/roles?page=${page}&limit=${limit}`);
 };

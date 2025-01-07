@@ -1,12 +1,12 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Checkbox from '../general/checkbox';
 import Button from '../general/button';
 import { useTranslations } from 'use-intl';
 import PermissionsHeadText from './permissions-head-text';
 import PermissionsDiv from './permissions-div';
 import { useModal } from '@app/_contexts/modal-provider';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   updateEmployeesFilePermissions,
   updateRolesFilePermissions,
@@ -14,11 +14,17 @@ import {
 import { getErrorText } from '@app/_utils/translations';
 import toast from 'react-hot-toast';
 import ErrorAction from '../general/error-action';
+import {
+  fetchEmployeeFilePermissions,
+  fetchRoleFilePermissions,
+} from './data/queries';
+import DataFetching from '../general/data-fetching';
 
-const FileFormPermissions = ({ type, id, defaultPermissions = [], fileId }) => {
-  const [permissions, setPermissions] = useState(defaultPermissions); // Stores selected permissions
-  const disabledCondition = permissions.length === 0;
+const FileFormPermissions = ({ type, id, mode, fileId }) => {
+  const [permissions, setPermissions] = useState([]); // Stores selected permissions
+  const disabledCondition = false;
   const t = useTranslations();
+  const isSingle = mode === 'single';
 
   const handleToggle = (index) => {
     setPermissions((prev) => {
@@ -70,37 +76,64 @@ const FileFormPermissions = ({ type, id, defaultPermissions = [], fileId }) => {
     },
   });
 
+  const { isPending, error, data, refetch } = useQuery({
+    queryKey: [`${type}${id[0]}${fileId}Permissions`],
+    queryFn:
+      type === 'employee'
+        ? () => fetchEmployeeFilePermissions(id[0], fileId)
+        : () => fetchRoleFilePermissions(id[0], fileId),
+    enabled: mode === 'single',
+  });
+
+  useEffect(() => {
+    if (data) {
+      setPermissions(data);
+    }
+  }, [data]);
+
+  const textError = getErrorText(
+    t,
+    `permissions.errors.${error?.message}`,
+    `permissions.errors.PERMISSIONS_LOAD_ERROR`,
+  );
+
   return (
-    <div>
+    <DataFetching
+      isLoading={isSingle ? isPending : false}
+      data={isSingle ? data : []}
+      error={isSingle ? error && textError : null}
+      refetch={isSingle ? refetch : () => {}}>
       <div>
-        <PermissionsHeadText>
-          {t('permissions.filePermissions')}
-        </PermissionsHeadText>
-        <PermissionsDiv>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Checkbox
-              key={index}
-              value={permissions.includes(index)}
-              disabled={
-                (index > 0 && !permissions.includes(index - 1)) ||
-                mutation.isPending
-              }
-              onChange={() => handleToggle(index)}
-              label={`Permission ${index}`}
-            />
-          ))}
-        </PermissionsDiv>
+        <div>
+          <PermissionsHeadText>
+            {t('permissions.filePermissions')}
+          </PermissionsHeadText>
+          <PermissionsDiv>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Checkbox
+                key={index}
+                value={permissions.includes(index)}
+                disabled={
+                  (index > 0 && !permissions.includes(index - 1)) ||
+                  mutation.isPending
+                }
+                onChange={() => handleToggle(index)}
+                label={`Permission ${index}`}
+              />
+            ))}
+          </PermissionsDiv>
+        </div>
+        <Button
+          text={t('permissions.updateButton')}
+          disabled={disabledCondition || id.length === 0}
+          isPending={mutation.isPending}
+          isPendingText={t('general.updating')}
+          className={'mt-[32px] w-[100%]'}
+          onClick={() => handleUpdate()}
+        />
+        <ErrorAction>{errorText}</ErrorAction>
       </div>
-      <Button
-        text={t('permissions.updateButton')}
-        disabled={disabledCondition || id.length === 0}
-        isPending={mutation.isPending}
-        isPendingText={t('general.updating')}
-        className={'mt-[32px] w-[100%]'}
-        onClick={() => handleUpdate()}
-      />
-      <ErrorAction>{errorText}</ErrorAction>
-    </div>
+    </DataFetching>
   );
 };
 

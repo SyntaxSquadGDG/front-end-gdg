@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { useLocale, useTranslations } from 'next-intl';
 import { getLangDir } from 'rtl-detect';
 import StructureView from '../general/structure-view';
-import { fetchFolderFolders } from './data/queries';
+import { fetchFolderFiles, fetchFolderFolders } from './data/queries';
 import Folders from './folders';
 import Files from '../files/files';
 import { contentFont } from '@app/_utils/fonts';
@@ -15,7 +15,6 @@ import FoldersTable from './folders-table';
 import FilesTable from '../files/files-table';
 import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
 import { getNextPage } from '@app/_utils/fetch';
-import { error } from 'console';
 import { getErrorText } from '@app/_utils/translations';
 
 const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
@@ -23,8 +22,6 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
   const direction = getLangDir(locale);
   const t = useTranslations();
   const paginationPageLimit = PAGINATION_PAGE_LIMIT;
-  const [errorTextFolders, setErrorTextFolders] = useState(null);
-  const [errorTextFiles, setErrorTextFiles] = useState(null);
 
   const {
     data: foldersData,
@@ -33,6 +30,7 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
     error: foldersError,
     fetchNextPage: fetchNextFolders,
     hasNextPage: hasNextFolders,
+    refetch: refetchFolders,
   } = useInfiniteQuery({
     queryKey: ['folderFolders', id],
     queryFn: ({ pageParam = 1 }) => {
@@ -45,6 +43,8 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
   // Safely access messages after the data is fetched
   const folders = foldersData?.pages?.flat() || [];
 
+  console.log(folders);
+
   const {
     data: filesData,
     isLoading: isLoadingFiles,
@@ -52,6 +52,7 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
     error: filesError,
     fetchNextPage: fetchNextFiles,
     hasNextPage: hasNextFiles,
+    refetch: refetchFiles,
   } = useInfiniteQuery({
     queryKey: ['folderFiles', id],
     queryFn: ({ pageParam = 1 }) => {
@@ -62,24 +63,19 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
   });
 
   const files = filesData?.pages?.flat() || [];
+  console.log(files);
 
-  useEffect(() => {
-    const textError = getErrorText(
-      t,
-      `folders.errors.${foldersError.message}`,
-      `folders.errors.FOLDERS_FETCH_ERROR`,
-    );
-    setErrorTextFolders(textError);
-  }, [foldersError]);
+  const errorFolder = getErrorText(
+    t,
+    `folders.errors.${foldersError?.message}`,
+    `folders.errors.FOLDERS_FETCH_ERROR`,
+  );
 
-  useEffect(() => {
-    const textError = getErrorText(
-      t,
-      `files.errors.${filesError.message}`,
-      `files.errors.FILES_LOAD_ERROR`,
-    );
-    setErrorTextFiles(textError);
-  }, [filesError]);
+  const errorFiles = getErrorText(
+    t,
+    `files.errors.${filesError?.message}`,
+    `files.errors.FILES_LOAD_ERROR`,
+  );
 
   return (
     <StructureView>
@@ -96,9 +92,10 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
               direction === 'ltr' ? 'xl:mr-[432px]' : 'xl:ml-[432px]',
             )}>
             <DataFetching
-              error={error && errorTextFolders}
+              error={foldersError && errorFolder}
               isLoading={isLoadingFolders}
               emptyError={t('folders.errors.FOLDERS_ZERO_ERROR')}
+              refetch={refetchFolders}
               data={folders}>
               <Folders folders={folders} sectionName={sectionName} />
             </DataFetching>
@@ -116,9 +113,10 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
               direction === 'ltr' ? 'xl:mr-[432px]' : 'xl:ml-[432px]',
             )}>
             <DataFetching
-              error={filesError && errorTextFiles}
+              error={filesError && errorFiles}
               isLoading={isLoadingFiles}
               emptyError={t('files.errors.FILES_ZERO_ERROR')}
+              refetch={refetchFiles}
               data={files}>
               <Files files={files} />
             </DataFetching>
@@ -130,9 +128,10 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
 
       <div>
         <DataFetching
-          error={error && errorTextFolders}
+          error={foldersError && errorFolder}
           isLoading={isLoadingFolders}
           emptyError={t('folders.errors.FOLDERS_ZERO_ERROR')}
+          refetch={refetchFolders}
           data={folders}>
           <p className={clsx(contentFont, 'mb-[24px] text-[22px] font-medium')}>
             {t('folders.folders')}
@@ -140,9 +139,10 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
           <FoldersTable folders={folders} sectionName={sectionName} />
         </DataFetching>
         <DataFetching
-          error={filesError && errorTextFiles}
+          error={filesError && errorFiles}
           isLoading={isLoadingFiles}
           emptyError={t('files.errors.FILES_ZERO_ERROR')}
+          refetch={refetchFiles}
           data={files}>
           <p className={clsx(contentFont, 'mb-[24px] text-[22px] font-medium')}>
             {t('files.files')}

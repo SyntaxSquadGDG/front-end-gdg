@@ -17,7 +17,7 @@ const page = async () => {
         />
       </ErrorBoundary>
       <SectionsViewWrapper>
-        <ActivitySection />
+        <ActivitySection type={'sections'} />
       </SectionsViewWrapper>
     </ViewProvider>
   );

@@ -7,9 +7,12 @@ import Storage from '@app/_components/(dashboard)/dashboard/storage';
 import Card from '@app/_components/(dashboard)/general/card';
 import ErrorBoundaryWrapper from '@app/_components/(dashboard)/general/error-boundary-wrapper';
 import LoadError from '@app/_components/(dashboard)/general/load-error';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
+import RefetchButton from '@app/_components/(dashboard)/general/refetch';
 import { contentFont } from '@app/_utils/fonts';
 import { getErrorText } from '@app/_utils/translations';
+import { refetchCategory } from '@app/actions';
 import clsx from 'clsx';
 import { getTranslations } from 'next-intl/server';
 import React, { Suspense } from 'react';
@@ -28,7 +31,12 @@ const page = async () => {
         `dashboard.errors.CATEGORIZATION_RESULTS_ERROR`,
       );
 
-      return <LoadError>{errorText}</LoadError>;
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchButton refetch={refetchCategory} />
+        </LoadErrorDiv>
+      );
     }
     return (
       <>

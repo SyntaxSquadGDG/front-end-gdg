@@ -65,7 +65,7 @@ const NewManager = () => {
               placeHolder={t('managers.firstNamePlaceholder')}
               type={'text'}
               {...register('firstName')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               error={errors.firstName?.message}
             />
             <Input
@@ -73,7 +73,7 @@ const NewManager = () => {
               placeHolder={t('managers.lastNamePlaceholder')}
               type={'text'}
               {...register('lastName')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               error={errors.lastName?.message}
             />
             <Input
@@ -81,7 +81,7 @@ const NewManager = () => {
               placeHolder={t('managers.emailPlaceholder')}
               type={'text'}
               {...register('email')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               error={errors.email?.message}
             />
 
@@ -90,7 +90,7 @@ const NewManager = () => {
               placeHolder={t('managers.passwordPlaceholder')}
               type={'password'}
               {...register('password')}
-              isPending={isLoading}
+              isPending={mutation.isPending}
               error={errors.password?.message}
             />
           </div>

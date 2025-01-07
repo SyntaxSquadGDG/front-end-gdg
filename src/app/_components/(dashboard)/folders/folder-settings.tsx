@@ -25,34 +25,30 @@ import LoadingSpinner from '../general/loader';
 import { useQuery } from '@tanstack/react-query';
 import DataFetching from '../general/data-fetching';
 import { getErrorText } from '@app/_utils/translations';
+import { isManagerOwner } from '@app/_utils/auth';
 
 const FolderSettings = ({ id }) => {
   const t = useTranslations();
   const { openModal, modalStack, closeModal } = useModal();
   const [isOpen, setIsOpen] = useState(false);
   const path = usePathname();
-
-  const [errorText, setErrorText] = useState(null);
+  const isSettingsFullAuth = isManagerOwner();
 
   function handleSettingsClick() {
     setIsOpen(true);
   }
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['folderSettings', id], // Unique key for the query
     queryFn: () => fetchFolderSettings(id), // Function to fetch the data
-    enabled: false, // Set to false if you want to fetch on user action (e.g., button click)
+    enabled: isOpen && !isSettingsFullAuth, // Set to false if you want to fetch on user action (e.g., button click)
   });
 
-  useEffect(() => {
-    console.log('AHA');
-    const textError = getErrorText(
-      t,
-      `folders.errors.${error?.message}`,
-      `folders.errors.FOLDER_SETTINGS_LOAD_ERROR`,
-    );
-    setErrorText(textError);
-  }, [error]);
+  const textError = getErrorText(
+    t,
+    `folders.errors.${error?.message}`,
+    `folders.errors.FOLDER_SETTINGS_LOAD_ERROR`,
+  );
 
   return (
     <div className="relative">
@@ -62,42 +58,59 @@ const FolderSettings = ({ id }) => {
 
       <ItemModal isOpen={isOpen} setIsOpen={setIsOpen}>
         <DataFetching
-          data={data}
-          isLoading={isLoading}
-          error={error && errorText}
-          emptyError={t('folders.errors.FOLDER_SETTINGS_ZERO_ERROR')}>
+          data={isSettingsFullAuth ? [] : data}
+          isLoading={isSettingsFullAuth ? false : isLoading}
+          error={isSettingsFullAuth ? null : error && textError}
+          refetch={refetch}>
           <React.Fragment>
-            <ItemModalItem
-              SVG={EditPermissionsSVG}
-              text={t('modals.editPermissions')}
-              onClick={() => openModal(`ItemPermissionsEdit${'folder'}${id}`)}
-            />
-            <ItemModalItem
-              SVG={EditSVG}
-              text={t('modals.rename')}
-              onClick={() => openModal(`renameFolderModal${id}`)}
-            />
-            <ItemModalItem
-              SVG={MoveSVG}
-              text={t('modals.move')}
-              onClick={() => openModal(`move${'folder'}${id}`)}
-            />
-            <ItemModalItem
-              SVG={CopySVG}
-              text={t('modals.copy')}
-              onClick={() => openModal(`copy${'folder'}${id}`)}
-            />
-            <ItemModalItem
-              SVG={MetadataSVG}
-              text={t('modals.editMetadata')}
-              onClick={() => openModal(`FolderMetadata${id}`)}
-              // onClick={() => openModal(`copy${'folder'}${folder.id}`)}
-            />
-            <ItemModalItem
-              SVG={RemoveSVG}
-              text={t('modals.delete')}
-              onClick={() => openModal(`deleteFolderModal${id}`)}
-            />
+            {isSettingsFullAuth && (
+              <ItemModalItem
+                SVG={EditPermissionsSVG}
+                text={t('modals.editPermissions')}
+                onClick={() => openModal(`ItemPermissionsEdit${'folder'}${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth ||
+              (data && data?.folderPermissions.length > 4)) && (
+              <ItemModalItem
+                SVG={EditSVG}
+                text={t('modals.rename')}
+                onClick={() => openModal(`renameFolderModal${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth ||
+              (data && data?.folderPermissions.length > 4)) && (
+              <ItemModalItem
+                SVG={MoveSVG}
+                text={t('modals.move')}
+                onClick={() => openModal(`move${'folder'}${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth ||
+              (data && data?.folderPermissions.length > 4)) && (
+              <ItemModalItem
+                SVG={CopySVG}
+                text={t('modals.copy')}
+                onClick={() => openModal(`copy${'folder'}${id}`)}
+              />
+            )}
+            {(isSettingsFullAuth ||
+              (data && data?.folderPermissions.length > 4)) && (
+              <ItemModalItem
+                SVG={MetadataSVG}
+                text={t('modals.editMetadata')}
+                onClick={() => openModal(`FolderMetadata${id}`)}
+                // onClick={() => openModal(`copy${'folder'}${folder.id}`)}
+              />
+            )}
+            {(isSettingsFullAuth ||
+              (data && data?.folderPermissions.length > 4)) && (
+              <ItemModalItem
+                SVG={RemoveSVG}
+                text={t('modals.delete')}
+                onClick={() => openModal(`deleteFolderModal${id}`)}
+              />
+            )}
           </React.Fragment>
         </DataFetching>
       </ItemModal>

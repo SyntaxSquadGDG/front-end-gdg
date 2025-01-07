@@ -102,17 +102,17 @@ const FileSettingsModals = ({ id, parentFolderId, name, filePage = false }) => {
 
       <ShowVersionsModal fileId={id} />
 
-      {!filePage && (
-        <>
+      <>
+        {!filePage && (
           <UploadNewVersionModal
             file={newFile}
             setFile={setNewFile}
             id={id}
             handleClose={handleClose}
           />
-          <FileMetadataModal fileId={id} folderId={parentFolderId} />
-        </>
-      )}
+        )}
+        <FileMetadataModal fileId={id} />
+      </>
     </>
   );
 };

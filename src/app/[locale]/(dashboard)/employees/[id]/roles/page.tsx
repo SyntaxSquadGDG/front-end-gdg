@@ -5,15 +5,18 @@ import EmployeesSVG from '@app/_components/svgs/employees/employees';
 import { getTranslations } from 'next-intl/server';
 import React, { Suspense } from 'react';
 import Roles from '@app/_components/(dashboard)/employees/roles';
-import { fetchEmployee } from '@app/_utils/fetch/queries';
 import TryLater from '@app/_components/(dashboard)/general/try-later';
 import LoadingSpinner from '@app/_components/(dashboard)/general/loader';
 import AddTypeButton from '@app/_components/(dashboard)/employees-roles/add-type-button';
 import AddTypeToTypeModal from '@app/_components/(dashboard)/modals/add-type-to-type-modal';
+import { fetchEmployee } from '@app/_components/(dashboard)/employees/data/queries';
+import LoadErrorDiv from '@app/_components/(dashboard)/general/load-error-div';
+import LoadError from '@app/_components/(dashboard)/general/load-error';
+import RefetchWrapper from '@app/_components/(dashboard)/general/refetch-wrapper';
+import { getErrorText } from '@app/_utils/translations';
 
 const page = async ({ params }) => {
   const id = (await params).id;
-  const employeeName = 'Amr';
 
   const t = await getTranslations();
 
@@ -50,8 +53,17 @@ const page = async ({ params }) => {
         </>
       );
     } catch (error) {
-      console.error('Error fetching employees:', error);
-      return <TryLater>{t('zero.employee')}</TryLater>;
+      const errorText = getErrorText(
+        t,
+        `employees.errors.${error?.message}`,
+        `employees.errors.EMPLOYEE_DATA_ERROR`,
+      );
+      return (
+        <LoadErrorDiv>
+          <LoadError>{errorText}</LoadError>
+          <RefetchWrapper tag={`employee${id}`} />
+        </LoadErrorDiv>
+      );
     }
   };
 
