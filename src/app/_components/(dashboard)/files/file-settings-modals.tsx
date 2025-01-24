@@ -40,8 +40,9 @@ const FileSettingsModals = ({ id, parentFolderId, name, filePage = false }) => {
   const deleteMutation = useMutation({
     mutationFn: () => deleteFile(id),
     onSuccess: async () => {
-      await revalidatePathAction(pathname);
-      toast.success(t('global.deleted'));
+      await queryClient.invalidateQueries(['files', parentFolderId]);
+      await queryClient.invalidateQueries(['folders']);
+      toast.success(t('general.deleted'));
       closeModal();
     },
     onError: (error) => {

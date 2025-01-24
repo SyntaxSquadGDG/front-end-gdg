@@ -1,11 +1,15 @@
 import { fetchBlob, fetchData, fetchData2 } from '@app/_utils/fetch';
 
 export const fetchAllFiles = async (id) => {
-  return await fetchData(`/Sfiles/filebyid?fileid=${id}`);
+  const res = await fetchData2(`/Folders/FoldersByParentId?id=${4}`);
+  return res.files;
+
+  // return await fetchData(`/Sfiles/filebyid?fileid=${id}`);
 };
 
 export const fetchFileData = async (id) => {
-  return await fetchData2(
+  console.log('AAAAAAAAAAAAAAAAAAAAAAAAA');
+  const res = await fetchData2(
     `/Sfiles/filebyid?fileid=${id}`,
     'GET',
     {},
@@ -15,6 +19,8 @@ export const fetchFileData = async (id) => {
       },
     },
   );
+  console.log(res);
+  return res;
 };
 
 export const fetchFilePath = async (id) => {
@@ -47,11 +53,13 @@ export const fetchFileMetadata = async (id) => {
 };
 
 export const fetchFileMoveAvailableStructure = async (id) => {
-  return await fetchData(`/files-structure/${id}`);
+  return await fetchData(`/structure`);
 };
 
 export const fetchFilePreview = async (id) => {
-  return await fetchData2(
+  console.log('AAAApppppppppppppppp');
+  // return [];
+  const res = await fetchData2(
     `/sfiles/filebyidpreview?fileid=${id}`,
     'GET',
     {},
@@ -61,6 +69,8 @@ export const fetchFilePreview = async (id) => {
       },
     },
   );
+  console.log(res);
+  return res;
 };
 
 export const fetchFileFolderMetadata = async (id) => {

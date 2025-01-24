@@ -24,7 +24,6 @@ const managerOwner = [
   '/employees/:id/permissions',
   '/employees/:id/roles',
   '/employees/:id/activities',
-  '/roles',
   '/roles/new',
   '/roles/:id',
   '/roles/:id/edit',
@@ -45,6 +44,7 @@ const employeeManagerOwner = [
   '/search',
   '/help',
   '/notifications',
+  '/roles',
   // '/preview',
   // '/test',
 ];

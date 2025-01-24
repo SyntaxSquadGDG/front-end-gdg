@@ -57,7 +57,11 @@ const CreateFolderModal = ({ type, id }) => {
         ? createFolderToSection(id, data)
         : createFolderToFolder(id, data),
     onSuccess: async () => {
-      await revalidatePathAction(currentRoute);
+      // await revalidatePathAction(currentRoute);
+      if (parentSection) {
+        await queryClient.invalidateQueries(['sections']);
+      }
+      await queryClient.invalidateQueries(['folders', id]);
       toast.success(t('folders.created'));
       reset();
       closeModal();

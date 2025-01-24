@@ -30,9 +30,10 @@ const SectionSettingsModals = ({ id }) => {
   const deleteMutation = useMutation({
     mutationFn: () => deleteSection(id),
     onSuccess: async () => {
-      queryClient.invalidateQueries(['sections']);
+      await queryClient.invalidateQueries(['folders', id]);
+      await queryClient.invalidateQueries(['sections']);
       // await revalidatePathAction('/sections');
-      toast.success(t('global.deleted'));
+      toast.success(t('general.deleted'));
 
       closeModal();
     },
@@ -55,7 +56,7 @@ const SectionSettingsModals = ({ id }) => {
   const renameMutation = useMutation({
     mutationFn: (data) => renameSection(id, data),
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['sections', id]);
+      await queryClient.invalidateQueries(['folders', id]);
       await queryClient.invalidateQueries(['sections']);
       toast.success(t('folders.renamed'));
       closeModal();

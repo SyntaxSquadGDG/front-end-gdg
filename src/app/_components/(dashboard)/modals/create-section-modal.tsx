@@ -52,6 +52,7 @@ const CreateSectionModal = () => {
     mutationFn: (data) => createSection(data),
     onSuccess: async () => {
       await queryClient.invalidateQueries(['sections']);
+      toast.success('Created successfully!');
       router.push('/sections');
       reset();
       closeModal();

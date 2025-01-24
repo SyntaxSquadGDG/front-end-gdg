@@ -97,6 +97,8 @@ const FileFormPermissions = ({ type, id, mode, fileId }) => {
     `permissions.errors.PERMISSIONS_LOAD_ERROR`,
   );
 
+  const labelsPermissions = ['View Files', 'Delete Files', 'Edit Files'];
+
   return (
     <DataFetching
       isLoading={isSingle ? isPending : false}
@@ -109,7 +111,7 @@ const FileFormPermissions = ({ type, id, mode, fileId }) => {
             {t('permissions.filePermissions')}
           </PermissionsHeadText>
           <PermissionsDiv>
-            {Array.from({ length: 5 }).map((_, index) => (
+            {labelsPermissions.map((item, index) => (
               <Checkbox
                 key={index}
                 value={permissions.includes(index)}
@@ -118,7 +120,7 @@ const FileFormPermissions = ({ type, id, mode, fileId }) => {
                   mutation.isPending
                 }
                 onChange={() => handleToggle(index)}
-                label={`Permission ${index}`}
+                label={item}
               />
             ))}
           </PermissionsDiv>

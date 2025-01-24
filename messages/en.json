@@ -548,7 +548,8 @@
       "METADATA_KEY_EMPTY": "You Must fill all the fields before saving!",
       "METADATA_KEY_DUPLICATE": "You can't have duplicate keys!",
       "FOLDER_PATH_ERROR": "Couldn't load folder path",
-      "FOLDER_CREATE_ERROR": "Couldn't create folder"
+      "FOLDER_CREATE_ERROR": "Couldn't create folder",
+      "FOLDER_FETCH_ERROR": "Couldn't load folders"
     },
     "success": {
       "METADATA_UPDATE": "Metadata updated successfully!",

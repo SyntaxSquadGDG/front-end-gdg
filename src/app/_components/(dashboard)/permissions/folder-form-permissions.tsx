@@ -133,6 +133,22 @@ const FolderFormPermissions = ({ type, id, folderId, mode }) => {
     `permissions.errors.PERMISSIONS_LOAD_ERROR`,
   );
 
+  const folderLabelsPermissions = [
+    'View Folder',
+    'Edit Folder',
+    'Upload Files',
+    'Delete Folder',
+  ];
+
+  const subFolderLabelsPermissions = [
+    'View Folder',
+    'Edit Folder',
+    'Upload Files',
+    'Delete Folder',
+  ];
+
+  const filesLabelsPermissions = ['View Files', 'Edit Files', 'Delete Files'];
+
   return (
     <DataFetching
       isLoading={isSingle ? isPending : false}
@@ -146,7 +162,7 @@ const FolderFormPermissions = ({ type, id, folderId, mode }) => {
               {t('permissions.foldersPermissions')}
             </PermissionsHeadText>
             <PermissionsDiv>
-              {Array.from({ length: 5 }).map((_, index) => (
+              {folderLabelsPermissions.map((item, index) => (
                 <Checkbox
                   key={`folder-${index}`}
                   value={folderPermissions.includes(index)}
@@ -155,7 +171,7 @@ const FolderFormPermissions = ({ type, id, folderId, mode }) => {
                     mutation.isPending
                   }
                   onChange={() => handleToggle('folder', index)}
-                  label={`Folder Permission ${index}`}
+                  label={item}
                 />
               ))}
             </PermissionsDiv>
@@ -165,7 +181,7 @@ const FolderFormPermissions = ({ type, id, folderId, mode }) => {
               {t('permissions.subFoldersPermissions')}
             </PermissionsHeadText>
             <PermissionsDiv>
-              {Array.from({ length: 5 }).map((_, index) => (
+              {subFolderLabelsPermissions.map((item, index) => (
                 <Checkbox
                   key={`subFolder-${index}`}
                   value={subFolderPermissions.includes(index)}
@@ -174,7 +190,7 @@ const FolderFormPermissions = ({ type, id, folderId, mode }) => {
                     mutation.isPending
                   }
                   onChange={() => handleToggle('subFolder', index)}
-                  label={`Subfolder Permission ${index}`}
+                  label={item}
                 />
               ))}
             </PermissionsDiv>
@@ -184,7 +200,7 @@ const FolderFormPermissions = ({ type, id, folderId, mode }) => {
               {t('permissions.filesPermissions')}
             </PermissionsHeadText>
             <PermissionsDiv>
-              {Array.from({ length: 5 }).map((_, index) => (
+              {filesLabelsPermissions.map((item, index) => (
                 <Checkbox
                   key={`file-${index}`}
                   value={filePermissions.includes(index)}
@@ -193,7 +209,7 @@ const FolderFormPermissions = ({ type, id, folderId, mode }) => {
                     mutation.isPending
                   }
                   onChange={() => handleToggle('file', index)}
-                  label={`File Permission ${index}`}
+                  label={item}
                 />
               ))}
             </PermissionsDiv>

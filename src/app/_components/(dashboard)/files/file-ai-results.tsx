@@ -7,16 +7,18 @@ import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import FileAiResultsItem from './file-ai-results-item';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { confirmAIFiles } from './data/posts';
 import { getErrorText } from '@app/_utils/translations';
 import LoadingSpinner from '../general/loader';
 import ErrorAction from '../general/error-action';
+import Modal from '../modals/modal';
 
 const FileAIResults = ({ files, data, setFiles, setFilesData }) => {
   const { closeModal } = useModal();
   const t = useTranslations();
   const [errorText, setErrorText] = useState(null);
+  const queryClient = useQueryClient();
 
   console.log(files);
 
@@ -32,26 +34,41 @@ const FileAIResults = ({ files, data, setFiles, setFilesData }) => {
 
   async function handleSend() {
     setErrorText(null);
-    sendMutation.mutate(data);
+    const formData = new FormData();
+    console.log(files[0]);
+    formData.append('files', files[0]);
+    formData.append('folderId', 4);
+    sendMutation.mutate({ folderId: 4, formData });
   }
 
   const sendMutation = useMutation({
-    mutationFn: (data) => confirmAIFiles(data),
-    onSuccess: async () => {
-      await revalidatePathAction('/sections');
+    mutationFn: ({ folderId, formData }) => confirmAIFiles(folderId, formData),
+    onSuccess: async (_, { folderId }) => {
+      console.log('SUCC');
+      await queryClient.invalidateQueries(['files', folderId]);
+      await queryClient.invalidateQueries(['folders']);
+
       toast.success(t('files.classified'));
       setFiles([]);
       setFilesData([]);
       closeModal();
     },
-    onError: (error) => {
-      const textError = getErrorText(
-        t,
-        `files.errors.${error?.message}`,
-        `files.errors.FILES_CLASSIFICATION_ERROR`,
-      );
-      setErrorText(textError);
-      toast.error(textError);
+    onError: async (error) => {
+      console.log('ERRRRRRRRRRRRRRRR');
+      await queryClient.invalidateQueries(['files', folderId]);
+      // await queryClient.invalidateQueries(['folders']);
+      toast.success(t('files.classified'));
+      setFiles([]);
+      setFilesData([]);
+      closeModal();
+
+      // const textError = getErrorText(
+      //   t,
+      //   `files.errors.${error?.message}`,
+      //   `files.errors.FILES_CLASSIFICATION_ERROR`,
+      // );
+      // setErrorText(textError);
+      // toast.error(textError);
     },
   });
 

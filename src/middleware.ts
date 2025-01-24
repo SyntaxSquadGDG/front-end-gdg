@@ -46,7 +46,7 @@ export default async function middleware(request) {
   console.log(`PATH IS ${path}`);
 
   // Extract cookies and decode the JWT token
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get('token');
   const decodedToken = token ? decodeJWT(token.value) : null;
   const isAuth = decodedToken ? !!decodedToken.payload : false;

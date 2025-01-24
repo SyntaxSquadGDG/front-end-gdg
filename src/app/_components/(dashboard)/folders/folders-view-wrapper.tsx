@@ -32,7 +32,7 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
     hasNextPage: hasNextFolders,
     refetch: refetchFolders,
   } = useInfiniteQuery({
-    queryKey: ['folderFolders', id],
+    queryKey: ['folders', id],
     queryFn: ({ pageParam = 1 }) => {
       return fetchFolderFolders(id, pageParam, paginationPageLimit); // Fetch 5 messages per page
     },
@@ -54,7 +54,7 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
     hasNextPage: hasNextFiles,
     refetch: refetchFiles,
   } = useInfiniteQuery({
-    queryKey: ['folderFiles', id],
+    queryKey: ['files', id],
     queryFn: ({ pageParam = 1 }) => {
       return fetchFolderFiles(id, pageParam, paginationPageLimit); // Fetch 5 messages per page
     },
@@ -97,7 +97,12 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
               emptyError={t('folders.errors.FOLDERS_ZERO_ERROR')}
               refetch={refetchFolders}
               data={folders}>
-              <Folders folders={folders} sectionName={sectionName} />
+              <Folders
+                folders={folders}
+                sectionName={sectionName}
+                parentId={id}
+                parentType="folder"
+              />
             </DataFetching>
           </div>
         </div>
@@ -118,7 +123,7 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
               emptyError={t('files.errors.FILES_ZERO_ERROR')}
               refetch={refetchFiles}
               data={files}>
-              <Files files={files} />
+              <Files files={files} parentId={id} />
             </DataFetching>
           </div>
         </div>

@@ -11,9 +11,12 @@ import ImageSection from '@app/_components/(dashboard)/profile/image';
 import ImageUpload from '@app/_components/(dashboard)/profile/image-upload';
 import PersonalInfo from '@app/_components/(dashboard)/profile/personal';
 import HelpSVG from '@app/_components/svgs/profile/help';
+import { decodeJWT } from '@app/_utils/auth';
 import { getErrorText } from '@app/_utils/translations';
 import { refetchProfile } from '@app/actions';
+import { getCookie } from 'cookies-next';
 import { getTranslations } from 'next-intl/server';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import React, { Suspense } from 'react';
 
@@ -24,7 +27,10 @@ const page = async () => {
 
   const UserDataWrapper = async () => {
     try {
-      const user = await fetchUserPersonalInfo();
+      const cookieStore = await cookies();
+      const token = cookieStore.get('token');
+      const decodedToken = token ? decodeJWT(token.value) : null;
+      const user = decodedToken.payload;
 
       return (
         <>

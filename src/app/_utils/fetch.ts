@@ -109,7 +109,12 @@ export async function fetchData2(
       }
     }
 
-    return await response.json();
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      return await response.json();
+    } else {
+      return await response.text();
+    }
   } catch (error) {
     console.error('Fetch error:', error.message);
     throw error;

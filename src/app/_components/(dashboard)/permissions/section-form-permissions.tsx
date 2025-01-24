@@ -109,6 +109,13 @@ const SectionFormPermissions = ({ type, id, sectionId, mode }) => {
     `permissions.errors.PERMISSIONS_LOAD_ERROR`,
   );
 
+  const permissionLabels = [
+    'View Section',
+    'Edit Section',
+    'Create/Upload Folders',
+    'Delete Folders',
+  ];
+
   return (
     <DataFetching
       isLoading={isSingle ? isPending : false}
@@ -121,7 +128,7 @@ const SectionFormPermissions = ({ type, id, sectionId, mode }) => {
             {t('permissions.sectionPermissions')}
           </PermissionsHeadText>
           <PermissionsDiv>
-            {Array.from({ length: 5 }).map((_, index) => (
+            {permissionLabels.map((item, index) => (
               <Checkbox
                 key={index}
                 value={permissions.includes(index)}
@@ -130,7 +137,7 @@ const SectionFormPermissions = ({ type, id, sectionId, mode }) => {
                   mutation.isPending
                 }
                 onChange={() => handleToggle(index)}
-                label={`Permission ${index}`}
+                label={item}
               />
             ))}
           </PermissionsDiv>

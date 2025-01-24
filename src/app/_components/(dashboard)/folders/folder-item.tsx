@@ -30,7 +30,13 @@ import FolderSettings from './folder-settings';
 import FolderMetadataModal from './metadata-modal';
 import FolderSettingsModals from './folder-settings-modals';
 
-const FolderItem = ({ folder, sectionName, sectionNameRequired }) => {
+const FolderItem = ({
+  folder,
+  sectionName,
+  parentId,
+  parentType,
+  sectionNameRequired,
+}) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -130,7 +136,12 @@ const FolderItem = ({ folder, sectionName, sectionNameRequired }) => {
         </div>
       </div>
 
-      <FolderSettingsModals id={folder.id} name={folder.name} />
+      <FolderSettingsModals
+        id={folder.id}
+        name={folder.name}
+        parentId={parentId}
+        parentType={parentType}
+      />
     </>
   );
 };

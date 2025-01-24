@@ -128,11 +128,11 @@ export const fetchTypeActivities = async (currentPage, limit, type, id) => {
 
 export const fetchAvailableStructure = async () => {
   const res = await fetchData('/structure');
-  return res.folders;
+  return res;
 };
 
 export const fetchStructure = async () => {
   const res = await fetchData('/structure');
-  return res.folders;
+  return res;
 };
 

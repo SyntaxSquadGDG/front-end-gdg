@@ -61,57 +61,57 @@ const CustomSelect = ({
     }
   };
 
-  const {
-    data,
-    isLoading,
-    isFetching,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    refetch,
-  } = useInfiniteQuery({
-    queryKey: ['searchEmployees', searchQuery],
-    queryFn: async ({ pageParam = 1 }) => {
-      if (searchQuery.trim() === '') return { results: [], totalResults: 0 }; // No query, return empty result
+  // const {
+  //   data,
+  //   isLoading,
+  //   isFetching,
+  //   isError,
+  //   fetchNextPage,
+  //   hasNextPage,
+  //   refetch,
+  // } = useInfiniteQuery({
+  //   queryKey: ['searchEmployees', searchQuery],
+  //   queryFn: async ({ pageParam = 1 }) => {
+  //     if (searchQuery.trim() === '') return { results: [], totalResults: 0 }; // No query, return empty result
 
-      const response = await fetch(
-        `${BASE_URL}${endPoint}?query=${searchQuery}&page=${pageParam}&limit=5`,
-      );
-      const data = await response.json();
-      console.log(data);
-      return data;
-    },
-    getNextPageParam: (lastPage, pages) => {
-      const hasData = lastPage.length > 0;
+  //     const response = await fetch(
+  //       `${BASE_URL}${endPoint}?query=${searchQuery}&page=${pageParam}&limit=5`,
+  //     );
+  //     const data = await response.json();
+  //     console.log(data);
+  //     return data;
+  //   },
+  //   getNextPageParam: (lastPage, pages) => {
+  //     const hasData = lastPage.length > 0;
 
-      const isLastPage = !hasData || lastPage.length < 5; // Adjust length based on how many items are expected per page
+  //     const isLastPage = !hasData || lastPage.length < 5; // Adjust length based on how many items are expected per page
 
-      return hasData && !isLastPage ? pages.length + 1 : undefined;
-    },
-    refetchOnWindowFocus: false,
-  });
+  //     return hasData && !isLastPage ? pages.length + 1 : undefined;
+  //   },
+  //   refetchOnWindowFocus: false,
+  // });
 
-  const handleSearchScroll = (event) => {
-    const bottom =
-      event.target.scrollHeight ===
-      event.target.scrollTop + event.target.clientHeight;
-    if (bottom && !isFetching && hasNextPage) {
-      fetchNextPage(); // Fetch the next page of employees
-    }
-  };
+  // const handleSearchScroll = (event) => {
+  //   const bottom =
+  //     event.target.scrollHeight ===
+  //     event.target.scrollTop + event.target.clientHeight;
+  //   if (bottom && !isFetching && hasNextPage) {
+  //     fetchNextPage(); // Fetch the next page of employees
+  //   }
+  // };
 
-  const initialData = data?.pages?.flat() || []; // Flatten the pages to get all employees in one array
-  const searchData = extendSelect(
-    initialData ? initialData : [],
-    dataToExtend,
-    'id',
-  );
+  // const initialData = data?.pages?.flat() || []; // Flatten the pages to get all employees in one array
+  // const searchData = extendSelect(
+  //   initialData ? initialData : [],
+  //   dataToExtend,
+  //   'id',
+  // );
 
-  const filteredSearchData = searchData
-    ? searchData.filter((item) => !selectedItems.includes(item.id))
-    : [];
+  // const filteredSearchData = searchData
+  //   ? searchData.filter((item) => !selectedItems.includes(item.id))
+  //   : [];
 
-  const toRender = searchQuery ? filteredSearchData : options;
+  const toRender = options;
 
   return (
     <div
@@ -150,7 +150,7 @@ const CustomSelect = ({
 
           {!errorData && (
             <span className="mx-[16px]">
-              {isOpen ? <span>OPEN</span> : <span>CLOSED</span>}
+              {isOpen ? <span>^</span> : <span>v</span>}
             </span>
           )}
         </div>
@@ -163,7 +163,7 @@ const CustomSelect = ({
           <div
             onScroll={(e) => {
               handleScroll(e);
-              handleSearchScroll(e);
+              // handleSearchScroll(e);
             }}
             className="absolute top-[72px] left-0 z-10 w-full bg-white border-[1px] border-solid border-mainColor3 rounded-[8px] max-h-[240px] overflow-y-auto">
             {/* Search input inside the select */}
@@ -176,7 +176,7 @@ const CustomSelect = ({
                     onClick={() => {
                       onChange(option);
                       setIsOpen(false);
-                      setSearchQuery(''); // Clear the search query when selecting a role
+                      // setSearchQuery(''); // Clear the search query when selecting a role
                     }}>
                     <p className="font-bold text-[20px]">{option.label}</p>
                     <p>{option.value}</p>
@@ -184,14 +184,14 @@ const CustomSelect = ({
                 ))
               ) : (
                 <>
-                  {!isLoading && !isFetchingData && !isLoadingData && (
+                  {!isFetchingData && !isLoadingData && (
                     <li className="py-[22px] px-[16px] text-mainColor1 font-medium">
                       {t('general.noResults')}
                     </li>
                   )}
                 </>
               )}
-              {(isFetchingData || isLoadingData || isLoading) && (
+              {(isFetchingData || isLoadingData) && (
                 <LoadingSpinner full={false} />
               )}
             </ul>

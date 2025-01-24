@@ -76,8 +76,8 @@ const page = async ({ params }) => {
     return (
       <FoldersViewWrapper
         id={id}
-        sectionName={'path[0].name'}
-        folderName={'path.slice(-1)[0].name'}>
+        sectionName={path.slice(-1)[0].name}
+        folderName={path[0].name}>
         <ActivitySection type={'folder'} id={id} />
       </FoldersViewWrapper>
     );

@@ -32,7 +32,8 @@ const FileVersions = ({ id, enabled = true }) => {
     queryFn: ({ pageParam = 1 }) => {
       return fetchFileVersions(id, pageParam, paginationPageLimit); // Fetch 5 messages per page
     },
-    getNextPageParam: (lastPage, pages) => getNextPage,
+    getNextPageParam: (lastPage, pages) =>
+      getNextPage(lastPage, pages, paginationPageLimit),
     enabled: enabled,
   });
 

@@ -32,7 +32,7 @@ const SectionViewWrapper = ({ children, sectionName, id }) => {
     hasNextPage,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ['sections', id],
+    queryKey: ['folders', id],
     queryFn: ({ pageParam = 1 }) => {
       return fetchSectionFolders(id, pageParam, paginationPageLimit); // Fetch 5 messages per page
     },
@@ -42,6 +42,8 @@ const SectionViewWrapper = ({ children, sectionName, id }) => {
 
   // Safely access messages after the data is fetched
   const folders = data?.pages?.flat() || [];
+
+  console.log(folders);
 
   const errorText = getErrorText(
     t,
@@ -73,7 +75,12 @@ const SectionViewWrapper = ({ children, sectionName, id }) => {
               emptyError={t('sections.errors.SECTION_ZERO_ERROR')}
               refetch={refetch}
               data={folders}>
-              <Folders folders={folders} sectionName={sectionName} />
+              <Folders
+                folders={folders}
+                sectionName={sectionName}
+                parentId={id}
+                parentType="section"
+              />
             </DataFetching>
           </div>
         </div>

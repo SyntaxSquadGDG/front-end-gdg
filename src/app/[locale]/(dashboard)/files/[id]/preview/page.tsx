@@ -51,6 +51,8 @@ const page = async ({ params }) => {
     try {
       const data = await fetchFileData(id);
       const preview = await fetchFilePreview(id);
+      console.log(data);
+      console.log(preview);
 
       return (
         <>

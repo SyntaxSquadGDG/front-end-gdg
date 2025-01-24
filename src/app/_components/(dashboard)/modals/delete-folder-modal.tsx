@@ -8,12 +8,14 @@ import toast from 'react-hot-toast';
 import { revalidatePathAction } from '@app/actions';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useQueryClient } from '@tanstack/react-query';
 
 const DeleteFolderModal = ({ id }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { modalStack, closeModal, openModal } = useModal();
   const path = usePathname();
   const t = useTranslations();
+  const queryClient = useQueryClient();
 
   async function handleDelete() {
     try {
@@ -30,7 +32,8 @@ const DeleteFolderModal = ({ id }) => {
       console.log(res);
       closeModal();
       toast.success('Deleted Successfully');
-      await revalidatePathAction(path);
+      // await revalidatePathAction(path);
+      await queryClient.invalidateQueries(['folderFolders', id]);
     } catch (e) {
       toast.error('Error while deleting section');
     } finally {

@@ -44,7 +44,7 @@ const FileVersionsTableItem = ({ fileId, version }) => {
     mutationFn: () => deleteFileVersion(fileId, version.id),
     onSuccess: async () => {
       await queryClient.invalidateQueries(['versions', fileId]);
-      toast.success(t('global.deleted'));
+      toast.success(t('general.deleted'));
       closeModal();
     },
     onError: (error) => {

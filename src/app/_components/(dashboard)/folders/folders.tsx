@@ -6,7 +6,13 @@ import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import { isManagerOwner } from '@app/_utils/auth';
 
-const Folders = ({ folders, sectionName, sectionNameRequired = true }) => {
+const Folders = ({
+  folders,
+  sectionName,
+  parentId,
+  parentType,
+  sectionNameRequired = true,
+}) => {
   const t = useTranslations();
   return (
     <>
@@ -17,6 +23,8 @@ const Folders = ({ folders, sectionName, sectionNameRequired = true }) => {
               key={folder.id}
               folder={folder}
               sectionName={sectionName}
+              parentId={parentId}
+              parentType={parentType}
               sectionNameRequired={sectionNameRequired}
             />
           );

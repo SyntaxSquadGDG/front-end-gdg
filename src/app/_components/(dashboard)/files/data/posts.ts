@@ -1,5 +1,5 @@
 import { BASE_URL } from '@app/_constants/fetch';
-import { fetchData } from '@app/_utils/fetch';
+import { fetchData, fetchData2 } from '@app/_utils/fetch';
 
 export const restoreFileVersion = async (fileId, versionId) => {
   return await fetchData(`/versions/${versionId}`, 'POST');
@@ -26,14 +26,18 @@ export const copyFileToFolder = async (fileId, folderId) => {
 };
 
 export const classifyAIFiles = async (data) => {
+  await new Promise((resolve) => setTimeout(resolve, 5000)); // Delay for 5 seconds
   return await fetchData(`/sendAIFiles`, 'POST', data);
 };
 
 export const sendFilesToFolder = async (folderId, data) => {
-  return await fetchData(`/sendFiles`, 'POST', data);
+  return await fetchData2(`/Sfiles/upload?folderId=${folderId}`, 'POST', data);
 };
 
-export const confirmAIFiles = async (data) => {
-  return await fetchData(`/sendAIFiles`, 'POST', data);
+export const confirmAIFiles = async (folderId, data) => {
+  console.log('????');
+  console.log(folderId);
+  console.log(data);
+  return await fetchData2(`/Sfiles/upload?folderId=${folderId}`, 'POST', data);
 };
 

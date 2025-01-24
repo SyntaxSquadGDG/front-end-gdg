@@ -3,7 +3,8 @@ import { fetchData, fetchData2 } from '@app/_utils/fetch';
 import { getCookie } from 'cookies-next';
 
 export const fetchAllFolders = async () => {
-  return await fetchData(`/folders`);
+  const res = await fetchData2(`/Sections/FoldersByParentId?id=${4}`);
+  return res;
 };
 
 export const fetchFolderPath = async (id) => {
@@ -60,6 +61,6 @@ export const fetchFolderMetadata = async (id) => {
 };
 
 export const fetchFolderMoveAvailableStructure = async (id) => {
-  return await fetchData(`/folder-structure/${id}`);
+  return await fetchData(`/structure`);
 };
 

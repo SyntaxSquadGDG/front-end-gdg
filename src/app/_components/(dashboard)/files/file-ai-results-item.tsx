@@ -6,6 +6,7 @@ import FileIcon from '../general/file-icon';
 import clsx from 'clsx';
 import EditPathModal from '../modals/edit-path-modal';
 import { useModal } from '@app/_contexts/modal-provider';
+import EditSVG from '@app/_components/svgs/modals/edit';
 
 const FileAiResultsItem = ({
   id,
@@ -40,10 +41,11 @@ const FileAiResultsItem = ({
   };
 
   const handleRemove = () => {
-    const newFilesData = filesData;
-    newFilesData[index].path = '';
-    newFilesData[index].folderId = -1;
-    setFilesData(newFilesData);
+    setFilesData((prevFilesData) => {
+      const newFilesData = [...prevFilesData]; // Create a new array
+      newFilesData[index] = { ...newFilesData[index], path: '', folderId: -1 }; // Update a new object
+      return newFilesData;
+    });
   };
 
   const { openModal, closeModal } = useModal();
@@ -52,7 +54,7 @@ const FileAiResultsItem = ({
   const [selectedPath, setSelectedPath] = useState(null);
   const [selectedItem, setSelectedItem] = useState({ type: null, id: null });
 
-  if (file.folderId === -1) {
+  if (metadata.folderId === -1) {
     return null;
   }
 
@@ -81,11 +83,16 @@ const FileAiResultsItem = ({
                 : 'text-highColor'
               : 'text-lowColor',
           )}>
-          {isPathChanged ? 'Manual' : `${metadata.accuracy || 0}%`}
+          {metadata.accuracy}%
+          {/* {isPathChanged ? 'Manual' : `${metadata.accuracy || 0}%`} */}
         </td>
         <td>
-          {isPathChanged ? selectedPath : metadata.path || 'N/A'}
-          <button onClick={() => openModal(`moveFileWithAI${id}`)}>Edit</button>
+          <div className="flex gap-[16px] items-center justify-center">
+            <p>{isPathChanged ? selectedPath : metadata.path || 'N/A'}</p>
+            <button onClick={() => openModal(`moveFileWithAI${id}`)}>
+              {<EditSVG />}
+            </button>
+          </div>
         </td>
         <td>
           <button

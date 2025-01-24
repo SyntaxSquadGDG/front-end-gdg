@@ -34,7 +34,7 @@ import UploadNewVersionModal from './upload-new-version-modal';
 import FileMetadataModal from './file-metadata-modal';
 import FileSettingsModals from './file-settings-modals';
 
-const FileItem = ({ file }) => {
+const FileItem = ({ file, parentId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
   const t = useTranslations();

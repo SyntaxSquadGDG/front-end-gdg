@@ -16,7 +16,7 @@ import { deleteFolder } from './data/deletes';
 import { getErrorText } from '@app/_utils/translations';
 import { renameFolder } from './data/updates';
 
-const FolderSettingsModals = ({ id, name }) => {
+const FolderSettingsModals = ({ id, name, parentId, parentType }) => {
   const t = useTranslations();
   const { closeModal } = useModal();
   const [errorTextDeleting, setErrorTextDeleting] = useState(null);
@@ -32,8 +32,13 @@ const FolderSettingsModals = ({ id, name }) => {
   const deleteMutation = useMutation({
     mutationFn: () => deleteFolder(id),
     onSuccess: async () => {
-      await revalidatePathAction(pathname);
-      toast.success(t('global.deleted'));
+      await queryClient.invalidateQueries(
+        parentType === 'section'
+          ? ['sections', parentId]
+          : ['folders', parentId],
+      );
+      // await revalidatePathAction(pathname);
+      toast.success(t('general.deleted'));
 
       closeModal();
     },

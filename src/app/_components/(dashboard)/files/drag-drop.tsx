@@ -14,7 +14,7 @@ import {
   uploadNewFileVersion,
 } from './data/posts';
 import { useTranslations } from 'next-intl';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getErrorText } from '@app/_utils/translations';
 import LoadingSpinner from '../general/loader';
 import ErrorAction from '../general/error-action';
@@ -33,6 +33,7 @@ const DragAndDropInput = ({
   const [errorText, setErrorText] = useState(null);
   const pathName = usePathname();
   const t = useTranslations();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     console.log(`Modal stack is: ${modalStack}`);
@@ -45,14 +46,16 @@ const DragAndDropInput = ({
 
   async function handleClassifyAI() {
     setErrorText(null);
+    console.log('DOING...');
     classifyAIMutation.mutate(files);
   }
 
   const classifyAIMutation = useMutation({
     mutationFn: (data) => classifyAIFiles(data),
     onSuccess: async (data) => {
+      console.log('SUCCESS?');
       setModal('AIResults');
-      closeModal();
+      // closeModal();
       setFilesData(data);
     },
     onError: (error) => {
@@ -68,7 +71,11 @@ const DragAndDropInput = ({
 
   async function handleConfirmFolderFiles() {
     setErrorText(null);
-    confirmFolderFilesMutation.mutate(files);
+    const formData = new FormData();
+    formData.append('files', files[0]);
+    formData.append('folderId', parentId);
+
+    confirmFolderFilesMutation.mutate(formData);
   }
 
   const confirmFolderFilesMutation = useMutation({
@@ -76,7 +83,10 @@ const DragAndDropInput = ({
     onSuccess: async () => {
       closeModal();
       toast.success(t('files.filesUploaded'));
-      await revalidatePathAction(`/folders/${parentId}`);
+      // await revalidatePathAction(`/folders/${parentId}`);
+      await queryClient.invalidateQueries(['files', parentId]);
+      await queryClient.invalidateQueries(['folders']);
+
       setFiles(null);
       closeModal();
     },

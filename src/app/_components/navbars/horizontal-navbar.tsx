@@ -18,6 +18,8 @@ import { fetchUserData } from './data/queries';
 import DataFetching from '../(dashboard)/general/data-fetching';
 import { getErrorText } from '@app/_utils/translations';
 import useNetworkStatus from '@app/_hooks/useonline';
+import { getCookie } from 'cookies-next';
+import { decodeJWT } from '@app/_utils/auth';
 
 const HorizontalNavbar = () => {
   const t = useTranslations();
@@ -30,6 +32,10 @@ const HorizontalNavbar = () => {
   const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
 
   useClickOutside(navbarRef, () => setIsOpen(false));
+
+  const token = getCookie('token');
+  const decodedToken = token ? decodeJWT(token) : null;
+  const user = decodedToken.payload;
 
   // useEffect(() => {
   //   if (!pathName.startsWith('/search')) {
@@ -59,7 +65,7 @@ const HorizontalNavbar = () => {
   );
 
   console.log(data);
-  const isOnline = useNetworkStatus();
+  // const isOnline = useNetworkStatus();
 
   return (
     <nav
@@ -88,18 +94,18 @@ const HorizontalNavbar = () => {
           {/* IMAGE + TEXT */}
           <div className="">
             <DataFetching
-              data={data}
-              error={error && errorText}
-              refetch={refetch}
-              className={'text-green-400'}
-              isLoading={isPending}>
-              {data && (
+              data={[]}
+              error={null}
+              refetch={() => {}}
+              className={''}
+              isLoading={false}>
+              {user && (
                 <div className="flex gap-[16px] items-center">
                   {/* IMAGE */}
                   <div className="shrink-0 rounded-full overflow-hidden">
                     <Link href={'/profile'}>
                       <Image
-                        src={data.img}
+                        src={user.img}
                         className=" w-[56px] h-[56px]"
                         width={0}
                         height={0}
@@ -117,7 +123,7 @@ const HorizontalNavbar = () => {
                     )}>
                     <p className="text-[12px] lg:text-[24px]">
                       {t('navbar.hello')}{' '}
-                      <Link href={'/profile'}>{data.firstName}!</Link>
+                      <Link href={'/profile'}>{user.firstName}!</Link>
                     </p>
                     <p className="text-[12px] lg:text-[14px]">
                       {formatDate(Date.now())}
@@ -174,7 +180,7 @@ const HorizontalNavbar = () => {
           </div>
         </div>
       </div>
-      {!isOnline && (
+      {/* {!isOnline && (
         <div
           className={clsx(
             direction === 'rtl'
@@ -186,7 +192,7 @@ const HorizontalNavbar = () => {
             {t('general.offline')}
           </div>
         </div>
-      )}
+      )} */}
     </nav>
   );
 };
