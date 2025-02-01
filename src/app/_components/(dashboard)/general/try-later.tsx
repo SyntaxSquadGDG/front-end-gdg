@@ -9,8 +9,8 @@ const TryLater = ({ children }) => {
   return (
     <h2
       className={clsx(
-        'text-center text-mainColor1 text-[20px] font-bold my-[32px]',
-        contentFont.className,
+        'text-center text-mainColor1 text-20px font-bold my-32px',
+        'font-content',
       )}>
       {t('zero.loadFail')} {children}. {t('zero.tryLater')}.
     </h2>

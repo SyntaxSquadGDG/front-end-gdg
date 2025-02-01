@@ -62,7 +62,7 @@ const page = async ({ params }) => {
       <Suspense fallback={<LoadingSpinner full={false} />}>
         <EmployeeDataWrapper />
       </Suspense>
-      <div className="my-[32px]">
+      <div className="my-32px">
         <RoleHead
           text={t('general.permissions')}
           SVG={ViewSVG}
@@ -74,7 +74,7 @@ const page = async ({ params }) => {
         <Permissions id={id} type="employee" />
       </div>
 
-      <div className="my-[32px]">
+      <div className="my-32px">
         <RoleHead
           text={t('general.activity')}
           SVG={ViewSVG}
@@ -84,7 +84,7 @@ const page = async ({ params }) => {
         <Activity id={id} type={'employee'} />
       </div>
 
-      <div className="my-[32px]">
+      <div className="my-32px">
         <RoleHead
           text={t('general.roles')}
           SVG={ViewSVG}

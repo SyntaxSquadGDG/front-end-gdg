@@ -47,14 +47,14 @@ const page = async () => {
 
   return (
     <div>
-      <div className="flex justify-between items-stretch gap-[16px] xl:flex-row flex-col">
+      <div className="flex justify-between items-stretch gap-16px xl:flex-row flex-col">
         <Card>
           <div
             className={clsx(
-              contentFont.className,
+              'font-content',
               'w-[100%] flex flex-col justify-start h-[100%]',
             )}>
-            <h3 className={clsx('text-[20px] font-medium')}>
+            <h3 className={clsx('text-20px font-medium')}>
               {t('dashboard.latestResults')}
             </h3>
 
@@ -68,10 +68,7 @@ const page = async () => {
         <Card>
           <div className="h-[100%]">
             <h3
-              className={clsx(
-                'text-[20px] font-medium mb-[18px]',
-                contentFont.className,
-              )}>
+              className={clsx('text-20px font-medium mb-18px', 'font-content')}>
               {t('dashboard.availableStorage')}
             </h3>
 
@@ -85,12 +82,12 @@ const page = async () => {
 
         <AiTrain />
       </div>
-      <div className="flex items-start gap-[40px] mt-[24px] flex-col xl:flex-row">
+      <div className="flex items-start gap-40px mt-24px flex-col xl:flex-row">
         <div className="w-[100%] xl:w-[calc(100%-432px)]">
           <h2
             className={clsx(
-              'font-medium text-[24px] text-black mb-[68px]',
-              contentFont.className,
+              'font-medium text-24px text-black mb-[68px]',
+              'font-content',
             )}>
             {t('dashboard.accuracy')}
           </h2>

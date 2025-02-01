@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const EmailSVG = () => {
@@ -6,6 +7,8 @@ const EmailSVG = () => {
       width="21"
       height="21"
       viewBox="0 0 21 21"
+      className="shrink-0"
+
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_1427_956)">

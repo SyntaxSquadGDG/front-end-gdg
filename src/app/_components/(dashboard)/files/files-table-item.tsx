@@ -12,9 +12,7 @@ import FileSettings from './file-settings';
 const FilesTableItem = ({ file, folderName, folderNameRequired }) => {
   const [isFileOpen, setIsFileOpen] = useState(false);
   return (
-    <tr
-      key={file.id}
-      className="py-[40px] font-medium text-[18px] rounded-[32px]">
+    <tr key={file.id} className="py-40px font-medium text-18px rounded-[32px]">
       <td>
         <Link href={`/files/${file.id}`}>
           <FileIcon type={file.type} />

@@ -54,21 +54,21 @@ const UnsubscribeModal = ({ plan }) => {
     <Modal
       isOpen={modalStack.includes(`unsubscribePlans${plan}`)}
       onClose={close}
-      className={clsx(contentFont.className)}>
-      <div className="text-center flex flex-col justify-center gap-[32px]">
+      className={clsx('font-content')}>
+      <div className="text-center flex flex-col justify-center gap-32px">
         <div>
-          <h2 className="text-[32px] font-medium">
+          <h2 className="text-32px font-medium">
             {t('plans.modals.unsubscribeHead')}
           </h2>
-          <p className="text-[24px] ">
+          <p className="text-24px ">
             {t('plans.modals.unsubscribeDescription')}
           </p>
         </div>
         <div className="flex items-center justify-center">
           <img src="/images/plans/unsubscribe.png" alt="" />
         </div>
-        <p className="text-[24px]">{t('plans.modals.unsubscribeSure')}</p>
-        <div className="flex items-center gap-[24px] w-[100%]">
+        <p className="text-24px">{t('plans.modals.unsubscribeSure')}</p>
+        <div className="flex items-center gap-24px w-[100%]">
           <Button
             text={t('general.no')}
             onClick={() => closeModal()}

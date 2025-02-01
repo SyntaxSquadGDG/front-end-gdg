@@ -4,7 +4,8 @@ import React from 'react';
 
 const GoogleButton = ({ className, variant = 'default' }) => {
   return (
-    <button className={clsx('w-fit', className)}>
+    <button
+      className={clsx('w-fit', className, 'hover:opacity-70 duration-500')}>
       <img
         src={
           variant === 'default'

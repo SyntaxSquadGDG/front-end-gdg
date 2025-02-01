@@ -156,7 +156,7 @@ const FolderFormPermissions = ({ type, id, folderId, mode }) => {
       error={isSingle ? error && textError : null}
       refetch={isSingle ? refetch : () => {}}>
       <div>
-        <div className="grid grid-cols-2 gap-[24px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-24px">
           <div className="">
             <PermissionsHeadText>
               {t('permissions.foldersPermissions')}
@@ -221,7 +221,7 @@ const FolderFormPermissions = ({ type, id, folderId, mode }) => {
           disabled={disabledCondition || id.length === 0}
           isPending={mutation.isPending}
           isPendingText={t('general.updating')}
-          className={'mt-[32px] w-[100%]'}
+          className={'mt-32px w-[100%]'}
           onClick={() => handleUpdate()}
         />
         <ErrorAction>{errorText}</ErrorAction>

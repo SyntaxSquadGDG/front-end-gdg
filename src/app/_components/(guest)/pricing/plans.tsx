@@ -4,6 +4,7 @@ import PlanItem from './plan-item';
 import HeadText from '../common/head';
 import clsx from 'clsx';
 import OverlaySection from '../common/overlay-section';
+import Transition from '@app/_components/transitions/transitions';
 
 const Plans = async () => {
   const t = await getTranslations();
@@ -34,29 +35,37 @@ const Plans = async () => {
           'relative z-[5px] container mx-auto minHeightSection flex flex-col items-center',
           'py-sectionPadding',
         )}>
-        <HeadText>{t('pricing.plans.head')}</HeadText>
-        <div className="flex items-center justify-between gap-[72px] text-textLight mt-[92px]">
-          <PlanItem
-            head={t('pricing.plans.plan1.head')}
-            description={t('pricing.plans.plan1.description')}
-            featuresHead={t('pricing.plans.plan1.featuresHead')}
-            price={t('pricing.plans.plan1.price')}
-            features={plan1Features}
-          />
-          <PlanItem
-            head={t('pricing.plans.plan2.head')}
-            description={t('pricing.plans.plan2.description')}
-            featuresHead={t('pricing.plans.plan2.featuresHead')}
-            price={t('pricing.plans.plan2.price')}
-            features={plan2Features}
-          />
-          <PlanItem
-            head={t('pricing.plans.plan3.head')}
-            description={t('pricing.plans.plan3.description')}
-            featuresHead={t('pricing.plans.plan3.featuresHead')}
-            price={t('pricing.plans.plan3.price')}
-            features={plan3Features}
-          />
+        <Transition from="up">
+          <HeadText className="text-center">{t('pricing.plans.head')}</HeadText>
+        </Transition>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-center gap-72px text-textLight mt-96px">
+          <Transition from="down" delay={0}>
+            <PlanItem
+              head={t('pricing.plans.plan1.head')}
+              description={t('pricing.plans.plan1.description')}
+              featuresHead={t('pricing.plans.plan1.featuresHead')}
+              price={t('pricing.plans.plan1.price')}
+              features={plan1Features}
+            />
+          </Transition>
+          <Transition from="down" delay={0.1}>
+            <PlanItem
+              head={t('pricing.plans.plan2.head')}
+              description={t('pricing.plans.plan2.description')}
+              featuresHead={t('pricing.plans.plan2.featuresHead')}
+              price={t('pricing.plans.plan2.price')}
+              features={plan2Features}
+            />
+          </Transition>
+          <Transition from="down" delay={0.2}>
+            <PlanItem
+              head={t('pricing.plans.plan3.head')}
+              description={t('pricing.plans.plan3.description')}
+              featuresHead={t('pricing.plans.plan3.featuresHead')}
+              price={t('pricing.plans.plan3.price')}
+              features={plan3Features}
+            />
+          </Transition>
         </div>
       </div>
     </section>

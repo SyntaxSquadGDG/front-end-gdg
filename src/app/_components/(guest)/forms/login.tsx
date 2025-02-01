@@ -92,19 +92,19 @@ const Login = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-[100%] flex flex-col lg:flex-row gap-[48px]">
+      className="w-[100%] flex flex-col lg:flex-row gap-48px">
       <div className="w-[100%] flex items-center justify-center">
         <img src="/images/guest/forms/login.png" className="flex" alt="" />
       </div>
       <div className="w-[100%]">
         <h2
           className={clsx(
-            contentFont.className,
-            'text-[24px] font-bold linearGuestText2 mb-[32px]',
+            'font-content',
+            'text-24px font-bold linearGuestText2 mb-32px',
           )}>
           {t('forms.login.head')}
         </h2>
-        <div className="flex flex-col gap-[24px]">
+        <div className="flex flex-col gap-24px">
           <Input
             SVG={CompanySVG}
             label={t('forms.login.companyLabel')}
@@ -133,7 +133,7 @@ const Login = () => {
             error={errors.password?.message}
           />
         </div>
-        <div className="flex justify-between items-center flex-col sm:flex-row gap-[8px] mt-[16px]">
+        <div className="flex justify-between items-center flex-col sm:flex-row gap-8px mt-16px">
           <Controller
             name="remember"
             control={control}
@@ -147,19 +147,19 @@ const Login = () => {
           />
           <Link
             href={'/forget-password'}
-            className="text-[18px] font-semibold text-textLight">
+            className="text-18px font-semibold text-textLight">
             {t('forms.login.forget')}
           </Link>
         </div>
         <GuestButton
           disabled={mutation.isPending}
-          className={'w-[100%] mt-[40px] mb-[32px]'}>
+          className={'w-[100%] mt-40px mb-32px'}>
           {mutation.isPending
             ? t('forms.login.logging')
             : t('forms.login.login')}
         </GuestButton>
         <ErrorAction>{errorText}</ErrorAction>
-        <p className="text-[20px] text-textLight text-center">
+        <p className="text-20px text-textLight text-center">
           <span>{t('forms.login.not')}</span>
           <span> | </span>
           <Link href={'/register'} className="linearGuestText2">

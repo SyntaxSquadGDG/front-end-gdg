@@ -7,6 +7,7 @@ const PlaySVG = () => {
       width="67"
       height="76"
       viewBox="0 0 67 76"
+      className="shrink-0"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <path

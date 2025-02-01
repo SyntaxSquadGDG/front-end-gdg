@@ -28,7 +28,7 @@ const page = async ({ params }) => {
         },
         {
           text: t('activity.activity'),
-          href: `/managers/${id}/activity`,
+          href: `/managers/${id}/activities`,
         },
       ];
 

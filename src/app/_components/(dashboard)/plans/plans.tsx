@@ -10,6 +10,7 @@ import { useModal } from '@app/_contexts/modal-provider';
 import UnsubscribeModal from './unsubscribe-modal';
 import SubscribeModal from './subscribe-modal';
 import useOnlineStatus from '@app/_hooks/useonline';
+import Button from '../general/button';
 
 const Plans = ({ activePlan }) => {
   const t = useTranslations();
@@ -38,8 +39,8 @@ const Plans = ({ activePlan }) => {
 
   if (activePage === 1) {
     return (
-      <section className={clsx('relative', contentFont.className)}>
-        <div className="flex items-center justify-between xl:flex-row flex-col gap-[72px] text-mainColor1">
+      <section className={clsx('relative', 'font-content')}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 items-center gap-72px text-mainColor1">
           <PlanItem
             head={t('pricing.plans.plan1.head')}
             description={t('pricing.plans.plan1.description')}
@@ -72,13 +73,18 @@ const Plans = ({ activePlan }) => {
           />
         </div>
         {isActivePlan && (
-          <div className="flex justify-between items-start lg:items-center mt-[48px] lg:flex-row flex-col gap-[24px]">
-            <h2 className={'text-[24px] font-medium'}>{t('plans.info')}</h2>
-            <button
-              className="text-[20px] font-bold p-[14px] rounded-[8px] border-[1px] border-solid border-black"
+          <div className="flex justify-between items-start lg:items-center mt-48px lg:flex-row flex-col gap-24px">
+            <h2 className={'text-24px font-medium'}>{t('plans.info')}</h2>
+            <Button
+              variant="outline"
+              onClick={() => openModal(`unsubscribePlans${activePlan}`)}
+              text={t('plans.cancelButton')}
+            />
+            {/* <button
+              className="text-20px font-bold p-14px rounded-[8px] border-[1px] border-solid border-black"
               onClick={() => openModal(`unsubscribePlans${activePlan}`)}>
               {t('plans.cancelButton')}
-            </button>
+            </button> */}
           </div>
         )}
         <UnsubscribeModal plan={activePlan} />

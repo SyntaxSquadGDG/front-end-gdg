@@ -47,16 +47,16 @@ const FileItem = ({ file, parentId }) => {
   return (
     <div
       ref={containerRef}
-      className="rounded-[16px] border-[1px] border-solid border-blue3 p-[24px]">
+      className="rounded-[16px] border-[1px] border-solid border-blue3 p-24px">
       <FileSettings id={file.id} />
       <Link
         href={`/files/${file.id}`}
-        className="mt-[8px] mb-[22px] flex items-center justify-center">
+        className="mt-8px mb-22px flex items-center justify-center">
         <FileIcon type={file.type} />
       </Link>
-      <div className={clsx(contentFont.className, 'flex flex-col gap-[10px]')}>
-        <p className="text-[18px] font-medium">{file.name}</p>
-        <p className="text-[14px] font-medium text-textGray">{file.size}</p>
+      <div className={clsx('font-content', 'flex flex-col gap-10px')}>
+        <p className="text-18px font-medium">{file.name}</p>
+        <p className="text-14px font-medium text-textGray">{file.size}</p>
       </div>
 
       <FileSettingsModals

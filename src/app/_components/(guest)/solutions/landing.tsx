@@ -17,8 +17,8 @@ const Landing = async () => {
         <HeadText>{t('solutions.landing.head')}</HeadText>
         <p
           className={clsx(
-            contentFont.className,
-            'text-[30px] font-medium mt-[32px] text-textLight',
+            'font-content',
+            'text-30px font-medium mt-32px text-textLight',
           )}>
           {t('solutions.landing.description')}
         </p>

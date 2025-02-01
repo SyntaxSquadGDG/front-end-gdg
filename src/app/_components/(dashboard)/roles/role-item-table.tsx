@@ -88,7 +88,7 @@ const RoleItemTable = ({ role }) => {
       <td>
         <Link
           href={`/roles/${role.id}/employees`}
-          className="flex items-center justify-center gap-[8px]">
+          className="flex items-center justify-center gap-8px">
           <ViewSVG />
           <span>{role.employeesCount}</span>
         </Link>

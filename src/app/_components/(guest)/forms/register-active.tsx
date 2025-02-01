@@ -11,7 +11,7 @@ const RegisterActive = ({ activePage }) => {
         <div className="box_parent">
           <div
             className={clsx(
-              'box2 px-[40px] py-[12px] pr-[60px] text-textDark text-[18px] font-medium bg-[#DDDDDD]',
+              'box2 px-40px py-12px pr-[60px] text-textDark text-18px font-medium bg-[#DDDDDD]',
               activePage === 1 && 'bg-goldLinear',
             )}>
             {t('forms.register.tab1')}
@@ -20,7 +20,7 @@ const RegisterActive = ({ activePage }) => {
         <div className="box_parent ml-[-30px]">
           <div
             className={clsx(
-              'box3 px-[40px] py-[12px] pl-[60px] text-textDark text-[18px] font-medium bg-[#DDDDDD]',
+              'box3 px-40px py-12px pl-[60px] text-textDark text-18px font-medium bg-[#DDDDDD]',
               activePage === 2 && 'bg-goldLinear',
             )}>
             {t('forms.register.tab2')}

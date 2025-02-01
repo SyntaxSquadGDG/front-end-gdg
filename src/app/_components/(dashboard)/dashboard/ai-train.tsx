@@ -11,10 +11,9 @@ const AiTrain = async () => {
   const t = await getTranslations();
   return (
     <Card>
-      <div className="flex items-center md:justify-between h-[100%] flex-col justify-center md:flex-row gap-[40px] w-[100%]">
-        <div className="flex-grow flex flex-col justify-between md:items-start gap-[40px] items-center">
-          <h3
-            className={clsx('text-[20px] font-medium', contentFont.className)}>
+      <div className="flex items-center md:justify-between h-[100%] flex-col justify-center md:flex-row gap-40px w-[100%]">
+        <div className="flex-grow flex flex-col justify-between md:items-start gap-40px items-center">
+          <h3 className={clsx('text-20px font-medium', 'font-content')}>
             {t('dashboard.enhance')}
           </h3>
           <TrainButton />

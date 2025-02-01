@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import React from 'react';
 
 const ScoreText = ({ score }) => {
-  const className = clsx('text-[18px] font-bold', contentFont.className);
+  const className = clsx('text-18px font-bold', 'font-content');
   if (score >= 50) {
     return <p className={clsx(className, 'text-highColor')}>{score} %</p>;
   }

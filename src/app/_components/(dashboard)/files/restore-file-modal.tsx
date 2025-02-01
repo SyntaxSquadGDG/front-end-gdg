@@ -30,12 +30,12 @@ const RestoreModal = ({
     <Modal
       isOpen={modalStack.includes(`RestoreFile${fileId}Version${versionId}`)}
       onClose={handleClose}
-      className={contentFont.className}>
-      <div className="flex flex-col gap-[24px] text-center items-center">
-        <p className="text-[20px] font-medium">
+      className={'font-content'}>
+      <div className="flex flex-col gap-24px text-center items-center">
+        <p className="text-20px font-medium">
           {t('files.restoreFileDescription')}
         </p>
-        <div className="flex items-center gap-[32px]">
+        <div className="flex items-center gap-32px">
           <Button
             onClick={() => closeModal()}
             text={t('general.cancel')}

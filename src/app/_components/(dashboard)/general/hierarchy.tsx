@@ -14,7 +14,7 @@ const HierarchicalView = ({
   const baseSpacing = 8;
   const levelSpacing = 20;
   const commonClass =
-    'cursor-pointer border-b-[1px] border-b-solid border-b-mainColor1 py-[4px] pr-[8px]';
+    'cursor-pointer border-b-[1px] border-b-solid border-b-mainColor1 py-4px pr-8px';
 
   const toggleSection = (id) => {
     setExpandedSections((prev) => ({
@@ -143,7 +143,7 @@ const HierarchicalView = ({
       const isSectionExpanded = expandedSections[section.id];
 
       return (
-        <div key={section.id} className="">
+        <div key={section.id} className="break-words">
           {/* Render section */}
           <div
             style={{
@@ -175,19 +175,17 @@ const HierarchicalView = ({
     : 'No item selected';
 
   return (
-    <div className="flex flex-col gap-[16px] w-[100%]">
+    <div className="flex flex-col gap-16px w-[100%]">
       <div
         className={clsx(
-          contentFont.className,
-          'rounded-[8px] overflow-hidden border-[1px] border-solid border-mainColor1 text-[20px] w-[100%]',
+          'font-content',
+          'rounded-[8px] overflow-hidden border-[1px] border-solid border-mainColor1 text-20px w-[100%]',
         )}>
         {renderSections()}
       </div>
       <div>
-        <p className="text-[16px] text-mainColor1 font-medium">
-          Selected Path:
-        </p>
-        <p>{selectedItemPath}</p>
+        <p className="text-16px text-mainColor1 font-medium">Selected Path:</p>
+        <p className="text-wrap break-words">{selectedItemPath}</p>
       </div>
     </div>
   );

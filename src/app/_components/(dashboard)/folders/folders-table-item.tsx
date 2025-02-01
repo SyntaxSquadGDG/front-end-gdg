@@ -12,7 +12,7 @@ const FoldersTableItem = ({ folder, sectionName, sectionNameRequired }) => {
   return (
     <tr
       key={folder.id}
-      className="py-[40px] font-medium text-[18px] rounded-[32px]">
+      className="py-40px font-medium text-18px rounded-[32px]">
       <td>
         <Link href={`/folders/${folder.id}`}>{folder.name}</Link>
       </td>

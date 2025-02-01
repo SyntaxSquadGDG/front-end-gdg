@@ -5,6 +5,7 @@ const activityLogs = [
     id: 1,
     action: 'created',
     lastModified: '2024-12-01T10:00:00Z',
+    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
   },
   {
     type: 'section',
@@ -12,6 +13,7 @@ const activityLogs = [
     id: 3,
     action: 'updated',
     lastModified: '2024-12-02T15:30:00Z',
+    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
   },
   {
     type: 'file',
@@ -19,6 +21,7 @@ const activityLogs = [
     id: 4,
     action: 'deleted',
     lastModified: '2024-12-03T12:45:00Z',
+    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
   },
   {
     type: 'folder',
@@ -26,6 +29,7 @@ const activityLogs = [
     id: 2,
     action: 'updated',
     lastModified: '2024-12-04T08:20:00Z',
+    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
   },
   {
     type: 'section',
@@ -33,6 +37,7 @@ const activityLogs = [
     id: 5,
     action: 'created',
     lastModified: '2024-12-05T11:10:00Z',
+    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
   },
   {
     type: 'file',
@@ -40,6 +45,7 @@ const activityLogs = [
     id: 6,
     action: 'created',
     lastModified: '2024-12-05T11:10:00Z',
+    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
   },
   {
     type: 'section',
@@ -47,6 +53,7 @@ const activityLogs = [
     id: 7,
     action: 'modified',
     lastModified: '2024-12-05T11:10:00Z',
+    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
   },
   {
     type: 'folder',
@@ -54,6 +61,7 @@ const activityLogs = [
     id: 8,
     action: 'created',
     lastModified: '2024-12-05T11:10:00Z',
+    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
   },
   {
     type: 'file',
@@ -61,6 +69,7 @@ const activityLogs = [
     id: 9,
     action: 'created',
     lastModified: '2024-12-05T11:10:00Z',
+    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
   },
   {
     type: 'section',
@@ -68,6 +77,7 @@ const activityLogs = [
     id: 10,
     action: 'modified',
     lastModified: '2024-12-05T11:10:00Z',
+    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
   },
 ];
 

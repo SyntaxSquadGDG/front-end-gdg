@@ -56,15 +56,15 @@ const page = async ({ params }) => {
 
       return (
         <>
-          <div className="flex flex-col lg:flex-row gap-[48px]">
+          <div className="flex flex-col lg:flex-row gap-48px">
             <div className="w-[100%]">
               <ImageViewer src={`data:image/png;base64,${preview.f}`} />
             </div>
-            <div className="w-[100%] p-[16px] overflow-hidden bg-slate-200">
+            <div className="w-[100%] p-16px overflow-hidden bg-slate-200">
               <h2
                 className={clsx(
-                  'text-mainColor1 text-[24px] mb-[32px] font-bold',
-                  contentFont.className,
+                  'text-mainColor1 text-24px mb-32px font-bold',
+                  'font-content',
                 )}>
                 OCR Text
               </h2>

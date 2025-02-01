@@ -20,6 +20,7 @@ import { getErrorText } from '@app/_utils/translations';
 import useNetworkStatus from '@app/_hooks/useonline';
 import { getCookie } from 'cookies-next';
 import { decodeJWT } from '@app/_utils/auth';
+import MenuBar from './menu-bars';
 
 const HorizontalNavbar = () => {
   const t = useTranslations();
@@ -30,6 +31,7 @@ const HorizontalNavbar = () => {
   const router = useRouter();
   const fullPathname = usePathname();
   const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
+  const searchInputRef = useRef(null);
 
   useClickOutside(navbarRef, () => setIsOpen(false));
 
@@ -37,11 +39,11 @@ const HorizontalNavbar = () => {
   const decodedToken = token ? decodeJWT(token) : null;
   const user = decodedToken.payload;
 
-  // useEffect(() => {
-  //   if (!pathName.startsWith('/search')) {
-  //     setSearchValue('');
-  //   }
-  // }, [fullPathname]);
+  useEffect(() => {
+    if (!pathName.startsWith('/search') && searchInputRef.current) {
+      searchInputRef.current.value = ''; // Clear the input field
+    }
+  }, [pathName]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -71,10 +73,11 @@ const HorizontalNavbar = () => {
     <nav
       ref={navbarRef}
       className={clsx(
+        'bg-whiteBackground pb-16px',
         direction === 'rtl'
           ? 'right-[calc(var(--verticalNavSmallWidth))] lg:right-[calc(var(--verticalNavWidth))]'
           : 'left-[calc(var(--verticalNavSmallWidth))] lg:left-[calc(var(--verticalNavWidth))]',
-        'text-textLight h-horizontalNavHeight  w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] fixed top-0 items-center flex flex-col z-[9999] px-[32px] bg-whiteBackground',
+        'text-textLight h-horizontalNavHeight  w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] fixed top-0 items-center flex flex-col z-[9999] px-32px bg-whiteBackground',
       )}>
       <div className="rounded-bl-navsRadius rounded-br-navsRadius h-[100%] bg-mainDashboardLinear w-[100%] relative">
         {/* <nav
@@ -90,7 +93,7 @@ const HorizontalNavbar = () => {
           className="rounded-br-navsRadius rounded-bl-navsRadius"
         />
 
-        <div className="relative z-5 text-textLight flex justify-between items-center w-[100%] px-[24px] h-[100%]">
+        <div className="relative z-5 text-textLight flex justify-between items-center w-[100%] px-24px h-[100%]">
           {/* IMAGE + TEXT */}
           <div className="">
             <DataFetching
@@ -100,10 +103,12 @@ const HorizontalNavbar = () => {
               className={''}
               isLoading={false}>
               {user && (
-                <div className="flex gap-[16px] items-center">
+                <div className="flex gap-16px items-center">
                   {/* IMAGE */}
                   <div className="shrink-0 rounded-full overflow-hidden">
-                    <Link href={'/profile'}>
+                    <Link
+                      href={'/profile'}
+                      className="hover:opacity-70 duration-500">
                       <Image
                         src={user.img}
                         className=" w-[56px] h-[56px]"
@@ -118,14 +123,18 @@ const HorizontalNavbar = () => {
                   {/* TEXT */}
                   <div
                     className={clsx(
-                      'hidden flex-col gap-[10px] xs:flex',
-                      headFont.className,
+                      'hidden flex-col gap-10px xs:flex',
+                      'font-head',
                     )}>
-                    <p className="text-[12px] lg:text-[24px]">
+                    <p className="text-16px lg:text-24px">
                       {t('navbar.hello')}{' '}
-                      <Link href={'/profile'}>{user.firstName}!</Link>
+                      <Link
+                        href={'/profile'}
+                        className="hover:text-secondaryColor1 duration-500">
+                        {user.firstName}!
+                      </Link>
                     </p>
-                    <p className="text-[12px] lg:text-[14px]">
+                    <p className="text-12px lg:text-14px">
                       {formatDate(Date.now())}
                     </p>
                   </div>
@@ -134,45 +143,64 @@ const HorizontalNavbar = () => {
             </DataFetching>
           </div>
           <button
-            className="flex lg:hidden mx-[8px]"
-            onClick={() => setIsOpen((old) => !old)}>
-            =
+            className="flex lg:hidden mx-8px flex-col group"
+            onClick={() => setIsOpen((prev) => !prev)}>
+            <MenuBar
+              isMenuOpen={isOpen}
+              openStyle={'rotate-45 translate-y-1'}
+              closeStyle={'mb-1'}
+            />
+            <MenuBar
+              isMenuOpen={isOpen}
+              openStyle={'opacity-0'}
+              closeStyle={'mb-1'}
+            />
+            <MenuBar
+              isMenuOpen={isOpen}
+              openStyle={'-rotate-45 -translate-y-1'}
+              closeStyle={'mb-1'}
+            />
           </button>
 
           <div
             className={clsx(
               isOpen &&
-                `flex absolute top-searchBarTop left-0 w-[100%] ${
+                `flex top-0 left-0 w-[100%] ${
                   direction === 'ltr'
                     ? 'bg-horizontalNavLinear'
                     : 'bg-horizontalNavLinearRTL'
-                }  rounded-[16px] py-[16px] px-[24px]`,
-              'gap-[16px] items-center justify-between flex',
+                }  rounded-[16px] py-16px px-24px`,
+              'gap-16px items-center justify-between flex absolute',
               'lg:static lg:w-auto lg:px-0 lg:py-0 lg:rounded-none lg:bg-none',
-              !isOpen && 'hidden lg:flex',
+              'duration-500',
+              'max-xs:flex-col',
+              isOpen
+                ? 'lg:translate-y-0 translate-y-[var(--searchBarTop)]'
+                : 'lg:translate-y-0 translate-y-[-500px]',
             )}>
             {/* SEARCH */}
             <form
               onSubmit={handleSubmit}
               className={clsx(
-                'flex items-center gap-[8px] px-[16px] rounded-[16px] border-[1px] border-white border-solid w-[100%]',
+                'flex items-center gap-8px px-16px rounded-[16px] border-[1px] border-white border-solid w-[100%]',
               )}>
-              <div className="flex py-[10px]">
+              <button className="flex py-10px group max-xs:hidden">
                 <SearchSVG />
-              </div>
+              </button>
               <div className="flex items-center justify-center h-fit">
                 <input
                   type="text"
+                  ref={searchInputRef}
                   placeholder={t('navbar.search')}
                   name="searchInput"
                   className={clsx(
-                    'bg-transparent outline-none flex-shrink w-[100%] text-[16px] py-[10px] ',
-                    headFont.className,
+                    'bg-transparent outline-none flex-shrink w-[100%] text-16px py-10px ',
+                    'font-head',
                   )}
                 />
               </div>
             </form>
-            <Link href={'/notifications'}>
+            <Link href={'/notifications'} className="group">
               <NotificationsSVG
                 active={pathName.startsWith('/notifications')}
               />
@@ -186,9 +214,9 @@ const HorizontalNavbar = () => {
             direction === 'rtl'
               ? 'right-[calc(var(--verticalNavSmallWidth))] lg:right-[calc(var(--verticalNavWidth))]'
               : 'left-[calc(var(--verticalNavSmallWidth))] lg:left-[calc(var(--verticalNavWidth))]',
-            'text-textLight h-horizontalNavHeight  w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] fixed top-[32px] items-center flex flex-col z-[-1] px-[32px]',
+            'text-textLight h-horizontalNavHeight  w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] fixed top-[32px] items-center flex flex-col z-[-1] px-32px',
           )}>
-          <div className="relative z-5 text-textLight flex justify-center items-end w-[100%] px-[24px] h-[100%] bg-red-400 rounded-br-navsRadius rounded-bl-navsRadius">
+          <div className="relative z-5 text-textLight flex justify-center items-end w-[100%] px-24px h-[100%] bg-red-400 rounded-br-navsRadius rounded-bl-navsRadius">
             {t('general.offline')}
           </div>
         </div>

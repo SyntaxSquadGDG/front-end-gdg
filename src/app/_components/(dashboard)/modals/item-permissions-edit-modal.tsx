@@ -183,8 +183,8 @@ const ItemPermissionsEditModal = ({ id, type }) => {
       isOpen={modalStack.includes(`ItemPermissionsEdit${type}${id}`)}
       onClose={handleClose}
       innerClassName="w-[800px]"
-      className={contentFont.className}>
-      <div className="mb-[32px]">
+      className={'font-content'}>
+      <div className="mb-32px">
         <NormalSelect
           options={options}
           onChange={handleChange}
@@ -217,7 +217,7 @@ const ItemPermissionsEditModal = ({ id, type }) => {
           keys={isEmployees ? ['firstName', 'lastName'] : ['name']}
         />
       </div>
-      <div className="mt-[32px]">
+      <div className="mt-32px">
         {type === 'section' && (
           <SectionFormPermissions
             id={isEmployees ? selectedEmployeeIds : selectedRoleIds}

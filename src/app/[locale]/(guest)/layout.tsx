@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import '../../globals.css';
+import '../../fonts.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import clsx from 'clsx';
@@ -10,6 +11,7 @@ import { getLangDir } from 'rtl-detect';
 import GuestNavbar from '@app/_components/navbars/guest-navbar';
 import Footer from '@app/_components/navbars/footer';
 import QueryClientWrapper from '@app/_contexts/react-query-provider';
+// import { contentFont, headFont } from '@app/_utils/fonts';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -27,7 +29,7 @@ export default async function RootLayout({
   const direction = getLangDir(locale);
 
   return (
-    <html lang={locale} dir={direction}>
+    <html lang={locale} dir={direction} className={`font-content`}>
       <body
         className={clsx(
           'overflow-x-hidden',

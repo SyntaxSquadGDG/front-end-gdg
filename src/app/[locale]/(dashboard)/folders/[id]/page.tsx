@@ -49,7 +49,7 @@ const page = async ({ params }) => {
 
     return (
       <>
-        <ToolBar path={path} views={true} id={id} type={'folder'} />;
+        <ToolBar path={path} views={true} id={id} type={'folder'} />
         <FolderSettingsModals id={id} name={path[0].name} />
       </>
     );

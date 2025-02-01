@@ -57,12 +57,12 @@ const page = async () => {
     <div>
       <ErrorBoundary>
         <HeadBar items={items}>
-          <Link href={'/help'}>
+          <Link href={'/help'} className="hover:opacity-70 duration-500">
             <HelpSVG />
           </Link>
         </HeadBar>
       </ErrorBoundary>
-      <div className="flex flex-col gap-[32px]">
+      <div className="flex flex-col gap-32px">
         {/* <ImageSection /> */}
         <ErrorBoundary>
           <Suspense fallback={<LoadingSpinner />}>

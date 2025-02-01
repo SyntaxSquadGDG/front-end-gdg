@@ -10,6 +10,7 @@ import React from 'react';
 import OverlaySection from '../common/overlay-section';
 import HeadText from '../common/head';
 import SquareInfoBig from '../common/square-info-big';
+import Transition from '@app/_components/transitions/transitions';
 
 const Features = async () => {
   const t = await getTranslations();
@@ -53,17 +54,20 @@ const Features = async () => {
           'relative z-[5px] container mx-auto minHeightSection text-center flex flex-col items-center',
           'py-sectionPadding',
         )}>
-        <HeadText>{t('services.features.head')}</HeadText>
+        <Transition from="up">
+          <HeadText>{t('services.features.head')}</HeadText>
+        </Transition>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 mt-[64px] gap-[88px]">
-          {data.map((item) => {
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 mt-64px gap-80px">
+          {data.map((item, index) => {
             return (
-              <SquareInfoBig
-                key={item.head}
-                SVG={item.icon}
-                head={item.head}
-                description={item.description}
-              />
+              <Transition key={item.head} from="down" delay={index * 0.1}>
+                <SquareInfoBig
+                  SVG={item.icon}
+                  head={item.head}
+                  description={item.description}
+                />
+              </Transition>
             );
           })}
         </div>

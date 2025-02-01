@@ -17,8 +17,8 @@ const Error = () => {
         </div>
         <p
           className={clsx(
-            headFont.className,
-            'text-[40px] font-bold text-textLight mt-[16px] mb-[40px]',
+            'font-head',
+            'text-40px font-bold text-textLight mt-16px mb-40px',
           )}>
           {t('general.error')}
         </p>

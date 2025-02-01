@@ -34,10 +34,10 @@ const Results = async () => {
 
   return (
     <>
-      <p className={clsx('text-[12px] font-medium mt-[8px] mb-[16px]')}>
+      <p className={clsx('text-12px font-medium mt-8px mb-16px')}>
         {t('dashboard.resultsOverview')}
       </p>
-      <ul className="flex flex-col gap-[16px] list-outside">
+      <ul className="flex flex-col gap-16px list-outside">
         {data.map((item, index) => {
           return <ResultItem key={index} item={item} />;
         })}

@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const ProductivitySVG = () => {
@@ -5,6 +6,7 @@ const ProductivitySVG = () => {
     <svg
       width="48"
       height="48"
+      className="shrink-0"
       viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">

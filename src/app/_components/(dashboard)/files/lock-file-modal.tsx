@@ -31,14 +31,14 @@ const LockModal = ({
     <Modal
       isOpen={modalStack.includes(`LockFile${fileId}`)}
       onClose={handleClose}
-      className={contentFont.className}>
-      <div className="flex flex-col gap-[24px] text-center items-center">
-        <p className="text-[20px] font-medium">
+      className={'font-content'}>
+      <div className="flex flex-col gap-24px text-center items-center">
+        <p className="text-20px font-medium">
           {locking
             ? t('files.lockFileDescription')
             : t('files.unlockFileDescription')}
         </p>
-        <div className="flex items-center gap-[32px]">
+        <div className="flex items-center gap-32px">
           <Button
             onClick={() => closeModal()}
             text={t('general.cancel')}

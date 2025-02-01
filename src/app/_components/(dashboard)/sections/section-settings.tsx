@@ -50,7 +50,7 @@ const SectionSettings = ({ id }) => {
   }, [error]);
 
   return (
-    <div className="relative">
+    <div className="relative flex items-center">
       <button onClick={handleSettingsClick}>
         <SettingsSVG />
       </button>

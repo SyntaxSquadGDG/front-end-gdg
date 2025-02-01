@@ -6,7 +6,7 @@ const ErrorAction = ({ children }) => {
   return (
     <>
       {children && (
-        <p className="text-errorColor font-bold text-[16px]">* {children}</p>
+        <p className="text-errorColor font-bold text-16px">* {children}</p>
       )}
     </>
   );

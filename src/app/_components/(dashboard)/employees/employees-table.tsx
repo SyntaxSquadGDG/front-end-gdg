@@ -86,7 +86,7 @@ const EmployeesTable = ({ initialEmployees }) => {
       isLoading={isLoadingEmployees}>
       <div className="tableDiv">
         <div>
-          <table className={clsx(contentFont.className, 'table')}>
+          <table className={clsx('font-content', 'table')}>
             <thead>
               <tr>
                 <td></td>

@@ -25,8 +25,8 @@ const Checkbox = ({
       />
       <div
         className={clsx(
-          contentFont.className,
-          'flex items-center gap-[8px]',
+          'font-content',
+          'flex items-center gap-8px',
           disabled && 'cursor-not-allowed',
         )}>
         <div
@@ -44,7 +44,7 @@ const Checkbox = ({
         </div>
         <label
           className={clsx(
-            'text-[18px] text-textLight',
+            'text-18px text-textLight',
             disabled ? 'cursor-not-allowed' : 'cursor-pointer',
           )}
           htmlFor={checkboxId}>

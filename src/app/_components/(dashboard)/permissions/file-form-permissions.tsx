@@ -130,7 +130,7 @@ const FileFormPermissions = ({ type, id, mode, fileId }) => {
           disabled={disabledCondition || id.length === 0}
           isPending={mutation.isPending}
           isPendingText={t('general.updating')}
-          className={'mt-[32px] w-[100%]'}
+          className={'mt-32px w-[100%]'}
           onClick={() => handleUpdate()}
         />
         <ErrorAction>{errorText}</ErrorAction>

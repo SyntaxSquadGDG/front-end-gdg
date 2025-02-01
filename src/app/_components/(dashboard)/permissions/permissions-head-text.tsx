@@ -6,8 +6,8 @@ const PermissionsHeadText = ({ children }) => {
   return (
     <p
       className={clsx(
-        contentFont.className,
-        'text-[18px] font-medium text-mainColor1 mb-[16px]',
+        'font-content',
+        'text-18px font-medium text-mainColor1 mb-16px',
       )}>
       {children}
     </p>

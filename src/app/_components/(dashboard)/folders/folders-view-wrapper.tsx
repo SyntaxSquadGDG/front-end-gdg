@@ -80,15 +80,15 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
   return (
     <StructureView>
       {/* Pass fetched sections to children */}
-      <div className={'flex flex-col gap-[32px]'}>
+      <div className={'flex flex-col gap-32px'}>
         <div>
-          <p className={clsx(contentFont, 'mb-[24px] text-[22px] font-medium')}>
+          <p className={clsx(contentFont, 'mb-24px text-22px font-medium')}>
             {t('folders.folders')}
           </p>
 
           <div
             className={clsx(
-              'grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-[32px]',
+              'grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-32px',
               direction === 'ltr' ? 'xl:mr-[432px]' : 'xl:ml-[432px]',
             )}>
             <DataFetching
@@ -108,13 +108,13 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
         </div>
 
         <div>
-          <p className={clsx(contentFont, 'mb-[24px] text-[22px] font-medium')}>
+          <p className={clsx(contentFont, 'mb-24px text-22px font-medium')}>
             {t('files.files')}
           </p>
 
           <div
             className={clsx(
-              'grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-[32px]',
+              'grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-32px',
               direction === 'ltr' ? 'xl:mr-[432px]' : 'xl:ml-[432px]',
             )}>
             <DataFetching
@@ -138,7 +138,7 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
           emptyError={t('folders.errors.FOLDERS_ZERO_ERROR')}
           refetch={refetchFolders}
           data={folders}>
-          <p className={clsx(contentFont, 'mb-[24px] text-[22px] font-medium')}>
+          <p className={clsx(contentFont, 'mb-24px text-22px font-medium')}>
             {t('folders.folders')}
           </p>
           <FoldersTable folders={folders} sectionName={sectionName} />
@@ -149,7 +149,7 @@ const FoldersViewWrapper = ({ children, id, sectionName, folderName }) => {
           emptyError={t('files.errors.FILES_ZERO_ERROR')}
           refetch={refetchFiles}
           data={files}>
-          <p className={clsx(contentFont, 'mb-[24px] text-[22px] font-medium')}>
+          <p className={clsx(contentFont, 'mb-24px text-22px font-medium')}>
             {t('files.files')}
           </p>
           <FilesTable files={files} folderName={folderName} />

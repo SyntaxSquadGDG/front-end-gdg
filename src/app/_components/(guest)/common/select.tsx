@@ -23,20 +23,16 @@ const CustomSelect = ({
   useClickOutside(selectRef, () => setIsOpen(false));
 
   return (
-    <div
-      className={clsx(
-        'w-full flex flex-col gap-[16px]',
-        contentFont.className,
-      )}>
+    <div className={clsx('w-full flex flex-col gap-16px', 'font-content')}>
       <label
-        className="block text-[18px] text-textLight"
+        className="block text-18px text-textLight"
         onClick={() => setIsOpen((old) => !old)}>
         {label}
       </label>
 
-      <div className="relative flex flex-col gap-[16px]" ref={selectRef}>
+      <div className="relative flex flex-col gap-16px" ref={selectRef}>
         <div
-          className="flex items-center justify-between gradient-borders rounded-[16px] cursor-pointer bg-transparent py-[22px] px-[16px]"
+          className="flex items-center justify-between gradient-borders rounded-[16px] cursor-pointer bg-transparent py-22px px-16px"
           onClick={() => setIsOpen((prev) => !prev)}>
           {value && options.some((opt) => opt.value === value) ? (
             <span className="text-textLight">
@@ -52,7 +48,7 @@ const CustomSelect = ({
         </div>
 
         {error && (
-          <p className="text-errorColor font-medium text-[14px]">{error}</p>
+          <p className="text-errorColor font-medium text-14px">{error}</p>
         )}
 
         {isOpen && !disabled && (
@@ -60,7 +56,7 @@ const CustomSelect = ({
             {options.map((option) => (
               <li
                 key={option.value}
-                className={`py-[22px] px-[16px] cursor-pointer text-mainColor1 font-medium ${
+                className={`py-22px px-16px cursor-pointer text-mainColor1 font-medium ${
                   option.value === value
                     ? 'bg-secondaryColor1 '
                     : 'hover:bg-secondaryColor2'

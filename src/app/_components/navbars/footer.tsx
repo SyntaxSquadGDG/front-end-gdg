@@ -45,48 +45,56 @@ const Footer = () => {
     {
       text: '(+20)1094748526',
       icon: PhoneSVG,
+      href: 'wa/+201098536400',
     },
     {
-      text: 'Archi@gmail.com',
+      text: 'archiivaii@gmail.com',
       icon: EmailSVG,
-    },
-    {
-      text: 'Mansoura',
-      icon: EmailSVG,
+      href: 'mailto:archiivaii@gmail.com',
     },
   ];
   return (
-    <footer className={clsx(contentFont.className)}>
-      <div className={clsx('bg-goldLinear py-[64px]')}>
-        <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[48px]">
+    <footer className={clsx('font-content')}>
+      <div className={clsx('bg-goldLinear py-64px')}>
+        <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-48px">
           <div>
-            <p>LOGO</p>
-            <p className="text-[18px] font-medium mt-[24px] mb-[42px]">
+            <p>
+              <Link href={'/'}> {t('logo')}</Link>
+            </p>
+            <p className="text-18px font-medium mt-24px mb-42px">
               {t('footer.slogan')}
             </p>
-            <div className="flex items-center gap-[24px]">
-              <Link href={'https://www.linkedin.com'}>
+            <div className="flex items-center gap-24px">
+              <Link
+                href={'https://www.linkedin.com'}
+                className="hover:opacity-70 duration-500">
                 <LinkedinSVG />
               </Link>
-              <Link href={'https://www.instagram.com'}>
+              <Link
+                href={'https://www.instagram.com'}
+                className="hover:opacity-70 duration-500">
                 <InstagramSVG />
               </Link>
-              <Link href={'https://www.facebook.com'}>
+              <Link
+                href={'https://www.facebook.com'}
+                className="hover:opacity-70 duration-500">
                 <FacebookSVG />
               </Link>
-              <Link href={'https://www.x.com'}>
+              <Link
+                href={'https://www.x.com'}
+                className="hover:opacity-70 duration-500">
                 <XSVG />
               </Link>
             </div>
           </div>
-          <div className="flex flex-col gap-[16px]">
-            <h3 className="text-[22px] font-medium text-mainColor1">
+          <div className="flex flex-col gap-16px">
+            <h3 className="text-22px font-medium text-mainColor1">
               {t('footer.quick')}
             </h3>
             {data.map((item) => {
               return (
                 <Link
-                  className="text-mainColor1 text-[18px]"
+                  className="text-mainColor1 text-18px hover:opacity-70 duration-500"
                   key={item.text}
                   href={item.href}>
                   {item.text}
@@ -94,28 +102,34 @@ const Footer = () => {
               );
             })}
           </div>
-          <div className="flex flex-col gap-[16px]">
-            <h3 className="text-[22px] font-medium text-mainColor1">
+          <div className="flex flex-col gap-16px">
+            <h3 className="text-22px font-medium text-mainColor1">
               {t('footer.contact')}
             </h3>
             {contactData.map((item) => {
               return (
-                <div key={item.text} className="flex items-center gap-[8px]">
+                <Link
+                  key={item.text}
+                  href={item.href}
+                  className={clsx(
+                    'flex items-center gap-8px',
+                    'hover:opacity-70 duration-500',
+                  )}>
                   <item.icon />
-                  <p className="text-[18px] text-mainColor1">{item.text}</p>
-                </div>
+                  <p className="text-18px text-mainColor1">{item.text}</p>
+                </Link>
               );
             })}
           </div>
-          <div className="flex flex-col gap-[24px]">
-            <h3 className="text-[22px] font-medium text-mainColor1">
+          <div className="flex flex-col gap-24px">
+            <h3 className="text-22px font-medium text-mainColor1">
               {t('footer.download')}
             </h3>
             <GoogleButton variant="footer" />
           </div>
         </div>
       </div>
-      <div className="text-textLight text-[26px] py-[32px] text-center">
+      <div className="text-textLight text-26px py-32px text-center">
         &copy; {new Date().getFullYear()} {t('footer.copyright')}
       </div>
     </footer>

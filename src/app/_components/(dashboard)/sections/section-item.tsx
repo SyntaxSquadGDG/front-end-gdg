@@ -40,22 +40,22 @@ const SectionItem = ({ section }) => {
     <div
       ref={containerRef}
       className={clsx(
-        contentFont.className,
-        'p-[16px] rounded-[16px] border-[1px] border-solid border-mainColor3 flex flex-col gap-[45px]',
+        'font-content',
+        'p-16px rounded-[16px] border-[1px] border-solid border-mainColor3 flex flex-col gap-48px',
       )}>
       {/* Header */}
-      <div className="flex justify-between items-center sm:flex-row flex-col">
+      <div className="flex justify-between items-center sm:flex-row flex-col gap-8px">
         {/* Header Details */}
         <Link
           href={`/sections/${section.id}`}
-          className="flex gap-[16px] items-center sm:flex-row flex-col">
+          className="flex gap-16px items-center sm:flex-row flex-col">
           <SectionItemSVG />
 
-          <div className="flex flex-col gap-[8px]">
-            <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
+          <div className="flex flex-col gap-8px">
+            <p className="text-textGray font-medium text-14px sm:text-start text-center">
               {section.numberOfFolders} folders
             </p>
-            <p className="text-[18px] font-medium text-mainColor1">
+            <p className="text-18px font-medium text-mainColor1 sm:text-start text-center">
               {section.name}
             </p>
           </div>
@@ -64,10 +64,10 @@ const SectionItem = ({ section }) => {
       </div>
 
       {/* Footer */}
-      <div className="px-[16px] py-[10px] bg-cardColor flex justify-between gap-[24px] lg:gap-[48px] items-center rounded-[8px] sm:flex-row flex-col">
+      <div className="px-16px py-10px bg-cardColor flex justify-between gap-24px lg:gap-48px items-center rounded-[8px] sm:flex-row flex-col">
         {/* Storage */}
-        <div className="flex flex-col gap-[20px] flex-grow sm:w-auto w-[100%]">
-          <p className="text-[12px] text-mainColor1 font-medium sm:text-start text-center">
+        <div className="flex flex-col gap-20px flex-grow sm:w-auto w-[100%]">
+          <p className="text-12px text-mainColor1 font-medium sm:text-start text-center">
             {t('general.storage')}
           </p>
           <div className="bg-storageContainer h-[4px] w-[100%] rounded-full">
@@ -78,7 +78,7 @@ const SectionItem = ({ section }) => {
           </div>
         </div>
         {/* Employees */}
-        <div className="flex flex-col gap-[8px] items-center sm:text-start text-center">
+        <div className="flex flex-col gap-8px items-center sm:text-start text-center">
           <p>{section.numberOfEmployees} Employee</p>
 
           {/* Stacked Images */}

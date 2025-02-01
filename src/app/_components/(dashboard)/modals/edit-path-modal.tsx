@@ -51,8 +51,8 @@ const EditPathModal = ({
       isOpen={isOpen}
       onClose={handleClose}
       innerClassName="w-[800px]"
-      className={contentFont.className}>
-      <h2 className="text-[20px] font-medium text-mainColor1 mb-[32px]">
+      className={'font-content'}>
+      <h2 className="text-20px font-medium text-mainColor1 mb-32px">
         Edit File Path
       </h2>
 
@@ -75,7 +75,7 @@ const EditPathModal = ({
         }
         text={'Confirm'}
         onClick={handlePathChanged}
-        className={'w-[100%] mt-[32px]'}
+        className={'w-[100%] mt-32px'}
       />
     </Modal>
   );

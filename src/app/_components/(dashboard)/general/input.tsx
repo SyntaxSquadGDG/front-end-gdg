@@ -11,6 +11,7 @@ const Input = ({
   type = 'text',
   error,
   isPending = false,
+  className,
   SVG,
   onChange = () => {},
   ...rest
@@ -18,14 +19,17 @@ const Input = ({
   const inputId = useId();
 
   return (
-    <div className="flex flex-col gap-[16px] text-start">
+    <div className={clsx('flex flex-col gap-16px text-start', className)}>
       {label && (
-        <label className="text-textDark text-[18px]" htmlFor={inputId}>
+        <label className="text-textDark text-18px" htmlFor={inputId}>
           {label}
         </label>
       )}
 
-      <div className="flex items-center gap-[8px] border-[1px] border-solid border-mainColor3 rounded-[8px] px-[16px]">
+      <div
+        className={clsx(
+          'flex items-center gap-8px border-[1px] border-solid border-mainColor3 rounded-[8px] px-16px',
+        )}>
         {SVG && <SVG />}
         <input
           type={type}
@@ -37,15 +41,15 @@ const Input = ({
           onChange={onChange}
           className={clsx(
             readOnly && 'opacity-50',
-            'rounded-[8px] py-[16px] text-[16px] font-normal text-black w-[100%] outline-none',
-            contentFont.className,
+            'rounded-[8px] py-16px text-16px font-normal text-black w-[100%] outline-none',
+            'font-content',
           )}
           {...rest}
         />
       </div>
 
       {error && (
-        <p className="text-errorColor font-medium text-[14px]">{error}</p>
+        <p className="text-errorColor font-medium text-14px">{error}</p>
       )}
     </div>
   );

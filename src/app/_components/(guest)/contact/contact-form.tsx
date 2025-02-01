@@ -23,6 +23,7 @@ import { contact } from './data/posts';
 import { getErrorText } from '@app/_utils/translations';
 import toast from 'react-hot-toast';
 import ErrorAction from '../common/error-action';
+import Transition from '@app/_components/transitions/transitions';
 
 const ContactForm = () => {
   const t = useTranslations();
@@ -40,7 +41,7 @@ const ContactForm = () => {
     },
     {
       SVG: EmailSVG,
-      text: t('contact.form.emailText'),
+      text: 'archiivaii@gmail.com',
     },
   ];
 
@@ -101,90 +102,95 @@ const ContactForm = () => {
       className={clsx(
         'relative pb-sectionPadding mt-[calc(0px-var(--sectionPadding))]',
       )}>
-      <div
-        className={clsx(
-          'container p-[72px] relative rounded-[32px] overflow-hidden border-[1px] border-solid border-secondaryColor1 flex gap-[72px] justify-between text-textLight flex-col lg:flex-row',
-          contentFont.className,
-        )}>
-        <OverlaySection className={'bg-guestLinear'} fullSection={false} />
+      <Transition from="down">
+        <div className="container">
+          <div
+            className={clsx(
+              'p-72px relative rounded-[32px] overflow-hidden border-[1px] border-solid border-secondaryColor1 flex gap-72px justify-between text-textLight flex-col lg:flex-row',
+              'font-content',
+            )}>
+            <OverlaySection className={'bg-guestLinear'} fullSection={false} />
+            <div className="w-[100%] flex flex-col justify-between gap-48px">
+              <div>
+                <h2 className="text-30px font-semibold">
+                  {t('contact.form.head')}
+                </h2>
+                <p className="mt-24px mb-32px text-24px">
+                  {t('contact.form.description')}
+                </p>
+                <div className="flex flex-col gap-24px">
+                  {contacts.map((contact, index) => {
+                    return (
+                      <ContactItem
+                        key={index}
+                        SVG={contact.SVG}
+                        text={contact.text}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
 
-        <div className="w-[100%] flex flex-col justify-between gap-[48px]">
-          <div>
-            <h2 className="text-[30px] font-semibold">
-              {t('contact.form.head')}
-            </h2>
-            <p className="mt-[24px] mb-[32px] text-[24px]">
-              {t('contact.form.description')}
-            </p>
-            <div className="flex flex-col gap-[24px]">
-              {contacts.map((contact, index) => {
-                return (
-                  <ContactItem
-                    key={index}
-                    SVG={contact.SVG}
-                    text={contact.text}
-                  />
-                );
-              })}
+              <div>
+                <h2 className="mb-16px text-30px font-medium">
+                  {t('contact.form.followText')}
+                </h2>
+                <div className="flex gap-24px items-center flex-wrap">
+                  {icons.map((icon, index) => {
+                    return (
+                      <IconCircle key={index} SVG={icon.SVG} href={icon.href} />
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-          </div>
+            <div className="w-[100%] flex flex-col gap-24px">
+              <h3 className="text-30px font-semibold">
+                {t('contact.form.head2')}
+              </h3>
+              <form
+                onSubmit={handleSubmit(onSuccess, onError)}
+                className="flex flex-col gap-16px">
+                <Input
+                  label={t('contact.form.nameLabel')}
+                  placeHolder={t('contact.form.namePlaceholder')}
+                  type={'text'}
+                  disabled={mutation.isPending}
+                  {...register('name')}
+                  error={errors.name?.message}
+                />
 
-          <div>
-            <h2 className="mb-[16px] text-[30px] font-medium">
-              {t('contact.form.followText')}
-            </h2>
-            <div className="flex gap-[24px] items-center flex-wrap">
-              {icons.map((icon, index) => {
-                return (
-                  <IconCircle key={index} SVG={icon.SVG} href={icon.href} />
-                );
-              })}
+                <Input
+                  label={t('contact.form.emailLabel')}
+                  placeHolder={t('contact.form.emailPlaceholder')}
+                  type={'text'}
+                  disabled={mutation.isPending}
+                  {...register('email')}
+                  error={errors.email?.message}
+                />
+
+                <Input
+                  label={t('contact.form.messageLabel')}
+                  placeHolder={t('contact.form.messagePlaceholder')}
+                  type={'textarea'}
+                  disabled={mutation.isPending}
+                  {...register('message')}
+                  error={errors.message?.message}
+                />
+
+                <GuestButton
+                  className={'w-[100%] mt-32px'}
+                  disabled={mutation.isPending}>
+                  {mutation.isPending
+                    ? t('general.sending')
+                    : t('general.send')}
+                </GuestButton>
+                <ErrorAction>{errorText}</ErrorAction>
+              </form>
             </div>
           </div>
         </div>
-        <div className="w-[100%] flex flex-col gap-[24px]">
-          <h3 className="text-[30px] font-semibold">
-            {t('contact.form.head2')}
-          </h3>
-          <form
-            onSubmit={handleSubmit(onSuccess, onError)}
-            className="flex flex-col gap-[16px]">
-            <Input
-              label={t('contact.form.nameLabel')}
-              placeHolder={t('contact.form.namePlaceholder')}
-              type={'text'}
-              disabled={mutation.isPending}
-              {...register('name')}
-              error={errors.name?.message}
-            />
-
-            <Input
-              label={t('contact.form.emailLabel')}
-              placeHolder={t('contact.form.emailPlaceholder')}
-              type={'text'}
-              disabled={mutation.isPending}
-              {...register('email')}
-              error={errors.email?.message}
-            />
-
-            <Input
-              label={t('contact.form.messageLabel')}
-              placeHolder={t('contact.form.messagePlaceholder')}
-              type={'textarea'}
-              disabled={mutation.isPending}
-              {...register('message')}
-              error={errors.message?.message}
-            />
-
-            <GuestButton
-              className={'w-[100%] mt-[32px]'}
-              disabled={mutation.isPending}>
-              {mutation.isPending ? t('general.sending') : t('general.send')}
-            </GuestButton>
-            <ErrorAction>{errorText}</ErrorAction>
-          </form>
-        </div>
-      </div>
+      </Transition>
     </section>
   );
 };

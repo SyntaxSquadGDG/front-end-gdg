@@ -60,19 +60,19 @@ const Forget = () => {
     <FormSection>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex lg:flex-row flex-col w-[100%] items-center gap-[48px]">
+        className="flex lg:flex-row flex-col w-[100%] items-center gap-48px">
         <div className="flex items-center justify-center w-[100%]">
           <img src="/images/guest/forms/forget.png" alt="" />
         </div>
         <div className="w-[100%]">
           <h2
             className={clsx(
-              contentFont.className,
-              'text-[30px] font-bold linearGuestText2 mb-[32px]',
+              'font-content',
+              'text-30px font-bold linearGuestText2 mb-32px',
             )}>
             {t('forms.forget.head')}
           </h2>
-          <div className="flex flex-col gap-[24px]">
+          <div className="flex flex-col gap-24px">
             <Input
               SVG={EmailSVG}
               label={t('forms.forget.emailLabel')}
@@ -82,12 +82,12 @@ const Forget = () => {
               {...register('email')}
               error={errors.email?.message}
             />
-            <p className="text-textLight text-[20px]">
+            <p className="text-textLight text-20px">
               {t('forms.forget.notifications')}
             </p>
           </div>
           <GuestButton
-            className={'w-[100%] mt-[40px] mb-[32px]'}
+            className={'w-[100%] mt-40px mb-32px'}
             disabled={mutation.isPending}>
             {mutation.isPending ? t('general.sending') : t('general.send')}
           </GuestButton>

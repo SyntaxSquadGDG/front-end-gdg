@@ -36,7 +36,7 @@ const ToolBar = ({
   const locale = useLocale();
   const direction = getLangDir(locale);
   const { modalStack, openModal, closeModal } = useModal();
-  const activeView = 'px-[28px] py-[12px] rounded-[32px] bg-goldLinear';
+  const activeView = 'px-28px py-12px rounded-[32px] bg-goldLinear';
   const reversedPath = path ? [...path].reverse() : null;
   const fullPathname = usePathname();
   const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
@@ -68,43 +68,34 @@ const ToolBar = ({
     <>
       <div
         style={{ height: height ? `${height}px` : 'auto' }}
-        className="mt-[-24px] mb-[4px] z-[-1]"
+        className="mt-[-24px] mb-4px z-[-1]"
       />
       <div
         ref={ref}
         className={clsx(
-          'flex items-center justify-between gap-[48px] bg-white flex-wrap',
-          'fixed top-[var(--horizontalNavHeight)] py-[32px] w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] z-[9999] lg:left-[var(--verticalNavWidth)] left-[var(--verticalNavSmallWidth)] px-[32px]',
+          'flex items-center justify-between gap-48px bg-white flex-wrap',
+          'fixed top-[var(--horizontalNavHeight)] py-32px w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] z-[9999] lg:left-[var(--verticalNavWidth)] left-[var(--verticalNavSmallWidth)] px-32px',
         )}>
         {/* Sections Text */}
-        <div className="flex gap-[16px] items-center flex-wrap">
+        <div className="flex gap-16px items-center flex-wrap">
           {pathName === '/sections' && (
             <Link
               href="/sections"
-              className={clsx(
-                contentFont.className,
-                'text-[26px] font-medium',
-              )}>
+              className={clsx('font-content', 'text-26px font-medium')}>
               {t('sections.sections')}
             </Link>
           )}
           {pathName === '/folders' && (
             <Link
               href="/folders"
-              className={clsx(
-                contentFont.className,
-                'text-[26px] font-medium',
-              )}>
+              className={clsx('font-content', 'text-26px font-medium')}>
               {t('folders.folders')}
             </Link>
           )}
           {pathName === '/files' && (
             <Link
               href="/files"
-              className={clsx(
-                contentFont.className,
-                'text-[26px] font-medium',
-              )}>
+              className={clsx('font-content', 'text-26px font-medium')}>
               {t('files.files')}
             </Link>
           )}
@@ -120,10 +111,7 @@ const ToolBar = ({
                       ? `/files/${item.id}`
                       : `/sections/${item.id}`
                   }
-                  className={clsx(
-                    contentFont.className,
-                    'text-[26px] font-medium',
-                  )}>
+                  className={clsx('font-content', 'text-26px font-medium')}>
                   {item.name}
                 </Link>
                 {index !== reversedPath.length - 1 && <PathArrowSVG />}
@@ -133,7 +121,7 @@ const ToolBar = ({
           {pathRequired && !path && <h2>Error While fetching path</h2>}
         </div>
         {views && (
-          <div className="flex gap-[16px] items-center flex-wrap">
+          <div className="flex gap-16px items-center flex-wrap">
             {/* VIEWS AND CREATION */}
             {/* VIEWS */}
             <div className="rounded-[32px] flex items-center border-[1px] border-solid border-blue1 w-fit">
@@ -142,8 +130,8 @@ const ToolBar = ({
                   view === 'grid'
                     ? activeView
                     : direction === 'ltr'
-                    ? 'pr-[12px] pl-[21px]'
-                    : 'pl-[12px] pr-[21px]',
+                    ? 'pr-12px pl-[21px]'
+                    : 'pl-12px pr-[21px]',
                 )}
                 onClick={setGrid}>
                 <GridViewSVG />
@@ -153,8 +141,8 @@ const ToolBar = ({
                   view === 'list'
                     ? activeView
                     : direction === 'ltr'
-                    ? 'pl-[12px] pr-[21px]'
-                    : 'pr-[12px] pl-[21px]',
+                    ? 'pl-12px pr-[21px]'
+                    : 'pr-12px pl-[21px]',
                 )}
                 onClick={setList}>
                 <ListViewSVG />
@@ -167,22 +155,22 @@ const ToolBar = ({
               <>
                 <button
                   className={clsx(
-                    'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] bg-mainColor1 w-fit text-textLight',
-                    contentFont.className,
+                    'flex gap-10px items-center h-fit px-32px py-10px rounded-[10px] bg-mainColor1 w-fit text-textLight',
+                    'font-content',
                   )}
                   onClick={() => handleAIClick()}>
                   <FileAddAiSVG />
-                  <p className="text-[18px] font-medium">{t('files.addAI')}</p>
+                  <p className="text-18px font-medium">{t('files.addAI')}</p>
                 </button>
 
                 <button
                   className={clsx(
-                    'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit text-textDark',
-                    contentFont.className,
+                    'flex gap-10px items-center h-fit px-32px py-10px rounded-[10px] border-[1px] border-solid border-blue1 w-fit text-textDark',
+                    'font-content',
                   )}
                   onClick={() => openModal('createSection')}>
                   <AddSVG />
-                  <p className="text-[18px] font-medium">
+                  <p className="text-18px font-medium">
                     {t('sections.create')}
                   </p>
                 </button>
@@ -191,8 +179,8 @@ const ToolBar = ({
             {path && (
               <button
                 className={clsx(
-                  'flex gap-[10px] items-center h-fit px-[12px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
-                  contentFont.className,
+                  'flex gap-10px items-center h-fit px-12px py-10px rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
+                  'font-content',
                 )}
                 onClick={() => openModal('createFolder')}>
                 <AddFolderSVG />
@@ -210,8 +198,8 @@ const ToolBar = ({
 
                 <button
                   className={clsx(
-                    'flex gap-[10px] items-center h-fit px-[12px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
-                    contentFont.className,
+                    'flex gap-10px items-center h-fit px-12px py-10px rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
+                    'font-content',
                   )}
                   onClick={() => openModal('uploadFiles')}>
                   <AddFileSVG />

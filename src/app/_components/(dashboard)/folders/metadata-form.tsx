@@ -159,7 +159,7 @@ export default function MetadataForm({ id, initialFields = [] }) {
         onClick={addField}
         variant="outline"
       />
-      <div className="flex gap-[8px]">
+      <div className="flex gap-8px">
         <Button
           text={t('general.cancel')}
           disabled={metadataMutation.isPending}

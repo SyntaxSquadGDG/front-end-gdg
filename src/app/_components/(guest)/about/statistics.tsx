@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { getTranslations } from 'next-intl/server';
 import React from 'react';
 import SquareInfo from '../common/square-info';
+import Transition from '@app/_components/transitions/transitions';
 
 const Statistics = async () => {
   const t = await getTranslations();
@@ -33,14 +34,15 @@ const Statistics = async () => {
           'relative z-[5px] container mx-auto flex items-center justify-center lg:flex-row flex-col text-textLight',
           'py-sectionPadding gap-sectionGap',
         )}>
-        {data.map((item) => {
+        {data.map((item, index) => {
           return (
-            <SquareInfo
-              key={item.description}
-              SVG={item.icon}
-              description={item.description}
-              head={item.head}
-            />
+            <Transition from="down" delay={index * 0.1} key={item.description}>
+              <SquareInfo
+                SVG={item.icon}
+                description={item.description}
+                head={item.head}
+              />
+            </Transition>
           );
         })}
       </div>

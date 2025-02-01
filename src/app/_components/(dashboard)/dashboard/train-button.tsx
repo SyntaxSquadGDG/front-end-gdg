@@ -5,21 +5,20 @@ import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 import { contentFont } from '@app/_utils/fonts';
 import { useModal } from '@app/_contexts/modal-provider';
+import Button from '../general/button';
 
 const TrainButton = () => {
   const t = useTranslations();
   const { openModal } = useModal();
 
   return (
-    <button
-      className={clsx(
-        'flex items-center justify-center gap-[10px] rounded-[16px] text-[14px] font-bold text-textLight py-[12px] px-[32px] bg-mainColor1',
-        contentFont.className,
-      )}
-      onClick={() => openModal('trainModal')}>
-      <SetupSVG />
-      <p>{t('dashboard.setupButton')}</p>
-    </button>
+    <Button
+      variant="fill"
+      onClick={() => openModal('trainModal')}
+      SVG={SetupSVG}
+      SVGFirst={true}
+      text={t('dashboard.setupButton')}
+    />
   );
 };
 

@@ -13,7 +13,7 @@ const FilesTable = ({ files, folderName, folderNameRequired = true }) => {
       <table
         className={clsx(
           'table-auto w-full min-w-[700px] border-collapse',
-          contentFont.className,
+          'font-content',
           'table',
         )}>
         <thead className="rounded-[32px]">

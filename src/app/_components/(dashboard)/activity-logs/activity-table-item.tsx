@@ -16,7 +16,7 @@ const ActivityTableItem = ({ activity }) => {
       </td>
       <td>{activity.action}</td>
       <td>
-        <div className="flex items-center gap-[18px] justify-center">
+        <div className="flex items-center gap-18px justify-center">
           <span>
             <FileIcon type={activity.type} />
             {/* {activity.type === 'section' && <SectionItemPermissionSVG />}

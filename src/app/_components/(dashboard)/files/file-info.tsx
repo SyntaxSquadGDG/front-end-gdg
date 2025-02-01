@@ -54,13 +54,13 @@ const FileInfo = ({ id, lockType }) => {
   });
 
   return (
-    <div className="flex flex-col gap-[24px]">
-      <div className="flex justify-between items-center flex-col md:flex-row gap-[24px] md:gap-[48px]">
-        <div className="flex-grow">
+    <div className="flex flex-col gap-24px">
+      <div className="flex justify-between items-start md:items-center flex-col md:flex-row gap-24px md:gap-48px">
+        <div className="flex-grow w-full">
           <HeadText bigSpace={false}>{t('files.documentId')}</HeadText>
           <Input readOnly={true} value={id} />
         </div>
-        <div className="flex-grow">
+        <div className="flex-grow w-full">
           <HeadText bigSpace={false}>{t('files.ocrLanguage')}</HeadText>
           <Input readOnly={true} value={'English'} />
         </div>
@@ -71,7 +71,8 @@ const FileInfo = ({ id, lockType }) => {
           text={t('files.lockButton')}
           onClick={() => openModal(`LockFile${id}`)}
           variant="fill"
-          expand={true}
+          className={'w-full md:w-fit md:px-40px'}
+          // expand={true}
           isPending={lockMutation.isPending}
         />
         <LockModal

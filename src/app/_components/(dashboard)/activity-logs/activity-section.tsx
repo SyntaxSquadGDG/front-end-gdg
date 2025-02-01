@@ -76,7 +76,7 @@ const ActivitySection = ({ type, id, fixed = true }) => {
   return (
     <div
       className={clsx(
-        'w-[100%] rounded-tl-[24px] rounded-br-[24px] shadow-activityLog p-[24px]',
+        'w-[100%] rounded-tl-[24px] rounded-br-[24px] shadow-activityLog p-24px',
         fixed && 'xl:fixed overflow-y-auto xl:w-[400px]',
         !fixed && 'w-[100%] xl:w-[400px]',
         direction === 'ltr'
@@ -85,20 +85,25 @@ const ActivitySection = ({ type, id, fixed = true }) => {
       )}
       // style={{ height: `${height}px` }}
     >
-      <div className="flex justify-between items-center mb-[24px]">
-        <p className={clsx(headFont.className, 'text-[22px] font-medium')}>
+      <div className="flex justify-between items-center mb-24px max-xs:flex-col gap-16px max-xs:justify-center">
+        <p
+          className={clsx(
+            'font-head',
+            'text-22px font-medium max-xs:text-center',
+          )}>
           {t('activity.activity')}
         </p>
         <Link
           href={hrefValue}
           className={clsx(
-            headFont.className,
-            'text-[14px] font-bold underline',
+            'font-head',
+            'text-14px font-bold underline',
+            'hover:opacity-70 duration-500',
           )}>
           {t('general.viewAll')}
         </Link>
       </div>
-      <div className="flex flex-col gap-[16px]">
+      <div className="flex flex-col gap-16px">
         <DataFetching
           data={data}
           emptyError={t('activity.errors.ACTIVITY_ZERO_ERROR')}

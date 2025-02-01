@@ -13,11 +13,11 @@ const SectionTable = ({ folders, sectionName }) => {
       <table
         className={clsx(
           'table-auto w-full min-w-[700px] border-collapse',
-          contentFont.className,
+          'font-content',
           'table',
         )}>
         <thead className="rounded-[32px]">
-          <tr className="font-semibold text-[20px] border-b-solid border-b-tableBorder ">
+          <tr className="font-semibold text-20px border-b-solid border-b-tableBorder ">
             <td>{t('folders.name')}</td>
             <td>{t('folders.section')}</td>
             <td>{t('folders.filesCount')}</td>

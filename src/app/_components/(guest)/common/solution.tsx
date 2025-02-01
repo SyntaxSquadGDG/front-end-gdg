@@ -12,8 +12,8 @@ const Solution = ({ text, src, SVG }) => {
       />
       <div
         className={clsx(
-          'relative z-[5] h-[150px] w-[calc(100%-50px)] ml-auto flex items-center justify-center pl-[32px] text-mainColor1 text-[30px] font-medium  text-center',
-          contentFont.className,
+          'relative z-[5] h-[150px] w-[calc(100%-50px)] ml-auto flex items-center justify-center pl-32px text-mainColor1 text-30px font-medium  text-center',
+          'font-content',
         )}>
         {text}
         <div className="w-[98px] h-[98px] rounded-full bg-mainColor1 flex items-center justify-center absolute right-[50%] translate-x-[50%] top-[-70px]">

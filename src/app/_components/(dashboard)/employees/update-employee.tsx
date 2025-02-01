@@ -58,7 +58,7 @@ const UpdateEmployee = ({ employee }) => {
     <div>
       <form onSubmit={handleSubmit(onSuccess, onError)} className="">
         <div className="w-[100%]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-[32px] gap-y-[32px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-32px gap-y-32px">
             <Input
               label={t('employees.firstNameLabel')}
               placeHolder={t('employees.firstNamePlaceholder')}

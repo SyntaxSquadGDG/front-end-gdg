@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const AiSVG = () => {
@@ -6,6 +7,7 @@ const AiSVG = () => {
       width="56"
       height="57"
       viewBox="0 0 56 57"
+      className="shrink-0"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_1478_910)">

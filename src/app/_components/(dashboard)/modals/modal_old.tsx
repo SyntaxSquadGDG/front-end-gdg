@@ -48,7 +48,7 @@ export default function Modal({
         'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50',
         className,
       )}>
-      <div className="bg-green-400 rounded-[16px] py-[36px] px-[50px] w-11/12 md:w-1/2 relative">
+      <div className="bg-green-400 rounded-[16px] py-36px px-[50px] w-11/12 md:w-1/2 relative">
         <div
           ref={modalRef}
           onClick={(e) => e.stopPropagation()}
@@ -57,7 +57,7 @@ export default function Modal({
           <button
             onClick={() => onClose()}
             className={clsx(
-              contentFont.className,
+              'font-content',
               'absolute right-[10px] top-[8px] w-[25px] h-[25px] rounded-full flex items-center justify-center font-bold text-textLight bg-mainColor1 z-50',
             )}>
             <CloseModalSVG />

@@ -53,16 +53,12 @@ const ChangePassword = () => {
 
   return (
     <div>
-      <h2
-        className={clsx(
-          contentFont.className,
-          'text-[22px] font-medium mb-[24px]',
-        )}>
+      <h2 className={clsx('font-content', 'text-22px font-medium mb-24px')}>
         {t('profile.changePassword.head')}
       </h2>
 
       <form onSubmit={handleSubmit(onSuccess, onError)}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-[32px] gap-y-[32px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-32px gap-y-32px">
           <Input
             label={t('profile.changePassword.currentLabel')}
             placeHolder={t('profile.changePassword.currentPlaceholder')}
@@ -80,9 +76,9 @@ const ChangePassword = () => {
             error={errors.new?.message}
           />
         </div>
-        <div className="flex items-start justify-start flex-col gap-[16px]">
+        <div className="flex items-start justify-start flex-col gap-16px">
           <Button
-            className={'w-[100%] lg:w-fit lg:px-[77px] lg:py-[14px] mt-[32px]'}
+            className={'w-[100%] lg:w-fit lg:px-[77px] lg:py-14px mt-32px'}
             text={t('profile.changePassword.updateButton')}
             isPending={mutation.isPending}
             isPendingText={t('general.updating')}

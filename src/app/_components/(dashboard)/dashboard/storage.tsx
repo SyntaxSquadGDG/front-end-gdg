@@ -34,14 +34,14 @@ const Storage = async () => {
   }
 
   return (
-    <div className="flex items-center justify-between gap-[32px] md:flex-row flex-col">
+    <div className="flex items-center justify-between gap-32px md:flex-row flex-col">
       <PieChartPage data={data} />
-      <div className="flex flex-col gap-[8px] text-[14px]">
-        <div className="flex items-center gap-[8px]">
+      <div className="flex flex-col gap-8px text-14px">
+        <div className="flex items-center gap-8px">
           <div className="w-[14px] h-[14px] bg-mainColorPie rounded-full" />
           <p>{t('dashboard.available')}</p>
         </div>
-        <div className="flex items-center gap-[8px]">
+        <div className="flex items-center gap-8px">
           <div className="w-[14px] h-[14px] bg-mainColor1 rounded-full" />
           <p>{t('dashboard.used')}</p>
         </div>

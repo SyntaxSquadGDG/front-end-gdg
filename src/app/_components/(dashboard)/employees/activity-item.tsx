@@ -4,8 +4,8 @@ import ItemIcon from '../general/item-icon';
 const ActivityItem = ({ item }) => {
   return (
     <tr key={`${item.type}${item.id}`}>
-      <td className="py-[16px]">
-        <div className="flex items-center gap-[18px] justify-center">
+      <td className="py-16px">
+        <div className="flex items-center gap-18px justify-center">
           <span>
             <ItemIcon type={item.type} />
           </span>

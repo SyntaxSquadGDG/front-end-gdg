@@ -38,9 +38,9 @@ const RenameModal = ({ modalName, head, onClick, isRenaming, error }) => {
     <Modal
       isOpen={modalStack.includes(modalName)}
       onClose={closeModal}
-      className={contentFont.className}>
-      <div className="flex flex-col gap-[24px] ">
-        <p className="text-[20px] font-medium">{head}</p>
+      className={'font-content'}>
+      <div className="flex flex-col gap-24px ">
+        <p className="text-20px font-medium">{head}</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Input
@@ -50,7 +50,7 @@ const RenameModal = ({ modalName, head, onClick, isRenaming, error }) => {
             error={errors.name?.message}
           />
 
-          <div className="flex items-center gap-[32px] mt-[32px] justify-end">
+          <div className="flex items-center gap-32px mt-32px justify-end">
             <Button
               onClick={(e) => {
                 e.preventDefault();

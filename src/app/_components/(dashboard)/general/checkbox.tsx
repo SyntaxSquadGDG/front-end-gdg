@@ -24,7 +24,11 @@ const Checkbox = ({
         onChange={alwaysTrue ? () => {} : (e) => onChange(e.target.checked)}
       />
       <div
-        className={clsx(contentFont.className, 'flex items-center gap-[16px]')}>
+        className={clsx(
+          'font-content',
+          'flex items-center gap-16px',
+          'hover:opacity-70 duration-500',
+        )}>
         <div
           className={clsx(
             'w-[18px] h-[18px] border-[2px] border-solid border-mainColor1 relative rounded-[2px]',
@@ -41,7 +45,7 @@ const Checkbox = ({
         </div>
         <label
           className={clsx(
-            'text-[16px] text-mainColor1',
+            'text-16px text-mainColor1',
             disabled && 'opacity-35',
             disabled ? 'cursor-not-allowed' : 'cursor-pointer',
           )}

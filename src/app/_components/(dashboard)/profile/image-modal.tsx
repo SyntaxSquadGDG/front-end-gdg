@@ -23,16 +23,16 @@ const ImageModal = ({
     <Modal
       isOpen={modalStack.includes('personalImage')}
       onClose={handleCancel}
-      className={clsx(contentFont.className)}>
-      <div className=" flex flex-col gap-[8px]">
-        <h3 className="text-tertiaryButton text-[20px] font-bold">
+      className={clsx('font-content')}>
+      <div className=" flex flex-col gap-8px">
+        <h3 className="text-tertiaryButton text-20px font-bold">
           {t('profile.image.new')}
         </h3>
         {image && (
           <img
             src={image}
             alt="Selected Preview"
-            className="w-[80px] h-[80px] md:w-[140px] md:h-[140px] object-cover rounded-full mt-[38px] mb-[50px] mx-auto cursor-pointer"
+            className="w-[80px] h-[80px] md:w-[140px] md:h-[140px] object-cover rounded-full mt-[38px] mb-[50px] mx-auto cursor-pointer hover:opacity-70 duration-500"
             onClick={() => {
               const newTab = window.open();
               if (newTab) {
@@ -46,14 +46,14 @@ const ImageModal = ({
           <button
             onClick={handleUpload}
             disabled={loading || !file}
-            className="cursor-pointer bg-[url('/images/service-background.png')] text-textNavBarPrimary text-[12px] px-4 py-2 rounded-md inline-block w-fit h-fit">
+            className="cursor-pointer bg-[url('/images/service-background.png')] text-textNavBarPrimary text-12px px-4 py-2 rounded-md inline-block w-fit h-fit hover:opacity-70 duration-500">
             {loading
               ? t('profile.image.uploading')
               : t('profile.image.confirm')}
           </button>
           <button
             onClick={handleCancel}
-            className="text-tertiaryButton text-[14px] p-[12px] rounded-md w-fit h-fit">
+            className="text-tertiaryButton text-14px p-12px rounded-md w-fit h-fit hover:opacity-70 duration-500">
             {t('general.cancel')}
           </button>
         </div>

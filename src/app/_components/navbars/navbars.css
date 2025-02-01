@@ -5,7 +5,7 @@
 
 .vertical-list li a p,
 .logoutButton p {
-  @apply hidden lg:flex;
+  /* @apply hidden lg:flex; */
 }
 
 .active-link {

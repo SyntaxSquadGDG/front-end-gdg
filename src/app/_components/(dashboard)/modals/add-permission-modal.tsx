@@ -125,12 +125,12 @@ const AddPermissionModal = ({ type, id }) => {
       isOpen={isOpen}
       onClose={onModalClose}
       innerClassName="w-[90vw]"
-      className={clsx(contentFont.className)}>
+      className={clsx('font-content')}>
       <div>
-        <h2 className="font-medium text-[20px] text-mainColor1">
+        <h2 className="font-medium text-20px text-mainColor1">
           {t('permissions.addPermissionHead')}
         </h2>
-        <div className="flex items-start justify-between mt-[16px] flex-col lg:flex-row gap-[32px]">
+        <div className="flex items-start justify-between mt-16px flex-col lg:flex-row gap-32px">
           <div className="w-[100%]">
             <DataFetching
               emptyError={t('structure.errors.STRUCTURE_ZERO_ERROR')}
@@ -147,7 +147,7 @@ const AddPermissionModal = ({ type, id }) => {
             {buttonView === 0 && selectedItem.id && selectedItem.type && (
               <Button
                 text={t('permissions.showPermissions')}
-                className="mt-[16px]"
+                className="mt-16px"
                 onClick={() => setButtonView(1)}
               />
             )}

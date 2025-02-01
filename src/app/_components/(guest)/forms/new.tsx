@@ -77,26 +77,26 @@ const New = () => {
     <FormSection>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex lg:flex-row flex-col w-[100%] items-center gap-[48px]">
+        className="flex lg:flex-row flex-col w-[100%] items-center gap-48px">
         <div className="flex items-center justify-center w-[100%]">
           <img src="/images/guest/forms/new-password.png" alt="" />
         </div>
         <div className="w-[100%]">
           <h2
             className={clsx(
-              contentFont.className,
-              'text-[30px] font-bold linearGuestText2 mb-[32px]',
+              'font-content',
+              'text-30px font-bold linearGuestText2 mb-32px',
             )}>
             {t('forms.new.head')}
           </h2>
           <p
             className={clsx(
-              contentFont.className,
-              'text-[16px] font-medium text-textLight mt-[16px] mb-[32px]',
+              'font-content',
+              'text-16px font-medium text-textLight mt-16px mb-32px',
             )}>
             {t('forms.new.description')}
           </p>
-          <div className="flex flex-col gap-[24px]">
+          <div className="flex flex-col gap-24px">
             <Input
               SVG={PasswordSVG}
               label={t('forms.new.newLabel')}
@@ -117,7 +117,7 @@ const New = () => {
             />
           </div>
           <GuestButton
-            className={'w-[100%] mt-[40px] mb-[32px]'}
+            className={'w-[100%] mt-40px mb-32px'}
             disabled={mutation.isPending}>
             {mutation.isPending
               ? t('general.confirming')

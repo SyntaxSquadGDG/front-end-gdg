@@ -8,6 +8,7 @@ import AiSVG from '@app/_components/svgs/guest/ai';
 import DocumentsSVG from '@app/_components/svgs/guest/documents';
 import OverlaySection from '../common/overlay-section';
 import ImageDiv from '../common/image';
+import Transition from '@app/_components/transitions/transitions';
 
 const Different = async () => {
   const t = await getTranslations();
@@ -38,31 +39,38 @@ const Different = async () => {
           'relative z-[5px] container mx-auto flex items-center justify-center lg:flex-row flex-col text-textLight',
           'py-sectionPadding minHeightSection gap-sectionGap',
         )}>
-        <ImageDiv src={'/images/guest/about/light.png'} direction="middle" />
+        <Transition from="left" className="w-full">
+          <ImageDiv
+            src={'/images/guest/about/light.png'}
+            alt="Different"
+            direction="middle"
+          />
+        </Transition>
         <div className="w-[100%]">
-          <h2
-            className={clsx(
-              headFont.className,
-              'text-[36px] font-semibold linearGuestText2',
-            )}>
-            {t('about.different.head')}
-          </h2>
-          <p
-            className={clsx(
-              contentFont.className,
-              'mb-[32px] mt-[24px] text-[18px]',
-            )}>
-            {t('about.different.description')}
-          </p>
-          <div className="flex flex-col gap-[32px]">
-            {data.map((item) => {
+          <Transition from={'right'}>
+            <h2
+              className={clsx(
+                'font-head',
+                'text-36px font-semibold linearGuestText2',
+              )}>
+              {t('about.different.head')}
+            </h2>
+          </Transition>
+          <Transition from="right" delay={0.1}>
+            <p className={clsx('font-content', 'mb-32px mt-24px text-18px')}>
+              {t('about.different.description')}
+            </p>
+          </Transition>
+          <div className="flex flex-col gap-32px">
+            {data.map((item, index) => {
               return (
-                <RectangleInfo
-                  description={item.description}
-                  head={item.head}
-                  key={item.head}>
-                  <item.icon />
-                </RectangleInfo>
+                <Transition key={item.head} from={'right'} delay={index * 0.1}>
+                  <RectangleInfo
+                    description={item.description}
+                    head={item.head}>
+                    <item.icon />
+                  </RectangleInfo>
+                </Transition>
               );
             })}
           </div>

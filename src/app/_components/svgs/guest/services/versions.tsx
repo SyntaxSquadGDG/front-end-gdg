@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const VersionsSVG = () => {
@@ -5,6 +6,7 @@ const VersionsSVG = () => {
     <svg
       width="110"
       height="110"
+      className="shrink-0"
       viewBox="0 0 110 110"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">

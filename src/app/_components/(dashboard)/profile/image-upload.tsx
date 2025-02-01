@@ -104,13 +104,13 @@ export default function ImageUpload({ initialImageUrl }: ImageUploadProps) {
 
   return (
     <div className="image-upload">
-      <div className="flex items-center gap-[24px]">
+      <div className="flex items-center gap-24px">
         <div className="image-preview w-[80px] h-[80px] overflow-hidden rounded-full flex-shrink-0">
           {image ? (
             <img
               src={image}
               alt="Profile Preview"
-              className="w-[80px] h-[80px] object-cover rounded-full cursor-pointer"
+              className="w-[80px] h-[80px] object-cover rounded-full cursor-pointer hover:opacity-70 duration-500"
               onClick={() => {
                 const newTab = window.open();
                 if (newTab) {
@@ -123,11 +123,11 @@ export default function ImageUpload({ initialImageUrl }: ImageUploadProps) {
           )}
         </div>
 
-        <div className="flex gap-[8px] items-center flex-wrap">
+        <div className="flex gap-8px items-center flex-wrap">
           <label
             htmlFor="fileInput"
             className={clsx(
-              'cursor-pointer px-[14px] py-[12px] bg-mainColor1 rounded-[8px] text-[12px] text-textLight',
+              'cursor-pointer px-14px py-12px bg-mainColor1 rounded-[8px] text-12px text-textLight hover:opacity-70 duration-500',
               (updateImage.isPending || deleteImage.isPending) &&
                 'opacity-50 cursor-default',
             )}>
@@ -149,7 +149,7 @@ export default function ImageUpload({ initialImageUrl }: ImageUploadProps) {
           <button
             onClick={handleDelete}
             disabled={deleteImage.isPending || updateImage.isPending || !image}
-            className="text-tertiaryButton text-[14px] p-[12px] rounded-md w-fit h-fit">
+            className="text-tertiaryButton text-14px p-12px rounded-md w-fit h-fit hover:opacity-70 duration-500">
             {deleteImage.isPending
               ? t('profile.image.deleting')
               : t('profile.image.delete')}

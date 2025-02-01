@@ -1,3 +1,4 @@
+import Transition from '@app/_components/transitions/transitions';
 import { contentFont } from '@app/_utils/fonts';
 import clsx from 'clsx';
 import { getTranslations } from 'next-intl/server';
@@ -21,19 +22,21 @@ const PlansInclude = async () => {
     <section className={clsx('relative py-sectionPadding')}>
       <div
         className={clsx(
-          'container text-textLight flex flex-col gap-[40px]',
-          contentFont.className,
+          'container text-textLight flex flex-col gap-40px',
+          'font-content',
         )}>
-        <h2 className="text-[40px] font-semibold">
-          {t('pricing.include.head')}
-        </h2>
-        <div className="w-[100%] bg-goldLinear h-[1px]" />
-        <ul className="list-disc grid grid-cols-2 gap-y-[40px] gap-x-[40px] pl-[20px]">
+        <Transition from="left">
+          <h2 className="text-40px font-semibold">
+            {t('pricing.include.head')}
+          </h2>
+          <div className="w-[100%] bg-goldLinear h-[1px]" />
+        </Transition>
+        <ul className="list-disc grid grid-cols-1 md:grid-cols-2 gap-y-40px gap-x-40px pl-20px">
           {data.map((item, index) => {
             return (
-              <li key={index} className="text-[20px] font-medium">
-                {item}
-              </li>
+              <Transition key={index} from="down" delay={index * 0.1}>
+                <li className="text-20px font-medium">{item}</li>
+              </Transition>
             );
           })}
         </ul>

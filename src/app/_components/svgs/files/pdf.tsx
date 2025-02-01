@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const PdfSVG = () => {
@@ -6,6 +7,7 @@ const PdfSVG = () => {
       width="95"
       height="95"
       viewBox="0 0 95 95"
+      className="shrink-0"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <path

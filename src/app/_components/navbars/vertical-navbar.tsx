@@ -21,6 +21,7 @@ import HelpSVG from '../svgs/navbars/help';
 import PlansSVG from '../svgs/navbars/plans';
 import Link from 'next/link';
 import useNavbar from './hooks/use-navbar';
+import Logout from './logout';
 
 const VerticalNavbar = () => {
   const t = useTranslations();
@@ -28,22 +29,8 @@ const VerticalNavbar = () => {
   const direction = getLangDir(locale);
   const fullPathname = usePathname();
   const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
-  const router = useRouter();
-  const [isPending, setIsPending] = useState(false);
 
   const data = useNavbar();
-
-  async function handleLogout() {
-    try {
-      setIsPending(true);
-      deleteCookie('token');
-      await revalidatePathAction('/login');
-      router.push('/login');
-    } catch (e) {
-    } finally {
-      setIsPending(false);
-    }
-  }
 
   return (
     <nav
@@ -51,7 +38,7 @@ const VerticalNavbar = () => {
         direction === 'ltr'
           ? 'left-0 rounded-tr-navsRadius rounded-br-navsRadius'
           : 'right-0 rounded-tl-navsRadius rounded-bl-navsRadius',
-        'h-screen w-verticalNavSmallWidth lg:w-verticalNavWidth bg-mainDashboardLinear fixed top-0 text-[16px] font-medium',
+        'h-screen w-verticalNavSmallWidth lg:w-verticalNavWidth bg-mainDashboardLinear fixed top-0 text-16px font-medium',
       )}>
       <OverlayImage
         url="/images/navbar/background.png"
@@ -65,11 +52,15 @@ const VerticalNavbar = () => {
       <div
         className={clsx(
           'w-[100%] h-[100%] text-textLight relative z-[5] flex flex-col justify-between',
-          headFont.className,
+          'font-head',
         )}>
-        <div className="px-[32px]">
-          <p className="my-[32px] h-[40px]">LOGO</p>
-          <ul className="vertical-list flex flex-col gap-[32px] overflow-auto h-[calc(100vh-40px-300px)]">
+        <div className="px-32px">
+          <p className="my-32px h-[40px]">
+            <Link href={'/dashboard'} className="lg:text-16px text-12px">
+              {t('logo')}
+            </Link>
+          </p>
+          <ul className="vertical-list flex flex-col gap-32px overflow-auto h-[calc(100vh-40px-300px)] items-center lg:items-start">
             {data.map((item) => {
               return (
                 <VerticalNavbarItem
@@ -84,9 +75,9 @@ const VerticalNavbar = () => {
           </ul>
         </div>
 
-        <div className="px-[32px]">
-          <div className="flex flex-col gap-[24px] my-[48px]">
-            <ul className="vertical-list flex flex-col gap-[32px] overflow-auto">
+        <div className="px-32px">
+          <div className="flex flex-col gap-24px my-48px">
+            <ul className="vertical-list flex flex-col gap-32px overflow-auto">
               <VerticalNavbarItem
                 path={'/help'}
                 pathName={pathName}
@@ -95,13 +86,7 @@ const VerticalNavbar = () => {
               />
             </ul>
 
-            <button
-              className="logoutButton"
-              onClick={() => handleLogout()}
-              disabled={isPending}>
-              <LogoutSVG />
-              <p>{isPending ? t('navbar.loggingOut') : t('navbar.logout')} </p>
-            </button>
+            <Logout />
           </div>
         </div>
       </div>

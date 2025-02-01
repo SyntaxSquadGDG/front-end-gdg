@@ -58,17 +58,17 @@ const FileAIResults = ({ file, data, setFile, setFileData }) => {
   }
 
   return (
-    <div className={clsx(contentFont.className)}>
-      <div className="flex justify-between items-center mb-[48px]">
-        <p className="text-[22px] font-medium">New Files (With AI)</p>
-        <div className="flex gap-[16px] items-center">
+    <div className={clsx('font-content')}>
+      <div className="flex justify-between items-center mb-48px">
+        <p className="text-22px font-medium">New Files (With AI)</p>
+        <div className="flex gap-16px items-center">
           <button
-            className="px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1"
+            className="px-32px py-10px rounded-[10px] border-[1px] border-solid border-blue1"
             onClick={() => handleConfirm()}>
             Confirm
           </button>
           <button
-            className="px-[32px] py-[10px] rounded-[10px] bg-red-600 text-white"
+            className="px-32px py-10px rounded-[10px] bg-red-600 text-white"
             onClick={() => closeModal()}>
             Cancel
           </button>
@@ -78,7 +78,7 @@ const FileAIResults = ({ file, data, setFile, setFileData }) => {
         <table
           className={clsx(
             'table-auto w-full min-w-[700px] border-collapse',
-            contentFont.className,
+            'font-content',
             'table',
           )}>
           <thead className="rounded-[32px]">
@@ -91,7 +91,7 @@ const FileAIResults = ({ file, data, setFile, setFileData }) => {
             </tr>
           </thead>
           <tbody className="">
-            <tr className="py-[40px] font-medium text-[18px] rounded-[32px]">
+            <tr className="py-40px font-medium text-18px rounded-[32px]">
               <td>
                 <div className="flex items-center justify-center">
                   <AccuracyLevel accuracy={data.accuracy || 0} />

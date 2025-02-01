@@ -25,14 +25,14 @@ const Page = () => {
     },
   ];
   return (
-    // <div className={clsx(contentFont.className)}>
-    //   <div className="flex justify-between items-center mb-[48px]">
-    //     <p className="text-[22px] font-medium">New Files (With AI)</p>
-    //     <div className="flex gap-[16px] items-center">
-    //       <button className="px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1">
+    // <div className={clsx('font-content')}>
+    //   <div className="flex justify-between items-center mb-48px">
+    //     <p className="text-22px font-medium">New Files (With AI)</p>
+    //     <div className="flex gap-16px items-center">
+    //       <button className="px-32px py-10px rounded-[10px] border-[1px] border-solid border-blue1">
     //         Confirm
     //       </button>
-    //       <button className="px-[32px] py-[10px] rounded-[10px] bg-red-600 text-white">
+    //       <button className="px-32px py-10px rounded-[10px] bg-red-600 text-white">
     //         Cancel
     //       </button>
     //     </div>
@@ -41,7 +41,7 @@ const Page = () => {
     //     <table
     //       className={clsx(
     //         'table-auto w-full min-w-[700px] border-collapse',
-    //         contentFont.className,
+    //         'font-content',
     //         'table',
     //       )}>
     //       <thead className="rounded-[32px]">
@@ -58,7 +58,7 @@ const Page = () => {
     //           return (
     //             <tr
     //               key={file.id}
-    //               className="py-[40px] font-medium text-[18px] rounded-[32px]">
+    //               className="py-40px font-medium text-18px rounded-[32px]">
     //               <td>
     //                 <div className="flex items-center justify-center">
     //                   <AccuracyLevel accuracy={file.accuracy} />
@@ -75,7 +75,7 @@ const Page = () => {
     //     </table>
     //   </div>
     // </div>
-    <div className={clsx(contentFont.className)}>
+    <div className={clsx('font-content')}>
       <p>FONT1</p>
       <p className="font-regular">FONT1</p>
       <p className="font-[400]">FONT1</p>

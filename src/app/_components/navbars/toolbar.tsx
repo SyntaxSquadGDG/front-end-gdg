@@ -33,6 +33,7 @@ import ShowVersionsModal from '../(dashboard)/files/show-versions-modal';
 import UploadNewVersionModal from '../(dashboard)/files/upload-new-version-modal';
 import MoveModal from '../(dashboard)/modals/move-modal';
 import RenameModal from '../(dashboard)/modals/rename-modal';
+import useClickOutside from '@app/_hooks/useclickoutside';
 
 const ToolBar = ({
   views,
@@ -47,7 +48,7 @@ const ToolBar = ({
   const locale = useLocale();
   const direction = getLangDir(locale);
   const { modalStack, openModal, closeModal } = useModal();
-  const activeView = 'px-[28px] py-[12px] rounded-[32px] bg-goldLinear';
+  const activeView = 'px-28px py-12px rounded-[32px] bg-goldLinear';
   const reversedPath = path ? [...path].reverse() : null;
   const fullPathname = usePathname();
   const pathName = `/${fullPathname.split('/').slice(2).join('/')}`;
@@ -150,54 +151,66 @@ const ToolBar = ({
     closeModal();
   }
 
+  const [isDropdownActionOpen, setIsDropdownActionOpen] = useState(false);
+  const [isDropdownPathOpen, setIsDropdownPathOpen] = useState(false);
+
+  const dropDownActionRef = useRef();
+  const dropDownPathRef = useRef();
+
+  const toggleDropdownAction = () => {
+    setIsDropdownActionOpen((old) => !old);
+  };
+  const toggleDropdownPath = () => {
+    setIsDropdownPathOpen((old) => !old);
+  };
+
+  useClickOutside(dropDownActionRef, () => setIsDropdownActionOpen(false));
+  useClickOutside(dropDownPathRef, () => setIsDropdownPathOpen(false));
+
   return (
     <>
       <div
-        style={{ height: height ? `${height}px` : 'auto' }}
-        className="mt-[-24px] mb-[4px] z-[-1]"
+        style={{ height: height ? `${height + 4}px` : 'auto' }}
+        className=""
       />
       <div
         ref={ref}
         className={clsx(
-          'flex items-center justify-between gap-[48px] bg-white flex-wrap',
-          'fixed top-[var(--horizontalNavHeight)] py-[32px] w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] z-[9999999] lg:left-[var(--verticalNavWidth)] left-[var(--verticalNavSmallWidth)] px-[32px]',
+          'flex items-center justify-between gap-48px bg-whiteBackground flex-wrap',
+          'fixed top-[var(--horizontalNavHeight)] pt-16px pb-32px w-[calc(100%-var(--verticalNavSmallWidth))] lg:w-[calc(100%-var(--verticalNavWidth))] z-[9999999] lg:left-[var(--verticalNavWidth)] left-[var(--verticalNavSmallWidth)] px-32px',
         )}>
         {/* Sections Text */}
-        <div className="flex gap-[16px] items-center flex-wrap">
+        <div className="flex gap-16px items-center flex-wrap">
           {pathName === '/sections' && (
             <Link
               href="/sections"
-              className={clsx(
-                contentFont.className,
-                'text-[26px] font-medium',
-              )}>
+              className={clsx('font-content', 'text-26px font-medium')}>
               {t('sections.sections')}
             </Link>
           )}
           {pathName === '/folders' && (
             <Link
               href="/folders"
-              className={clsx(
-                contentFont.className,
-                'text-[26px] font-medium',
-              )}>
+              className={clsx('font-content', 'text-26px font-medium')}>
               {t('folders.folders')}
             </Link>
           )}
           {pathName === '/files' && (
             <Link
               href="/files"
-              className={clsx(
-                contentFont.className,
-                'text-[26px] font-medium',
-              )}>
+              className={clsx('font-content', 'text-26px font-medium')}>
               {t('files.files')}
             </Link>
           )}
 
           {reversedPath &&
             reversedPath.map((item, index) => (
-              <React.Fragment key={`${item.type}${item.id}`}>
+              <div
+                key={`${item.type}${item.id}`}
+                className={clsx(
+                  reversedPath?.length > 1 ? 'hidden lg:flex' : 'flex',
+                  'gap-16px items-center',
+                )}>
                 <Link
                   href={
                     item.type === 'folder'
@@ -207,14 +220,54 @@ const ToolBar = ({
                       : `/sections/${item.id}`
                   }
                   className={clsx(
-                    contentFont.className,
-                    'text-[26px] font-medium',
+                    'font-content',
+                    'text-26px font-medium',
+                    'hover:opacity-70 duration-500',
                   )}>
                   {item.name}
                 </Link>
-                {index !== reversedPath.length - 1 && <PathArrowSVG />}
-              </React.Fragment>
+                {index !== reversedPath?.length - 1 && <PathArrowSVG />}
+              </div>
             ))}
+
+          <button
+            onClick={toggleDropdownPath}
+            className={clsx(
+              reversedPath?.length > 1
+                ? 'lg:hidden text-26px font-medium focus:outline-none'
+                : 'hidden',
+            )}>
+            &#8230; {/* Unicode for three dots */}
+          </button>
+          {isDropdownPathOpen && (
+            <div
+              className="lg:hidden absolute top-full left-0 bg-white shadow-lg rounded-lg mt-2 z-50"
+              ref={dropDownPathRef}>
+              <ul className="flex flex-col gap-2 p-4">
+                {reversedPath.map((item, index) => (
+                  <React.Fragment key={`${item.type}${item.id}`}>
+                    <Link
+                      href={
+                        item.type === 'folder'
+                          ? `/folders/${item.id}`
+                          : item.type === 'file'
+                          ? `/files/${item.id}`
+                          : `/sections/${item.id}`
+                      }
+                      className={clsx(
+                        'font-content',
+                        'text-26px font-medium',
+                        'hover:opacity-70 duration-500',
+                      )}>
+                      {item.name}
+                    </Link>
+                    {index !== reversedPath?.length - 1 && <PathArrowSVG />}
+                  </React.Fragment>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {reversedPath && (
             <>
               {type === 'section' && <SectionSettings id={id} />}
@@ -226,7 +279,7 @@ const ToolBar = ({
           {pathRequired && !path && <h2>Error While fetching path</h2>}
         </div>
         {views && (
-          <div className="flex gap-[16px] items-center flex-wrap">
+          <div className="flex gap-16px items-center flex-wrap">
             {/* VIEWS AND CREATION */}
             {/* VIEWS */}
             <div className="rounded-[32px] flex items-center border-[1px] border-solid border-blue1 w-fit">
@@ -235,8 +288,8 @@ const ToolBar = ({
                   view === 'grid'
                     ? activeView
                     : direction === 'ltr'
-                    ? 'pr-[12px] pl-[21px]'
-                    : 'pl-[12px] pr-[21px]',
+                    ? 'pr-12px pl-[21px]'
+                    : 'pl-12px pr-[21px]',
                 )}
                 onClick={setGrid}>
                 <GridViewSVG />
@@ -246,8 +299,8 @@ const ToolBar = ({
                   view === 'list'
                     ? activeView
                     : direction === 'ltr'
-                    ? 'pl-[12px] pr-[21px]'
-                    : 'pr-[12px] pl-[21px]',
+                    ? 'pl-12px pr-[21px]'
+                    : 'pr-12px pl-[21px]',
                 )}
                 onClick={setList}>
                 <ListViewSVG />
@@ -255,61 +308,154 @@ const ToolBar = ({
             </div>
 
             {/* CREATION */}
+            <div className="hidden lg:flex items-center gap-16px">
+              {!viewOnly && (
+                <>
+                  <button
+                    className={clsx(
+                      'flex gap-10px items-center h-fit px-32px py-10px rounded-[10px] bg-mainColor1 w-fit text-textLight',
+                      'font-content',
+                    )}
+                    onClick={() => handleAIClick()}>
+                    <FileAddAiSVG />
+                    <p className="text-18px font-medium">{t('files.addAI')}</p>
+                  </button>
 
-            {!viewOnly && (
-              <>
+                  <button
+                    className={clsx(
+                      'flex gap-10px items-center h-fit px-32px py-10px rounded-[10px] border-[1px] border-solid border-blue1 w-fit text-textDark',
+                      'font-content',
+                    )}
+                    onClick={() => openModal('createSection')}>
+                    <AddSVG />
+                    <p className="text-18px font-medium">
+                      {t('sections.create')}
+                    </p>
+                  </button>
+                </>
+              )}
+              {path && (
                 <button
                   className={clsx(
-                    'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] bg-mainColor1 w-fit text-textLight',
-                    contentFont.className,
+                    'flex gap-10px items-center h-fit px-12px py-10px rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
+                    'font-content',
                   )}
-                  onClick={() => handleAIClick()}>
-                  <FileAddAiSVG />
-                  <p className="text-[18px] font-medium">{t('files.addAI')}</p>
+                  onClick={() => openModal('createFolder')}>
+                  <AddFolderSVG />
                 </button>
+              )}
+              {path && addFiles && (
+                <>
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleFileChange}
+                    className="hidden"
+                    ref={inputRef}
+                  />
 
-                <button
-                  className={clsx(
-                    'flex gap-[10px] items-center h-fit px-[32px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit text-textDark',
-                    contentFont.className,
-                  )}
-                  onClick={() => openModal('createSection')}>
-                  <AddSVG />
-                  <p className="text-[18px] font-medium">
-                    {t('sections.create')}
-                  </p>
-                </button>
-              </>
-            )}
-            {path && (
-              <button
-                className={clsx(
-                  'flex gap-[10px] items-center h-fit px-[12px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
-                  contentFont.className,
-                )}
-                onClick={() => openModal('createFolder')}>
-                <AddFolderSVG />
-              </button>
-            )}
-            {path && addFiles && (
-              <>
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleFileChange}
-                  className="hidden"
-                  ref={inputRef}
-                />
+                  <button
+                    className={clsx(
+                      'flex gap-10px items-center h-fit px-12px py-10px rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
+                      'font-content',
+                    )}
+                    onClick={() => openModal('uploadFiles')}>
+                    <AddFileSVG />
+                  </button>
+                </>
+              )}
+            </div>
 
-                <button
-                  className={clsx(
-                    'flex gap-[10px] items-center h-fit px-[12px] py-[10px] rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
-                    contentFont.className,
+            {/* Three dots button (visible on small screens) */}
+            <button
+              onClick={toggleDropdownAction}
+              className="lg:hidden text-26px font-medium focus:outline-none">
+              &#8230; {/* Unicode for three dots */}
+            </button>
+
+            {/* Dropdown menu (visible on small screens when clicked) */}
+            {isDropdownActionOpen && (
+              <div
+                className="lg:hidden absolute top-full right-0 w-full bg-white shadow-lg rounded-lg mt-2 z-50"
+                ref={dropDownActionRef}>
+                {/* Navigation items */}
+                <ul className="gap-16px flex flex-col px-32px py-16px">
+                  {/* Buttons */}
+                  {!viewOnly && (
+                    <>
+                      <li>
+                        <button
+                          className={clsx(
+                            'flex gap-10px items-center h-fit px-32px py-10px rounded-[10px] bg-mainColor1 w-fit text-textLight',
+                            'font-content',
+                          )}
+                          onClick={() => {
+                            handleAIClick();
+                            toggleDropdown(); // Close dropdown after click
+                          }}>
+                          <FileAddAiSVG />
+                          <p className="text-18px font-medium">
+                            {t('files.addAI')}
+                          </p>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className={clsx(
+                            'flex gap-10px items-center h-fit px-32px py-10px rounded-[10px] border-[1px] border-solid border-blue1 w-fit text-textDark',
+                            'font-content',
+                          )}
+                          onClick={() => {
+                            openModal('createSection');
+                            toggleDropdown(); // Close dropdown after click
+                          }}>
+                          <AddSVG />
+                          <p className="text-18px font-medium">
+                            {t('sections.create')}
+                          </p>
+                        </button>
+                      </li>
+                    </>
                   )}
-                  onClick={() => openModal('uploadFiles')}>
-                  <AddFileSVG />
-                </button>
-              </>
+                  {path && (
+                    <li>
+                      <button
+                        className={clsx(
+                          'flex gap-10px items-center h-fit px-12px py-10px rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
+                          'font-content',
+                        )}
+                        onClick={() => {
+                          openModal('createFolder');
+                          toggleDropdown(); // Close dropdown after click
+                        }}>
+                        <AddFolderSVG />
+                      </button>
+                    </li>
+                  )}
+                  {path && addFiles && (
+                    <li>
+                      <input
+                        type="file"
+                        multiple
+                        onChange={handleFileChange}
+                        className="hidden"
+                        ref={inputRef}
+                      />
+                      <button
+                        className={clsx(
+                          'flex gap-10px items-center h-fit px-12px py-10px rounded-[10px] border-[1px] border-solid border-blue1 w-fit',
+                          'font-content',
+                        )}
+                        onClick={() => {
+                          openModal('uploadFiles');
+                          toggleDropdown(); // Close dropdown after click
+                        }}>
+                        <AddFileSVG />
+                      </button>
+                    </li>
+                  )}
+                </ul>
+              </div>
             )}
           </div>
         )}
@@ -357,79 +503,6 @@ const ToolBar = ({
             setFilesData={setFilesData}
           />
         </Modal>
-
-        {/*
-        SECTION MODALS
-        */}
-        {/* <>
-          <DeleteModal
-            head={t('sections.deleteDescription')}
-            modalName={`deleteSectionModal${id}`}
-            onClick={() => {
-              handleDeleteSection();
-            }}
-            isDeleting={isDeletingSection}
-          />
-          <RenameModal
-            head={t('modals.rename')}
-            modalName={`renameSectionModal${id}`}
-            isRenaming={isRenamingSection}
-            onClick={() => {}}
-          />
-        </>
-        <>
-          <DeleteModal
-            head={t('folders.deleteDescription')}
-            modalName={`deleteFolderModal${id}`}
-            isDeleting={isDeletingFolder}
-            onClick={handleDeleteFolder}
-          />
-          <RenameModal
-            head={t('modals.rename')}
-            modalName={`renameFolderModal${id}`}
-            isRenaming={isRenamingFolder}
-            onClick={() => {}}
-          />
-        </>
-
-        <>
-          <DeleteModal
-            head={t('files.deleteDescription')}
-            isDeleting={isDeletingFile}
-            modalName={`deleteFileModal${id}`}
-            onClick={handleDeleteFile}
-          />
-          <RenameModal
-            head={t('modals.rename')}
-            modalName={`renameFileModal${id}`}
-            isRenaming={isRenamingFile}
-            onClick={(data) => console.log(data)}
-          />
-
-          <ShowVersionsModal fileId={id} />
-
-          <UploadNewVersionModal
-            file={newFile}
-            setFile={setNewFile}
-            id={id}
-            handleClose={handleCloseNewFileUpload}
-          />
-        </>
-        <>
-          <MoveModal
-            move={true}
-            type={type}
-            id={id}
-            itemName={path.slice(-1)[0]}
-          />
-          <MoveModal
-            move={false}
-            type={type}
-            id={id}
-            itemName={path.slice(-1)[0]}
-          />
-        </>
-        {<ItemPermissionsEditModal type={type} id={id} />} */}
       </div>
     </>
   );

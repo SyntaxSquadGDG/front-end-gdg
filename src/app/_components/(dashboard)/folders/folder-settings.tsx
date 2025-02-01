@@ -52,7 +52,9 @@ const FolderSettings = ({ id }) => {
 
   return (
     <div className="relative">
-      <button onClick={() => handleSettingsClick()}>
+      <button
+        onClick={() => handleSettingsClick()}
+        className="flex items-center">
         <SettingsSVG />
       </button>
 

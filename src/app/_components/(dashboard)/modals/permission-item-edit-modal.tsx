@@ -12,7 +12,7 @@ const PermissionItemEditModal = ({ children, type, id, itemType, itemId }) => {
       )}
       onClose={closeModal}
       innerClassName="w-[800px]"
-      className={contentFont.className}>
+      className={'font-content'}>
       {children}
     </Modal>
   );

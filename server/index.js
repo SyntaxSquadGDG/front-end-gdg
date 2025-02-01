@@ -17,18 +17,18 @@ const jwt = require('jsonwebtoken');
 dotenv.config();
 connectDB();
 
-let shouldFail = true; // Flag to toggle between success and failure
+// let shouldFail = true; // Flag to toggle between success and failure
 
 const toggleRequestMiddleware = (req, res, next) => {
-  console.log(shouldFail);
-  if (shouldFail) {
-    shouldFail = false; // Set flag to false after failing
-    return res
-      .status(500)
-      .json({ message: 'Request failed for testing purposes.' });
-  }
+  // console.log(shouldFail);
+  // if (shouldFail) {
+  //   shouldFail = false; // Set flag to false after failing
+  //   return res
+  //     .status(500)
+  //     .json({ message: 'Request failed for testing purposes.' });
+  // }
 
-  shouldFail = true; // Set flag to true for next failure
+  // shouldFail = true; // Set flag to true for next failure
   next(); // Proceed to the next middleware or route handler
 };
 
@@ -857,3 +857,4 @@ app.get('/api/online', async (req, res) => {
 app.get('/api/section', async (req, res) => {
   return res.status(200).json([0, 1]);
 });
+

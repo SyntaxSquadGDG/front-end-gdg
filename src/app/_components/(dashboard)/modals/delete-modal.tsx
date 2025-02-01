@@ -26,10 +26,10 @@ const DeleteModal = ({
     <Modal
       isOpen={modalStack.includes(modalName)}
       onClose={handleClose}
-      className={contentFont.className}>
-      <div className="flex flex-col gap-[24px] text-center items-center">
-        <p className="text-[20px] font-medium">{head}</p>
-        <div className="flex items-center gap-[32px]">
+      className={'font-content'}>
+      <div className="flex flex-col gap-24px text-center items-center">
+        <p className="text-20px font-medium">{head}</p>
+        <div className="flex items-center gap-32px">
           <Button
             onClick={() => closeModal()}
             text={t('general.cancel')}
@@ -45,7 +45,7 @@ const DeleteModal = ({
           />
         </div>
         {error && (
-          <p className="text-[16px] font-medium text-red-500">* {error}</p>
+          <p className="text-16px font-medium text-red-500">* {error}</p>
         )}
       </div>
     </Modal>

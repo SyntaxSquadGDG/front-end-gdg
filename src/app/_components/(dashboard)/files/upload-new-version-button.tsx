@@ -24,6 +24,7 @@ const UploadNewVersionButton = ({ id }) => {
         text={t('files.uploadNewVersion')}
         onClick={() => openModal(`uploadNewFile${id}Version`)}
         variant="outline"
+        className={'w-full md:w-fit'}
       />
 
       <UploadNewVersionModal

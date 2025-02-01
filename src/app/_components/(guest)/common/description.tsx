@@ -6,10 +6,10 @@ const DescriptionText = ({ children, size = 28 }) => {
   return (
     <p
       className={clsx(
-        contentFont.className,
-        'text-textLight mt-[32px] mb-[56px]',
-      )}
-      style={{ fontSize: size }}>
+        'font-content',
+        'text-textLight mt-32px mb-56px',
+        `text-${size}px`,
+      )}>
       {children}
     </p>
   );

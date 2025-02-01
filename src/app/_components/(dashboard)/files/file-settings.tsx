@@ -51,7 +51,7 @@ const FileSettings = ({ id }) => {
   );
 
   return (
-    <div className="relative flex justify-end">
+    <div className="relative flex justify-end items-center">
       <button onClick={handleSettingsClick}>
         <SettingsSVG />
       </button>

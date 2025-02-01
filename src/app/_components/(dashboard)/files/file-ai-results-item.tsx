@@ -60,7 +60,7 @@ const FileAiResultsItem = ({
 
   return (
     <>
-      <tr className="py-[40px] font-medium text-[18px] rounded-[32px]">
+      <tr className="py-40px font-medium text-18px rounded-[32px]">
         <td>
           <div className="flex items-center justify-center">
             <AccuracyLevel
@@ -87,7 +87,7 @@ const FileAiResultsItem = ({
           {/* {isPathChanged ? 'Manual' : `${metadata.accuracy || 0}%`} */}
         </td>
         <td>
-          <div className="flex gap-[16px] items-center justify-center">
+          <div className="flex gap-16px items-center justify-center">
             <p>{isPathChanged ? selectedPath : metadata.path || 'N/A'}</p>
             <button onClick={() => openModal(`moveFileWithAI${id}`)}>
               {<EditSVG />}

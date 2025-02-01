@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import '../../globals.css';
+import '../../fonts.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import VerticalNavbar from '../../_components/navbars/vertical-navbar';
@@ -12,6 +13,7 @@ import { getLangDir } from 'rtl-detect';
 import QueryClientWrapper from '@app/_contexts/react-query-provider';
 import { SocketProvider } from '@app/_contexts/socket-context';
 import { NextIntlProvider } from '@app/_contexts/next-intl-provider';
+// import { contentFont, headFont } from '@app/_utils/fonts';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -29,17 +31,19 @@ export default async function RootLayout({
   const direction = getLangDir(locale);
 
   return (
-    <html lang={locale} dir={direction}>
+    <html lang={locale} dir={direction} className={`font-content`}>
       <body
         className={clsx(
           'overflow-x-hidden',
-          'text-textDark font-normal',
+          'text-textDark font-normal bg-whiteBackground',
           `${
             direction === 'ltr'
-              ? 'pl-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pl-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight)+24px)] pb-[calc(var(--navsBodySpacing))] pr-[var(--navsBodySpacing)]'
-              : 'pr-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pr-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight)+24px)] pb-[calc(var(--navsBodySpacing))] pl-[var(--navsBodySpacing)]'
+              ? 'pl-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pl-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight))] pb-[calc(var(--navsBodySpacing))] pr-[var(--navsBodySpacing)]'
+              : 'pr-[calc(var(--verticalNavSmallWidth)+var(--navsBodySpacing))] lg:pr-[calc(var(--verticalNavWidth)+var(--navsBodySpacing))] pt-[calc(var(--horizontalNavHeight))] pb-[calc(var(--navsBodySpacing))] pl-[var(--navsBodySpacing)]'
           } `,
         )}>
+        <div id="portal-root" />
+
         <NextTopLoader />
         <Toaster
           position="top-center"

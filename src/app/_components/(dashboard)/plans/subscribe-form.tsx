@@ -31,7 +31,7 @@ const SubscribeForm = ({ setActivePage }) => {
   return (
     <div>
       <form onSubmit={handleSubmit(onSuccess, onError)}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-[32px] gap-y-[32px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-32px gap-y-32px">
           <Input
             label={t('plans.payment.holderLabel')}
             placeHolder={t('plans.payment.holderPlaceholder')}
@@ -70,15 +70,15 @@ const SubscribeForm = ({ setActivePage }) => {
             )}
           />
         </div>
-        <div className="flex items-center justify-center gap-[24px] lg:flex-row flex-col mt-[48px]">
+        <div className="flex items-center justify-center gap-24px lg:flex-row flex-col mt-48px">
           <Button
             variant="outline"
-            className={'w-[100%] lg:w-fit lg:px-[77px] lg:py-[14px]'}
+            className={'w-[100%] lg:w-fit lg:px-[77px] lg:py-14px'}
             text={t('plans.payment.backButton')}
             onClick={() => setActivePage(1)}
           />
           <Button
-            className={'w-[100%] lg:w-fit lg:px-[77px] lg:py-[14px]'}
+            className={'w-[100%] lg:w-fit lg:px-[77px] lg:py-14px'}
             text={t('plans.payment.payButton')}
           />
         </div>

@@ -140,7 +140,7 @@ export default function FileMetadataForm({
           {/* You can add more types if needed */}
         </div>
       ))}
-      <div className="flex gap-[8px]">
+      <div className="flex gap-8px">
         <Button
           text={t('general.cancel')}
           disabled={mutation.isPending}

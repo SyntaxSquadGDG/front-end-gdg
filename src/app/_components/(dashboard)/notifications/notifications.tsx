@@ -54,7 +54,7 @@ const Notifications = () => {
       isLoading={isLoading}
       refetch={refetch}
       emptyError={t('notifications.errors.NOTIFICATIONS_ZERO_ERROR')}>
-      <div className="flex flex-col gap-[32px]">
+      <div className="flex flex-col gap-32px">
         {notifications.map((notification, index) => {
           return (
             <React.Fragment key={index}>

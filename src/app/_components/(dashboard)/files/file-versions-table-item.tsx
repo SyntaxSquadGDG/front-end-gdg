@@ -134,9 +134,9 @@ const FileVersionsTableItem = ({ fileId, version }) => {
               openModal(`DeleteFile${fileId}Version${version.id}`);
             }}
             disabled={pendingCondition}
-            className="flex items-center justify-center gap-[10px] items-center w-[100%]">
+            className="flex items-center justify-center gap-10px items-center w-[100%]">
             <RemoveSVG />
-            <p className="text-dangerColor text-[16px] font-normal">
+            <p className="text-dangerColor text-16px font-normal">
               {t('general.remove')}
             </p>
           </button>

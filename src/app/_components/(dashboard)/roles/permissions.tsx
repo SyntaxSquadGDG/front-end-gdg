@@ -48,9 +48,9 @@ const Permissions = () => {
           })}
         </tbody>
       </table>
-      {/* <div className="py-[16px] px-[24px] flex items-center gap-[16px]">
+      {/* <div className="py-16px px-24px flex items-center gap-16px">
         <AddSVG />
-        <p className="text-[18px]">{t('permissions.addAnother')}</p>
+        <p className="text-18px">{t('permissions.addAnother')}</p>
       </div> */}
     </div>
   );

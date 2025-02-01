@@ -8,6 +8,7 @@ import FinanceSVG from '@app/_components/svgs/guest/solutions/finance';
 import HeadText from '../common/head';
 import GuestButton from '@app/_components/(guest)/common/guest-button';
 import OverlaySection from '../common/overlay-section';
+import Transition from '@app/_components/transitions/transitions';
 
 const Solutions = async () => {
   const t = await getTranslations();
@@ -36,27 +37,33 @@ const Solutions = async () => {
           'relative z-[5px] container mx-auto flex items-center minHeightSection flex-col lg:flex-row',
           'py-sectionPadding gap-sectionGap',
         )}>
-        <div className="w-[100%] flex flex-col gap-[64px] items-center">
-          <HeadText>{t('home.solutions.explore')}</HeadText>
-          <div className="flex gap-[87px] items-center flex-col lg:flex-row w-[100%]">
-            {data.map((item, index) => {
-              return (
-                <Solution
-                  key={index}
-                  src={item.src}
-                  text={item.text}
-                  SVG={item.svg}
-                />
-              );
-            })}
-          </div>
-          <GuestButton
-            className={'w-[100%] lg:w-fit'}
-            link={true}
-            href={'/solutions'}
-            variant="light">
-            {t('general.readMore')}
-          </GuestButton>
+        <div className="w-[100%] flex flex-col gap-64px items-center">
+          <Transition from={'up'}>
+            <HeadText>{t('home.solutions.explore')}</HeadText>
+          </Transition>
+          <Transition from="down" className="w-full">
+            <div className="flex gap-80px items-center flex-col lg:flex-row w-[100%]">
+              {data.map((item, index) => {
+                return (
+                  <Solution
+                    key={index}
+                    src={item.src}
+                    text={item.text}
+                    SVG={item.svg}
+                  />
+                );
+              })}
+            </div>
+          </Transition>
+          <Transition from="down" delay={0.1}>
+            <GuestButton
+              className={'w-[100%] lg:w-fit'}
+              link={true}
+              href={'/solutions'}
+              variant="light">
+              {t('general.readMore')}
+            </GuestButton>
+          </Transition>
         </div>
       </div>
     </section>

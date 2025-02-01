@@ -4,15 +4,15 @@ import React from 'react';
 
 const RectangleInfo = ({ head, description, children }) => {
   return (
-    <div className="p-[16px] rounded-[16px] gradient-borders flex items-center gap-[24px] max-xs:flex-col">
+    <div className="p-16px rounded-[16px] gradient-borders flex items-center gap-24px max-xs:flex-col">
       <div>{children}</div>
       <div
         className={clsx(
-          'flex gap-[8px] flex-col text-textLight items-start max-xs:items-center max-xs:text-center',
-          contentFont.className,
+          'flex gap-8px flex-col text-textLight items-start max-xs:items-center max-xs:text-center',
+          'font-content',
         )}>
-        <h3 className="text-[20px] font-medium">{head}</h3>
-        <p className="text-[16px]">{description}</p>
+        <h3 className="text-20px font-medium">{head}</h3>
+        <p className="text-16px">{description}</p>
       </div>
     </div>
   );

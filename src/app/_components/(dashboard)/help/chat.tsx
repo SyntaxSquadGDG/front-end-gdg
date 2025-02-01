@@ -118,14 +118,14 @@ const Chat = ({ user }) => {
     <section
       className={clsx(
         'w-[100%] rounded-[16px] overflow-hidden border-[2px] border-solid border-mainColor1',
-        contentFont.className,
+        'font-content',
       )}>
-      <div className="flex justify-between py-[40px] px-[8px] xs:px-[32px] bg-mainColor1 text-textLight text-[20px] font-medium">
+      <div className="flex justify-between py-40px px-8px xs:px-32px bg-mainColor1 text-textLight text-20px font-medium">
         <p>{t('help.support')}</p>
       </div>
       <div>
         <div
-          className="px-[8px] xs:px-[32px] py-[30px] flex flex-col-reverse gap-5 h-[600px] overflow-y-auto overflow-x-hidden"
+          className="px-8px xs:px-32px py-30px flex flex-col-reverse gap-5 h-[600px] overflow-y-auto overflow-x-hidden"
           ref={messagesContainerRef}
           onScroll={handleScroll}>
           {/* {isLoading && <LoadingSpinner />} */}
@@ -135,9 +135,9 @@ const Chat = ({ user }) => {
             isLoading={isLoading}
             refetch={refetch}>
             {messages?.map((message) => (
-              <div key={message.id} className="flex flex-col gap-[8px]">
+              <div key={message.id} className="flex flex-col gap-8px">
                 <div
-                  className={`flex w-fit gap-[16px] items-end ${
+                  className={`flex w-fit gap-16px items-end ${
                     message.type === 'customer'
                       ? dir === 'rtl'
                         ? 'mr-auto'
@@ -165,7 +165,7 @@ const Chat = ({ user }) => {
                   </div>
 
                   <div
-                    className={`w-fit p-[24px] rounded-[16px] text-[16px] font-medium ${
+                    className={`w-fit p-24px rounded-[16px] text-16px font-medium ${
                       message.type === 'customer'
                         ? dir === 'rtl'
                           ? 'mr-auto rounded-bl-none bg-mainColor1 text-textLight'
@@ -179,7 +179,7 @@ const Chat = ({ user }) => {
                 </div>
 
                 <p
-                  className={`w-fit text-textBodyPrimary text-[12px] ${
+                  className={`w-fit text-textBodyPrimary text-12px ${
                     message.type === 'customer'
                       ? dir === 'rtl'
                         ? 'mr-auto'
@@ -198,13 +198,13 @@ const Chat = ({ user }) => {
       </div>
       <form
         onSubmit={handleSubmit(handleSuccessMessage, handleErrorMessage)}
-        className="py-[20px] px-[8px] xs:px-[32px] bg-mainColor1 flex sm:flex-row flex-col items-center gap-[8px] sm:gap-[40px]">
+        className="py-20px px-8px xs:px-32px bg-mainColor1 flex sm:flex-row flex-col items-center gap-8px sm:gap-40px">
         <textarea
           disabled={mutation.isPending}
           id="chatMessage"
           {...register('message')}
           placeholder="Enter Your Message"
-          className="resize-none w-[100%] h-[55px] overflow-y-auto rounded-[8px] xs:p-[14px] p-[1px] focus:outline-none text-mainColor1"
+          className="resize-none w-[100%] h-[55px] overflow-y-auto rounded-[8px] xs:p-14px p-[1px] focus:outline-none text-mainColor1"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault(); // Prevents adding a new line

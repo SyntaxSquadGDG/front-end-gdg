@@ -10,8 +10,8 @@ const CloseModalButton = ({ onClose }) => {
       <button
         onClick={() => onClose()}
         className={clsx(
-          contentFont.className,
-          'absolute right-[10px] top-[8px] w-[26px] h-[26px] rounded-full flex items-center justify-center font-bold text-textLight bg-mainColor1 z-50',
+          'font-content',
+          'absolute right-[10px] top-[8px] w-[26px] h-[26px] rounded-full flex items-center justify-center font-bold text-textLight bg-mainColor1 z-50 hover:opacity-70 duration-500',
         )}>
         <CloseModalSVG />
       </button>

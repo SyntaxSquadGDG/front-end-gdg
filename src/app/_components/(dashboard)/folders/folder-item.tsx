@@ -75,35 +75,35 @@ const FolderItem = ({
       <div
         ref={containerRef}
         className={clsx(
-          contentFont.className,
-          'p-[16px] rounded-[16px] border-[1px] border-solid border-blue3 flex flex-col gap-[45px]',
+          'font-content',
+          'p-16px rounded-[16px] border-[1px] border-solid border-blue3 flex flex-col gap-48px',
         )}>
         {/* Header */}
-        <div className="flex justify-between items-center sm:flex-row flex-col">
+        <div className="flex justify-between items-center sm:flex-row flex-col gap-8px">
           {/* Header Details */}
           <Link
             href={`/folders/${folder.id}`}
-            className="flex gap-[16px] items-center sm:flex-row flex-col">
+            className="flex gap-16px items-center sm:flex-row flex-col">
             <FolderItemSVG />
 
-            <div className="flex flex-col gap-[8px]">
-              <div className="flex gap-[12px] items-center">
+            <div className="flex flex-col gap-8px">
+              <div className="flex gap-12px sm:justify-start justify-center items-start sm:items-center">
                 {sectionNameRequired && sectionName && (
                   <>
-                    <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
+                    <p className="text-textGray font-medium text-14px sm:text-start text-center">
                       {sectionName}
                     </p>
-                    <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
+                    <p className="text-textGray font-medium text-14px sm:text-start text-center">
                       |
                     </p>
                   </>
                 )}
 
-                <p className="text-textGray font-medium text-[14px] sm:text-start text-center">
+                <p className="text-textGray font-medium text-14px sm:text-start text-center">
                   {folder.numberOfFiles} files
                 </p>
               </div>
-              <p className="text-[18px] font-medium text-blue1">
+              <p className="text-18px font-medium text-blue1 sm:text-start text-center">
                 {folder.name}
               </p>
             </div>
@@ -113,10 +113,10 @@ const FolderItem = ({
         </div>
 
         {/* Footer */}
-        <div className="px-[16px] py-[10px] bg-cardColor flex justify-between gap-[24px] lg:gap-[48px] items-center rounded-[8px] sm:flex-row flex-col">
+        <div className="px-16px py-10px bg-cardColor flex justify-between gap-24px lg:gap-48px items-center rounded-[8px] sm:flex-row flex-col">
           {/* Storage */}
-          <div className="flex flex-col gap-[20px] flex-grow sm:w-auto w-[100%]">
-            <p className="text-[12px] text-blue1 font-medium sm:text-start text-center">
+          <div className="flex flex-col gap-20px flex-grow sm:w-auto w-[100%]">
+            <p className="text-12px text-blue1 font-medium sm:text-start text-center">
               {t('general.storage')}
             </p>
             <div className="bg-storageContainer h-[4px] w-[100%] rounded-full">
@@ -127,7 +127,7 @@ const FolderItem = ({
             </div>
           </div>
           {/* Employees */}
-          <div className="flex flex-col gap-[8px] items-center sm:text-start text-center">
+          <div className="flex flex-col gap-8px items-center sm:text-start text-center">
             <p>{folder.numberOfEmployees} Employee</p>
 
             {/* Stacked Images */}

@@ -82,7 +82,7 @@ const Register = () => {
         <RegisterActive activePage={activePage} />
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="w-[100%]">
-        <div className="mt-[80px] w-[100%]">
+        <div className="mt-80px w-[100%]">
           {activePage === 1 && (
             <RegisterPage1
               register={register}

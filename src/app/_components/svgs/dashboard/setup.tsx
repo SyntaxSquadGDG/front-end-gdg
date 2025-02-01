@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const SetupSVG = () => {
@@ -7,6 +8,7 @@ const SetupSVG = () => {
       height="18"
       viewBox="0 0 18 18"
       fill="none"
+      className="shrink-0"
       xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_1_325)">
         <path

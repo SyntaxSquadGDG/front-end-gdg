@@ -45,9 +45,9 @@ const DeleteFolderModal = ({ id }) => {
     <Modal
       isOpen={modalStack.includes(`deleteFolderModal${id}`)}
       onClose={closeModal}
-      className={contentFont.className}>
-      <h2 className="text-xl font-bold mb-[16px]">{t('folders.delete')}</h2>
-      <p className="text-xl font-bold mb-[12px]">
+      className={'font-content'}>
+      <h2 className="text-xl font-bold mb-16px">{t('folders.delete')}</h2>
+      <p className="text-xl font-bold mb-12px">
         {t('folders.deleteDescription')}
       </p>
       <input
@@ -55,7 +55,7 @@ const DeleteFolderModal = ({ id }) => {
         value={isDeleting ? 'Deleting...' : 'Delete'}
         disabled={isDeleting}
         className={clsx(
-          'w-[100%] py-[20px] rounded-[8px] px-[16px] bg-red-400 outline-none text-textLight cursor-pointer',
+          'w-[100%] py-20px rounded-[8px] px-16px bg-red-400 outline-none text-textLight cursor-pointer',
           isDeleting && 'bg-gray-400',
         )}
         onClick={() => handleDelete()}

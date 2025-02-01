@@ -7,9 +7,9 @@ const HeadText = ({ children, bigSpace = true }) => {
   return (
     <h3
       className={clsx(
-        'text-[22px] font-medium',
-        contentFont.className,
-        bigSpace ? 'mb-[24px]' : 'mb-[16px]',
+        'text-22px font-medium',
+        'font-content',
+        bigSpace ? 'mb-24px' : 'mb-16px',
       )}>
       {children}
     </h3>

@@ -130,7 +130,7 @@ const AddTypeToTypeModal = ({ fromType, fromId, addingType }) => {
       isOpen={modalStack.includes(`add${addingType}To${fromType}${fromId}`)}
       onClose={handleCloseModal}
       innerClassName="w-[90vw] py-[140px]"
-      className={clsx(contentFont.className)}>
+      className={clsx('font-content')}>
       <CustomSelect
         label={
           isAddingEmployees

@@ -10,10 +10,13 @@ import { fetchSearchResults } from './data/queries';
 import { PAGINATION_PAGE_LIMIT } from '@app/_constants/fetch';
 import { getNextPage } from '@app/_utils/fetch';
 import { getErrorText } from '@app/_utils/translations';
+import HeadBar from '../general/head-bar';
+import { usePathname } from 'next/navigation';
 
 const SearchResults = ({ query }) => {
   const t = useTranslations();
   const paginationPageLimit = PAGINATION_PAGE_LIMIT;
+  const pathName = usePathname();
 
   const {
     data,
@@ -40,6 +43,8 @@ const SearchResults = ({ query }) => {
     `search.errors.SEARCH_ERROR`,
   );
 
+  const items = [{ text: 'Search Results', href: pathName }];
+
   return (
     <DataFetching
       data={results}
@@ -47,10 +52,13 @@ const SearchResults = ({ query }) => {
       error={error && errorText}
       refetch={refetch}
       isLoading={isLoading}>
-      <div className={clsx(contentFont.className)}>
-        <div className="flex items-center justify-between mb-[32px]">
-          <p className="text-[24px] font-medium">{t('search.results')}</p>
-          <p className="text-[20px] font-medium">
+      <div className={clsx('font-content')}>
+        {/* <HeadBar items={items}>
+          {t('search.total')} {results && results.length}
+        </HeadBar> */}
+        <div className="flex items-start sm:items-center justify-between mb-32px flex-col sm:flex-row gap-16px">
+          <p className="text-24px font-medium">{t('search.results')}</p>
+          <p className="text-20px font-medium">
             {t('search.total')} {results && results.length}
           </p>
         </div>

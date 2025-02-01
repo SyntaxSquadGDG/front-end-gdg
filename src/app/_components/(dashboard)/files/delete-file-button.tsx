@@ -48,10 +48,7 @@ const DeleteFileButton = ({ file }) => {
         text={t('general.delete')}
         disabled={deleteMutation.isPending}
         onClick={() => openModal(`deleteFileModal${file.id}`)}
-        className={clsx(
-          'bg-red-400 text-textLight',
-          deleteMutation.isPending && 'cursor-not-allowed',
-        )}
+        className={'w-full md:w-fit'}
       />
       <DeleteModal
         error={errorText}

@@ -91,14 +91,14 @@ const page = async ({ params }) => {
           <PathWrapper />
         </Suspense>
       </ErrorBoundary>
-      <div className="flex flex-col gap-[24px]">
+      <div className="flex flex-col gap-24px">
         <div
           className={clsx(
             direction === 'ltr'
               ? 'xl:mr-[calc(var(--activitySpace))]'
               : 'xl:ml-[calc(var(--activitySpace))]',
-            contentFont.className,
-            'flex flex-col gap-[24px]',
+            'font-content',
+            'flex flex-col gap-24px',
           )}>
           {/* FILE P1 */}
           <ErrorBoundary>

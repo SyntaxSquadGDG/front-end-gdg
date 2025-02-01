@@ -34,7 +34,7 @@ const MarkdownRenderer = ({ markdown }) => {
 
   return (
     // Use React Portal to render the markdown content outside its normal DOM hierarchy
-    <div className="reset-to-native">
+    <div className="reset-to-native break-words">
       <ReactMarkdown rehypePlugins={[rehypeRaw]}>
         {sanitizedMarkdown}
       </ReactMarkdown>

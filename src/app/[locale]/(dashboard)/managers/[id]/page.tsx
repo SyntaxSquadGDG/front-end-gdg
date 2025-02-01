@@ -60,11 +60,11 @@ const page = async ({ params }) => {
         <ManagerDataWrapper />
       </Suspense>
 
-      <div className="my-[32px]">
+      <div className="my-32px">
         <RoleHead
           text={t('general.activity')}
           SVG={ViewSVG}
-          href={`/managers/${id}/activity`}
+          href={`/managers/${id}/activities`}
         />
 
         <Activity id={id} />

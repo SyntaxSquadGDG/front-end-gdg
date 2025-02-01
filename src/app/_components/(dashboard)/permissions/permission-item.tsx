@@ -58,8 +58,8 @@ const PermissionItem = ({ item, type, id }) => {
 
   return (
     <tr key={`${item.type}${item.id}`}>
-      <td className="py-[16px]">
-        <div className="flex items-center gap-[18px] justify-start">
+      <td className="py-16px">
+        <div className="flex items-center gap-18px justify-start">
           <span>
             <ItemIcon type={item.type} />
           </span>
@@ -71,16 +71,14 @@ const PermissionItem = ({ item, type, id }) => {
           onClick={() =>
             openModal(`permission${type}${id}Edit${item.type}${item.id}`)
           }>
-          <div className="flex items-center justify-center gap-[10px]">
+          <div className="flex items-center justify-center gap-10px">
             <EditSVG />
-            <p className="text-[20px] text-mainColor1">
-              {t('permissions.edit')}
-            </p>
+            <p className="text-20px text-mainColor1">{t('permissions.edit')}</p>
           </div>
         </button>
       </td>
       <td>
-        <div className="flex items-center gap-[10px] justify-end">
+        <div className="flex items-center gap-10px justify-end">
           <div className="relative">
             <button
               onClick={() =>
@@ -88,9 +86,9 @@ const PermissionItem = ({ item, type, id }) => {
                   `deletePermissionFrom${type}${id}${item.type}${item.id}`,
                 )
               }>
-              <div className="flex items-center gap-[10px] justify-end">
+              <div className="flex items-center gap-10px justify-end">
                 <DeleteSVG />
-                <p className="text-[20px] text-dangerColor">
+                <p className="text-20px text-dangerColor">
                   {t('permissions.remove')}
                 </p>
               </div>

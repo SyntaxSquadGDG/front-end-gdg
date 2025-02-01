@@ -23,11 +23,7 @@ class ErrorBoundary extends Component {
     if (this.state.hasError) {
       // Render fallback text passed as a prop
       return (
-        <h1
-          className={clsx(
-            contentFont.className,
-            'text-[20px] font-bold text-center',
-          )}>
+        <h1 className={clsx('font-content', 'text-20px font-bold text-center')}>
           {this.props.fallbackText || 'Something went wrong.'}
         </h1>
       );

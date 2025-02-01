@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const EducationSVG = () => {
@@ -7,6 +8,7 @@ const EducationSVG = () => {
       height="38"
       viewBox="0 0 38 38"
       fill="none"
+      className="shrink-0"
       xmlns="http://www.w3.org/2000/svg">
       <path
         d="M37.7392 13.4584L19.0005 1.27783L0.261719 13.4584L19.0005 25.6374L31.6671 17.4041V25.3334H34.8338V15.3473L37.7392 13.4584Z"

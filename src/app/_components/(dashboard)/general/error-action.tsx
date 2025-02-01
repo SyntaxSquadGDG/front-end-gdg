@@ -9,10 +9,7 @@ const ErrorAction = ({ children }) => {
     <>
       {children && (
         <div
-          className={clsx(
-            contentFont.className,
-            'text-red-400 text-[16px] font-bold',
-          )}>
+          className={clsx('font-content', 'text-red-400 text-16px font-bold')}>
           * {children}
         </div>
       )}

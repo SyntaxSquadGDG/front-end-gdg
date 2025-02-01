@@ -18,22 +18,24 @@ const Button = ({
   type = 'button',
   href = '',
   expand = false,
+  SVGFirst = false,
 }) => {
   const commonClass = clsx(
-    contentFont.className,
-    'px-[24px] py-[12px] text-[18px] font-medium rounded-[8px] flex items-center justify-center text-center gap-[8px]',
+    'font-content duration-500',
+    'px-24px py-12px text-18px font-medium rounded-[8px] flex items-center justify-center text-center gap-8px',
     expand && 'min-w-[200px]',
-    variant === 'fill' && 'bg-mainDashboardLinear text-textLight',
+    variant === 'fill' &&
+      'bg-mainDashboardLinear text-textLight hover:opacity-70',
     variant === 'outline' &&
-      'linearMainText border-[1px] border-solid border-mainColor3',
-    variant === 'solid' && 'border-none px-[0px]',
+      'border-[1px] border-solid border-mainColor3 hover:bg-mainColor3 hover:text-textLight',
+    variant === 'solid' && 'border-none px-[0px] hover:opacity-70',
     className,
   );
 
   if (type === 'link') {
     return (
       <Link href={href} className={commonClass}>
-        <span>{text}</span>
+        <span className={SVGFirst && 'order-2'}>{text}</span>
         {SVG && <SVG />}
       </Link>
     );
@@ -44,7 +46,9 @@ const Button = ({
       disabled={isPending || disabled}
       className={commonClass}>
       {(text || isPendingText) && (
-        <span>{isPending ? (isPendingText ? isPendingText : text) : text}</span>
+        <span className={SVGFirst && 'order-2'}>
+          {isPending ? (isPendingText ? isPendingText : text) : text}
+        </span>
       )}
       {/* {isPending && <LoadingSpinner full={false} alignStart={true} />} */}
       {SVG && <SVG />}

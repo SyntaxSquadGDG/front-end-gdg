@@ -9,14 +9,12 @@ const CircularInfo = ({ head, description, SVG }) => {
       <CircularIconDiv SVG={SVG} />
       <h3
         className={clsx(
-          'linearGuestText2 text-[24px] font-semibold mt-[16px] mb-[20px]',
-          headFont.className,
+          'linearGuestText2 text-24px font-semibold mt-16px mb-20px',
+          'font-head',
         )}>
         {head}
       </h3>
-      <p className={clsx('text-[16px]', contentFont.className)}>
-        {description}
-      </p>
+      <p className={clsx('text-16px', 'font-content')}>{description}</p>
     </div>
   );
 };

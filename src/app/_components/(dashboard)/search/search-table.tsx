@@ -14,7 +14,7 @@ const SearchTable = ({ results, hasNext, isFetching, fetchNext }) => {
   const t = useTranslations();
   return (
     <div className="w-full rounded-[32px] shadow-tableShadow overflow-y-hidden overflow-x-auto">
-      <table className={clsx(contentFont.className, 'table')}>
+      <table className={clsx('font-content', 'table')}>
         <thead>
           <tr>
             <td>{t('search.file')}</td>

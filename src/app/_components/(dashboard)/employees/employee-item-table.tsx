@@ -73,7 +73,7 @@ const EmployeeItemTable = ({ employee }) => {
       <td>
         <Link
           href={`/employees/${employee.id}/roles`}
-          className="flex items-center gap-[8px] justify-center">
+          className="flex items-center gap-8px justify-center">
           <ViewSVG />
           <p>{t('employees.view')}</p>
         </Link>

@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const LinkedinSVG = () => {
@@ -7,6 +8,7 @@ const LinkedinSVG = () => {
       height="33"
       viewBox="0 0 32 33"
       fill="none"
+      className="shrink-0"
       xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"

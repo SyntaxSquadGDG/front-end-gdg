@@ -81,8 +81,8 @@ const CreateFolderModal = ({ type, id }) => {
     <Modal
       isOpen={modalStack.includes('createFolder')}
       onClose={closeModal}
-      className={contentFont.className}>
-      <h2 className="text-xl font-bold mb-[16px]">{t('folders.new')}</h2>
+      className={'font-content'}>
+      <h2 className="text-xl font-bold mb-16px">{t('folders.new')}</h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
@@ -90,10 +90,10 @@ const CreateFolderModal = ({ type, id }) => {
           type="text"
           placeholder="Enter Folder Name"
           disabled={mutation.isPending}
-          className="w-[100%] py-[20px] rounded-[8px] px-[16px] border-[1px] border-solid border-blue1 outline-none mb-[16px]"
+          className="w-[100%] py-20px rounded-[8px] px-16px border-[1px] border-solid border-blue1 outline-none mb-16px"
         />
         {errors.folderName && (
-          <p className="text-red-500 text-sm mb-[16px]">
+          <p className="text-red-500 text-sm mb-16px">
             {errors.folderName.message}
           </p>
         )}
@@ -102,7 +102,7 @@ const CreateFolderModal = ({ type, id }) => {
           type="submit"
           disabled={mutation.isPending}
           className={clsx(
-            'w-[100%] py-[20px] rounded-[8px] px-[16px] bg-blue1 outline-none text-textLight',
+            'w-[100%] py-20px rounded-[8px] px-16px bg-blue1 outline-none text-textLight',
             mutation.isPending && 'bg-slate-400',
           )}
         />

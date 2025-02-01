@@ -11,6 +11,7 @@ import { getTranslations } from 'next-intl/server';
 import React from 'react';
 import Solution from '../common/solution';
 import HeadText from '../common/head';
+import Transition from '@app/_components/transitions/transitions';
 
 const Solutions = async () => {
   const t = await getTranslations();
@@ -64,17 +65,16 @@ const Solutions = async () => {
           'relative z-[5px] container mx-auto minHeightSection text-center flex flex-col items-center',
           'py-sectionPadding',
         )}>
-        <HeadText>{t('solutions.solutions.head')}</HeadText>
+        <Transition from={'up'}>
+          <HeadText>{t('solutions.solutions.head')}</HeadText>
+        </Transition>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 mt-[64px] gap-[88px]">
-          {data.map((item) => {
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 mt-64px gap-80px">
+          {data.map((item, index) => {
             return (
-              <Solution
-                key={item.text}
-                SVG={item.icon}
-                src={item.src}
-                text={item.text}
-              />
+              <Transition key={item.text} from={'down'} delay={index * 0.1}>
+                <Solution SVG={item.icon} src={item.src} text={item.text} />
+              </Transition>
             );
           })}
         </div>

@@ -27,16 +27,12 @@ const TempSection = ({ src, head, description, redirect }) => {
       </div>
       <h3
         className={clsx(
-          'text-[40px] font-bold linearGuestText2 mt-[48px] mb-[24px] text-center',
-          headFont.className,
+          'text-40px font-bold linearGuestText2 mt-48px mb-24px text-center',
+          'font-head',
         )}>
         {head}
       </h3>
-      <p
-        className={clsx(
-          'text-[24px] font-medium text-center',
-          contentFont.className,
-        )}>
+      <p className={clsx('text-24px font-medium text-center', 'font-content')}>
         {description}
       </p>
     </div>

@@ -9,6 +9,7 @@ const SendSVG = () => {
       height="25"
       viewBox="0 0 24 25"
       fill="none"
+      className="shrink-0"
       xmlns="http://www.w3.org/2000/svg">
       <path
         d="M6 12.5L3 21.5L21 12.5L3 3.5L6 12.5ZM6 12.5H12"

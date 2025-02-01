@@ -9,6 +9,7 @@ const MetadataSVG = () => {
       height="21"
       viewBox="0 0 20 21"
       fill="none"
+      className="shrink-0"
       xmlns="http://www.w3.org/2000/svg">
       <path
         d="M19 5.5C19 7.71 14.97 9.5 10 9.5C5.03 9.5 1 7.71 1 5.5C1 3.29 5.03 1.5 10 1.5C14.97 1.5 19 3.29 19 5.5Z"

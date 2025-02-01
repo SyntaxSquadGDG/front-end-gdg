@@ -34,19 +34,19 @@ const PlanItem = ({
   return (
     <div
       className={clsx(
-        'px-[46px] py-[64px] rounded-[20px] border-[1px] border-solid border-mainColor1 flex flex-col items-start w-[100%]',
-        contentFont.className,
+        'px-48px py-64px rounded-[20px] border-[1px] border-solid border-mainColor1 flex flex-col items-start w-[100%]',
+        'font-content',
       )}>
-      <h2 className="text-[24px] font-semibold">{head}</h2>
-      <h3 className="text-[30px] font-semibold mt-[26px] mb-[8px]">{price}</h3>
-      <p className="text-[18px]">{description}</p>
-      <p className="text-[18px] mt-[32px] mb-[24px]">{featuresHead}</p>
-      <div className="flex flex-col gap-[16px]">
+      <h2 className="text-24px font-semibold">{head}</h2>
+      <h3 className="text-30px font-semibold mt-26px mb-8px">{price}</h3>
+      <p className="text-18px">{description}</p>
+      <p className="text-18px mt-32px mb-24px">{featuresHead}</p>
+      <div className="flex flex-col gap-16px">
         {features.map((feature, index) => {
           return <PlanItemFeature key={index} text={feature} />;
         })}
       </div>
-      <div className="mt-[32px] flex items-center justify-center w-[100%]">
+      <div className="mt-32px flex items-center justify-center w-[100%]">
         <Button
           variant={active ? 'outline' : 'fill'}
           text={active ? t('plans.cancel') : t('plans.subscribe')}

@@ -44,12 +44,12 @@ const ResultItem = async ({ item }) => {
   }
 
   return (
-    <li className="flex justify-between items-center gap-[24px]">
-      <div className="flex gap-[8px] items-center justify-start w-[120px]">
+    <li className="flex justify-between items-center gap-24px">
+      <div className="flex gap-8px items-center justify-start w-[120px]">
         <div className="w-[8px] h-[8px] rounded-full bg-black"></div>
-        <p className="text-[12px]">{getTranslatedType(item.name)}</p>
+        <p className="text-12px">{getTranslatedType(item.name)}</p>
       </div>
-      <div className="bg-white rounded-full overflow-hidden h-[6px] w-[100%]">
+      <div className="bg-white rounded-full overflow-hidden h-[6px] w-[100%] max-xs:hidden">
         <div
           className={clsx('rounded-full h-[100%]')}
           style={{
@@ -58,7 +58,7 @@ const ResultItem = async ({ item }) => {
           }}
         />
       </div>
-      <p className="text-[12px] w-[40px]">{item.percentage}%</p>
+      <p className="text-12px w-[40px]">{item.percentage}%</p>
     </li>
   );
 };

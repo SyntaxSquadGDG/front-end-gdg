@@ -9,6 +9,7 @@ const AddFileSVG = () => {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
+            className="shrink-0"
       xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_57_1661)">
         <path

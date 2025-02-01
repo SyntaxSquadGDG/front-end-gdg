@@ -72,8 +72,8 @@ const CreateSectionModal = () => {
     <Modal
       isOpen={modalStack.includes('createSection')}
       onClose={closeModal}
-      className={contentFont.className}>
-      <h2 className="text-xl font-bold mb-[16px]">{t('sections.new')}</h2>
+      className={'font-content'}>
+      <h2 className="text-xl font-bold mb-16px">{t('sections.new')}</h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
@@ -81,10 +81,10 @@ const CreateSectionModal = () => {
           type="text"
           placeholder="Enter Section Name"
           disabled={mutation.isPending}
-          className="w-[100%] py-[20px] rounded-[8px] px-[16px] border-[1px] border-solid border-blue1 outline-none mb-[16px]"
+          className="w-[100%] py-20px rounded-[8px] px-16px border-[1px] border-solid border-blue1 outline-none mb-16px"
         />
         {errors.sectionName && (
-          <p className="text-red-500 text-sm mb-[16px]">
+          <p className="text-red-500 text-sm mb-16px">
             {errors.sectionName.message}
           </p>
         )}
@@ -93,7 +93,7 @@ const CreateSectionModal = () => {
           type="submit"
           disabled={mutation.isPending}
           className={clsx(
-            'w-[100%] py-[20px] rounded-[8px] px-[16px] bg-blue1 outline-none text-textLight',
+            'w-[100%] py-20px rounded-[8px] px-16px bg-blue1 outline-none text-textLight',
             mutation.isPending && 'bg-slate-500 cur',
           )}
         />

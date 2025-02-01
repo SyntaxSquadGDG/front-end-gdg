@@ -4,7 +4,7 @@ export default function LoadingSpinner({ full = false, alignStart = false }) {
   return (
     <div
       className={clsx(
-        'flex items-center my-[16px]',
+        'flex items-center my-16px',
         alignStart ? 'justify-start' : 'justify-center',
         full ? 'h-[calc(100vh-var(--horizontalNavHeight))]' : '',
       )}>

@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const ManagementSVG = () => {
@@ -6,6 +7,7 @@ const ManagementSVG = () => {
       width="112"
       height="112"
       viewBox="0 0 112 112"
+      className="shrink-0"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <path

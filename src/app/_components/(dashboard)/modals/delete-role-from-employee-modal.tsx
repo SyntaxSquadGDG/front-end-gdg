@@ -41,12 +41,12 @@ const DeleteRoleFromEmployeeModal = ({ id }) => {
     <Modal
       isOpen={modalStack.includes(`deleteRoleFromEmployee${id}`)}
       onClose={closeModal}
-      className={contentFont.className}>
-      <div className="flex flex-col gap-[16px] text-center items-center">
-        <p className="text-[20px] font-medium">
+      className={'font-content'}>
+      <div className="flex flex-col gap-16px text-center items-center">
+        <p className="text-20px font-medium">
           {t('roles.removeRoleFromEmployeeText')}
         </p>
-        <div className="flex items-center gap-[32px]">
+        <div className="flex items-center gap-32px">
           <Button
             onClick={() => closeModal()}
             text={t('general.cancel')}

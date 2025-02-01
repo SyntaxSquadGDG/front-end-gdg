@@ -16,20 +16,16 @@ const NormalSelect = ({ label, options, value, disabled, onChange, error }) => {
   useClickOutside(selectRef, () => setIsOpen(false));
 
   return (
-    <div
-      className={clsx(
-        'w-full flex flex-col gap-[16px]',
-        contentFont.className,
-      )}>
+    <div className={clsx('w-full flex flex-col gap-16px', 'font-content')}>
       <label
-        className="block text-[18px] text-mainColor1"
+        className="block text-18px text-mainColor1"
         onClick={() => setIsOpen((old) => !old)}>
         {label}
       </label>
 
-      <div className="relative flex flex-col gap-[16px]" ref={selectRef}>
+      <div className="relative flex flex-col gap-16px" ref={selectRef}>
         <div
-          className="flex items-center justify-between border-[1px] border-solid border-mainColor1 rounded-[16px] cursor-pointer bg-transparent py-[22px] px-[16px]"
+          className="flex items-center justify-between border-[1px] border-solid border-mainColor1 rounded-[16px] cursor-pointer bg-transparent py-22px px-16px"
           onClick={() => setIsOpen((prev) => !prev)}>
           {value && options.some((opt) => opt.value === value) ? (
             <span className="text-mainColor1">
@@ -45,7 +41,7 @@ const NormalSelect = ({ label, options, value, disabled, onChange, error }) => {
         </div>
 
         {error && (
-          <p className="text-errorColor font-medium text-[14px]">{error}</p>
+          <p className="text-errorColor font-medium text-14px">{error}</p>
         )}
 
         {isOpen && !disabled && (
@@ -53,7 +49,7 @@ const NormalSelect = ({ label, options, value, disabled, onChange, error }) => {
             {options.map((option) => (
               <li
                 key={option.value}
-                className={`py-[22px] px-[16px] cursor-pointer text-mainColor1 hover:text-textLight font-medium flex flex-col gap-[8px] ${
+                className={`py-22px px-16px cursor-pointer text-mainColor1 hover:text-textLight font-medium flex flex-col gap-8px ${
                   option.value === value
                     ? 'bg-mainColor1 text-textLight'
                     : 'hover:bg-mainColor3'

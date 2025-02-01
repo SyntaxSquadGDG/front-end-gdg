@@ -27,18 +27,18 @@ const Input = ({
   }
 
   return (
-    <div className={clsx(contentFont.className, 'flex flex-col gap-[16px]')}>
-      <label className="text-textLight text-[18px]" htmlFor={inputId}>
+    <div className={clsx('font-content', 'flex flex-col gap-16px')}>
+      <label className="text-textLight text-18px" htmlFor={inputId}>
         {label}
       </label>
-      <div className="flex items-center px-[16px] rounded-[16px] relative gradient-borders">
+      <div className="flex items-center px-16px rounded-[16px] relative gradient-borders">
         <div className="shrink-0">{SVG && <SVG />}</div>
         {type === 'textarea' && (
           <textarea
             placeholder={placeHolder}
             id={inputId}
             disabled={disabled}
-            className="bg-transparent outline-none text-textLight w-[100%] py-[20px] mx-[8px] placeholder:text-placeHolderColor resize-none min-h-[190px]"
+            className="bg-transparent outline-none text-textLight w-[100%] py-20px mx-8px placeholder:text-placeHolderColor resize-none min-h-[190px]"
             {...rest}></textarea>
         )}
         {type !== 'textarea' && (
@@ -47,7 +47,7 @@ const Input = ({
             id={inputId}
             disabled={disabled}
             placeholder={placeHolder}
-            className="bg-transparent outline-none text-textLight w-[100%] py-[20px] mx-[8px] placeholder:text-placeHolderColor"
+            className="bg-transparent outline-none text-textLight w-[100%] py-20px mx-8px placeholder:text-placeHolderColor"
             {...rest}
           />
         )}
@@ -62,7 +62,7 @@ const Input = ({
         )}
       </div>
       {error && (
-        <p className="text-errorColor font-medium text-[14px]">{error}</p>
+        <p className="text-errorColor font-medium text-14px">{error}</p>
       )}
     </div>
   );

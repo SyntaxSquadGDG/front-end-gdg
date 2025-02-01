@@ -133,6 +133,6 @@ export const fetchAvailableStructure = async () => {
 
 export const fetchStructure = async () => {
   const res = await fetchData('/structure');
-  return res;
+  return res.folders;
 };
 

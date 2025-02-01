@@ -14,6 +14,7 @@ const ViewMetadataButton = ({ id }) => {
       text={t('files.viewMetaData')}
       onClick={() => openModal(`FileMetadata${id}`)}
       variant="fill"
+      className={'w-full md:w-fit'}
     />
   );
 };

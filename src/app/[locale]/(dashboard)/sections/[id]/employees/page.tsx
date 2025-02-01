@@ -44,7 +44,7 @@ const page = async ({ params }) => {
   };
 
   return (
-    <div className={clsx(contentFont.className)}>
+    <div className={clsx('font-content')}>
       <SectionDataWrapper />
       <EmployeesTable id={id} full={true} />
     </div>

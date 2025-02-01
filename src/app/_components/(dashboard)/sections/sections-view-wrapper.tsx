@@ -54,10 +54,10 @@ const SectionsViewWrapper = ({ children }) => {
   return (
     <StructureView>
       {/* Pass fetched sections to children */}
-      <div className={'flex flex-col gap-[32px]'}>
+      <div className={'flex flex-col gap-32px'}>
         <div
           className={clsx(
-            'grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-[32px]',
+            'grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-32px',
             isActivitiesAuth
               ? direction === 'ltr'
                 ? 'xl:mr-[432px]'

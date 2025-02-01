@@ -41,9 +41,9 @@ const DeleteSectionModal = ({ id }) => {
     <Modal
       isOpen={modalStack.includes(`deleteModal${id}`)}
       onClose={closeModal}
-      className={contentFont.className}>
-      <h2 className="text-xl font-bold mb-[16px]">{t('sections.delete')}</h2>
-      <p className="text-xl font-bold mb-[12px]">
+      className={'font-content'}>
+      <h2 className="text-xl font-bold mb-16px">{t('sections.delete')}</h2>
+      <p className="text-xl font-bold mb-12px">
         {t('sections.deleteDescription')}
       </p>
       <input
@@ -51,7 +51,7 @@ const DeleteSectionModal = ({ id }) => {
         value={isDeleting ? 'Deleting...' : 'Delete'}
         disabled={isDeleting}
         className={clsx(
-          'w-[100%] py-[20px] rounded-[8px] px-[16px] bg-red-400 outline-none text-textLight cursor-pointer',
+          'w-[100%] py-20px rounded-[8px] px-16px bg-red-400 outline-none text-textLight cursor-pointer',
           isDeleting && 'bg-gray-400',
         )}
         onClick={() => handleDelete()}

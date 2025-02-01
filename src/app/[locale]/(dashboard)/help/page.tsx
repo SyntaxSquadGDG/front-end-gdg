@@ -28,11 +28,11 @@ const page = async () => {
   return (
     <div>
       <HeadBar items={items}>
-        <Link href={'/help'}>
+        <Link href={'/help'} className="hover:opacity-70 duration-500">
           <HelpSVG />
         </Link>
       </HeadBar>
-      <p className={clsx('mb-[32px] text-[22px] ', contentFont.className)}>
+      <p className={clsx('mb-32px text-22px ', 'font-content')}>
         {t('help.description')}
       </p>
       <UserChatWrapper />

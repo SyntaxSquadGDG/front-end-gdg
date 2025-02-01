@@ -9,9 +9,9 @@ const LoadError = ({ children, className = '' }) => {
   return (
     <h2
       className={clsx(
-        'text-center text-mainColor1 text-[20px] font-bold my-[32px]',
+        'text-center text-mainColor1 text-20px font-bold my-32px',
         className,
-        contentFont.className,
+        'font-content',
       )}>
       {children}
     </h2>

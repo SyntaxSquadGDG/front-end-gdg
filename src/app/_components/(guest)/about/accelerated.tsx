@@ -8,6 +8,7 @@ import TargetSVG from '@app/_components/svgs/guest/about/target';
 import SuccessSVG from '@app/_components/svgs/guest/about/success';
 import CircularInfo from '../common/circular-info';
 import OverlaySection from '../common/overlay-section';
+import Transition from '@app/_components/transitions/transitions';
 
 const Accelerated = async () => {
   const t = await getTranslations();
@@ -36,24 +37,26 @@ const Accelerated = async () => {
           'relative z-[5px] container mx-auto flex items-center justify-center  flex-col text-textLight text-center',
           'py-sectionPadding minHeightSection',
         )}>
-        <HeadText>{t('about.accelerated.head')}</HeadText>
-        <div
-          className={clsx(
-            'mt-[40px] mb-[48px] text-[24px]',
-            contentFont.className,
-          )}>
-          <p>{t('about.accelerated.description1')}</p>
-          <p>{t('about.accelerated.description2')}</p>
-        </div>
+        <Transition from="up">
+          <HeadText>{t('about.accelerated.head')}</HeadText>
+        </Transition>
+        <Transition from="up" delay={0.1}>
+          <div className={clsx('mt-40px mb-48px text-24px', 'font-content')}>
+            <p>{t('about.accelerated.description1')}</p>
+            <p>{t('about.accelerated.description2')}</p>
+          </div>
+        </Transition>
         <div className="flex items-center gap-[44px] flex-col lg:flex-row">
-          {data.map((item) => {
+          {data.map((item, index) => {
             return (
-              <CircularInfo
-                key={item.head}
-                SVG={item.icon}
-                description={item.description}
-                head={item.head}
-              />
+              <Transition key={item.head} from={'down'} delay={index * 0.1}>
+                <CircularInfo
+                  key={item.head}
+                  SVG={item.icon}
+                  description={item.description}
+                  head={item.head}
+                />
+              </Transition>
             );
           })}
         </div>

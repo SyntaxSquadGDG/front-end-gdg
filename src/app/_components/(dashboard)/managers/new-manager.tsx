@@ -59,7 +59,7 @@ const NewManager = () => {
     <div>
       <form onSubmit={handleSubmit(onSuccess, onError)} className="">
         <div className="w-[100%]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-[32px] gap-y-[32px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-32px gap-y-32px">
             <Input
               label={t('managers.firstNameLabel')}
               placeHolder={t('managers.firstNamePlaceholder')}
@@ -94,7 +94,7 @@ const NewManager = () => {
               error={errors.password?.message}
             />
           </div>
-          <div className="flex items-start justify-start flex-col gap-[16px]">
+          <div className="flex items-start justify-start flex-col gap-16px">
             <Button
               className={'w-[100%] lg:w-[50%] mt-[50px]'}
               text={t('managers.addManagerButton')}

@@ -6,13 +6,13 @@ import React from 'react';
 
 const RoleHead = async ({ text, SVG, href, children }) => {
   return (
-    <div className="flex items-center justify-between gap-[10px]">
-      <div className="flex items-center gap-[10px] mb-[24px]">
-        <h2 className={clsx(contentFont.className, 'text-[24px] font-medium')}>
+    <div className="flex items-center justify-between gap-10px  mb-24px flex-wrap">
+      <div className="flex items-center gap-10px">
+        <h2 className={clsx('font-content', 'text-24px font-medium')}>
           {text}
         </h2>
         {SVG && href && (
-          <Link href={href}>
+          <Link href={href} className="hover:opacity-70 duration-500">
             <SVG />
           </Link>
         )}

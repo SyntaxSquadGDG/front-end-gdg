@@ -13,8 +13,8 @@ const PermissionItem = ({ item, role }) => {
   const { openModal } = useModal();
   return (
     <tr key={`${item.type}${item.id}`}>
-      <td className="py-[16px]">
-        <div className="flex items-center gap-[18px] justify-start">
+      <td className="py-16px">
+        <div className="flex items-center gap-18px justify-start">
           <span>
             <ItemIcon type={item.type} />
           </span>
@@ -27,7 +27,7 @@ const PermissionItem = ({ item, role }) => {
         </div>
       </td>
       <td>
-        <div className="flex items-center gap-[10px] justify-end">
+        <div className="flex items-center gap-10px justify-end">
           <div className="relative">
             <button
               onClick={() =>
@@ -35,9 +35,9 @@ const PermissionItem = ({ item, role }) => {
                   `deletePermissionFromRole${role.id}${item.id}${item.type}`,
                 )
               }>
-              <div className="flex items-center gap-[10px] justify-end">
+              <div className="flex items-center gap-10px justify-end">
                 <DeleteSVG />
-                <p className="text-[20px] text-dangerColor">
+                <p className="text-20px text-dangerColor">
                   {t('permissions.remove')}
                 </p>
               </div>

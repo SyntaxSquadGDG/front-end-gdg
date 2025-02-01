@@ -114,20 +114,16 @@ const CustomSelect = ({
   const toRender = options;
 
   return (
-    <div
-      className={clsx(
-        'w-full flex flex-col gap-[16px]',
-        contentFont.className,
-      )}>
+    <div className={clsx('w-full flex flex-col gap-16px', 'font-content')}>
       <label
-        className="block text-[18px] text-textDark"
+        className="block text-18px text-textDark"
         onClick={() => setIsOpen((old) => !old)}>
         {label}
       </label>
 
-      <div className="relative flex flex-col gap-[16px]" ref={selectRef}>
+      <div className="relative flex flex-col gap-16px" ref={selectRef}>
         <div
-          className="rounded-[8px] text-[16px] font-normal text-black border-[1px] border-solid border-mainColor3 w-[100%] outline-none flex justify-between items-center"
+          className="rounded-[8px] text-16px font-normal text-black border-[1px] border-solid border-mainColor3 w-[100%] outline-none flex justify-between items-center"
           onClick={() => setIsOpen(true)}>
           <input
             type="text"
@@ -143,20 +139,20 @@ const CustomSelect = ({
               setSearchQuery(e.target.value);
             }}
             className={clsx(
-              'w-full p-[16px] focus:outline-none rounded-[8px]',
+              'w-full p-16px focus:outline-none rounded-[8px]',
               errorData && 'text-red-400',
             )}
           />
 
           {!errorData && (
-            <span className="mx-[16px]">
+            <span className="mx-16px">
               {isOpen ? <span>^</span> : <span>v</span>}
             </span>
           )}
         </div>
 
         {error && (
-          <p className="text-errorColor font-medium text-[14px]">{error}</p>
+          <p className="text-errorColor font-medium text-14px">{error}</p>
         )}
 
         {isOpen && !errorData && (
@@ -172,20 +168,20 @@ const CustomSelect = ({
                 toRender.map((option) => (
                   <li
                     key={option.value}
-                    className="py-[22px] px-[16px] cursor-pointer text-mainColor1 font-medium hover:bg-mainColor3 hover:text-textLight flex flex-col gap-[8px]"
+                    className="py-22px px-16px cursor-pointer text-mainColor1 font-medium hover:bg-mainColor3 hover:text-textLight flex flex-col gap-8px"
                     onClick={() => {
                       onChange(option);
                       setIsOpen(false);
                       // setSearchQuery(''); // Clear the search query when selecting a role
                     }}>
-                    <p className="font-bold text-[20px]">{option.label}</p>
+                    <p className="font-bold text-20px">{option.label}</p>
                     <p>{option.value}</p>
                   </li>
                 ))
               ) : (
                 <>
                   {!isFetchingData && !isLoadingData && (
-                    <li className="py-[22px] px-[16px] text-mainColor1 font-medium">
+                    <li className="py-22px px-16px text-mainColor1 font-medium">
                       {t('general.noResults')}
                     </li>
                   )}

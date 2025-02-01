@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const FinanceSVG = () => {
@@ -7,6 +8,7 @@ const FinanceSVG = () => {
       height="38"
       viewBox="0 0 38 38"
       fill="none"
+      className="shrink-0"
       xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_1872_233)">
         <path

@@ -17,8 +17,8 @@ const NotFound = () => {
         </div>
         <p
           className={clsx(
-            headFont.className,
-            'text-[40px] font-bold mt-[16px] mb-[40px] text-textLight',
+            'font-head',
+            'text-40px font-bold mt-16px mb-40px text-textLight',
           )}>
           {t('general.notFound')}
         </p>

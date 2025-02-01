@@ -80,20 +80,20 @@ const SubscribeModal = ({ plan }) => {
     <Modal
       isOpen={modalStack.includes(`subscribePlans${plan}`)}
       onClose={close}
-      className={clsx(contentFont.className)}>
-      <div className="text-center flex flex-col justify-center gap-[32px]">
+      className={clsx('font-content')}>
+      <div className="text-center flex flex-col justify-center gap-32px">
         <div>
-          <h2 className="text-[32px] font-medium">
+          <h2 className="text-32px font-medium">
             {t('plans.modals.subscribeHead')}
           </h2>
-          <p className="text-[24px] text-secondText mt-[40px] mb-[32px]">
+          <p className="text-24px text-secondText mt-40px mb-32px">
             {t('plans.modals.subscribeDescription')}
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit(onSuccess, onError)}
-          className="flex flex-col gap-[40px]">
+          className="flex flex-col gap-40px">
           <Input
             label={t('plans.modals.emailLabel')}
             placeHolder={t('plans.modals.emailPlaceholder')}

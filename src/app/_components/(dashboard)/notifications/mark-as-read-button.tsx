@@ -7,7 +7,7 @@ import React from 'react';
 const MarkAsReadButton = () => {
   const t = useTranslations();
   return (
-    <button className={clsx('text-[20px] underline', contentFont.className)}>
+    <button className={clsx('text-20px underline', 'font-content')}>
       {t('notifications.markAsReadButton')}
     </button>
   );

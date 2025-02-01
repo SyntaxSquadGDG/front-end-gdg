@@ -117,8 +117,8 @@ const MoveModal = ({ move, type, id, itemName }) => {
       isOpen={modalStack.includes(name)}
       onClose={handleClose}
       innerClassName="w-[800px]"
-      className={contentFont.className}>
-      <h2 className="text-[20px] font-medium text-mainColor1 mb-[32px]">
+      className={'font-content'}>
+      <h2 className="text-20px font-medium text-mainColor1 mb-32px">
         {move ? t('general.move') : t('general.copy')} {itemName}
         {t('general.to')}
       </h2>
@@ -140,7 +140,7 @@ const MoveModal = ({ move, type, id, itemName }) => {
         disabled={selectedItem.id === null || selectedItem.type === null}
         text={move ? t('modals.moveButton') : t('modals.copyButton')}
         onClick={onSubmit}
-        className={'w-[100%] mt-[32px]'}
+        className={'w-[100%] mt-32px'}
       />
     </Modal>
   );

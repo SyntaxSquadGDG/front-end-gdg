@@ -9,7 +9,7 @@ const StackUsers = ({ employeesCount }) => {
   const avatarsToDisplay = Math.min(employeesCount, 3);
 
   return (
-    <div className={clsx('flex items-center w-fit', contentFont.className)}>
+    <div className={clsx('flex items-center w-fit', 'font-content')}>
       {/* <img src="/images/defaults/employee.png" /> */}
 
       {/* Render avatars based on the number of employees */}
@@ -26,7 +26,7 @@ const StackUsers = ({ employeesCount }) => {
 
       {/* Render "+X" only if there are more than 3 employees */}
       {employeesCount > 3 && (
-        <div className="text-[12px] font-medium px-[7px] py-[4px] rounded-[8px] bg-[#FFFFFF] ml-[-8px]">
+        <div className="text-12px font-medium px-[7px] py-4px rounded-[8px] bg-[#FFFFFF] ml-[-8px]">
           +{employeesCount - 3}
         </div>
       )}

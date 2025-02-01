@@ -13,17 +13,13 @@ const ShowMore = ({ hasNext, isFetching, onClick }) => {
       {hasNext && (
         <div className="w-[100%] flex items-center justify-center showMore">
           <button
-            className="py-[24px] w-[100%] flex items-center justify-center gap-[8px]"
+            className="py-24px w-[100%] flex items-center justify-center gap-8px"
             onClick={() => onClick()}
             disabled={!hasNext || isFetching}>
             {!isFetching && (
               <>
                 <MoreSVG />
-                <p
-                  className={clsx(
-                    contentFont.className,
-                    'text-[18px] font-medium',
-                  )}>
+                <p className={clsx('font-content', 'text-18px font-medium')}>
                   {t('general.more')}
                 </p>
               </>

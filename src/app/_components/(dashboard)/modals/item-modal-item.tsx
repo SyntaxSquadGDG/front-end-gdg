@@ -11,10 +11,11 @@ const ItemModalItem = ({
   href = '',
   type = 'button',
 }) => {
-  const itemClassName = 'flex items-center gap-[10px]';
+  const itemClassName =
+    'flex items-center gap-10px hover:bg-secondaryColor2 duration-500 py-12px px-24px';
   const textClassName = clsx(
-    'text-[20px] text-mainColor1 font-normal',
-    contentFont.className,
+    'text-20px text-mainColor1 font-normal',
+    'font-content',
   );
   if (type === 'button') {
     return (

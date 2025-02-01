@@ -140,14 +140,14 @@ const AddEmployeePermissionModal = ({ id }) => {
     <Modal
       isOpen={modalStack.includes(`addEmployeePermission${id}`)}
       onClose={closeModal}
-      className={contentFont.className}>
-      <h2 className="text-xl font-bold mb-[16px]">{t('folders.new')}</h2>
+      className={'font-content'}>
+      <h2 className="text-xl font-bold mb-16px">{t('folders.new')}</h2>
       <HierarchicalView
         selectedItem={selectedItem}
         setSelectedItem={setSelectedItem}
         data={data}
       />
-      <button className="bg-green-400 p-[4px]" onClick={() => setButtonView(1)}>
+      <button className="bg-green-400 p-4px" onClick={() => setButtonView(1)}>
         ClickMe
       </button>
       {buttonView === 1 && (

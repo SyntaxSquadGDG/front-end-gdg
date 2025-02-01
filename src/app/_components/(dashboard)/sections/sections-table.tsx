@@ -14,7 +14,7 @@ const SectionsTable = ({ sections }) => {
   return (
     <>
       <div className="w-full rounded-[32px] h-fit shadow-tableShadow overflow-x-auto">
-        <table className={clsx(contentFont.className, 'table')}>
+        <table className={clsx('font-content', 'table')}>
           <thead>
             <tr>
               <td>{t('sections.name')}</td>

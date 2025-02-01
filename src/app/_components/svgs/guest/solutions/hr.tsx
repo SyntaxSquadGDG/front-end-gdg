@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 
 const HrSVG = () => {
@@ -5,6 +6,7 @@ const HrSVG = () => {
     <svg
       width="40"
       height="40"
+      className="shrink-0"
       viewBox="0 0 40 40"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">

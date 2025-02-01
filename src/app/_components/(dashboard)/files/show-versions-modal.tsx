@@ -13,7 +13,7 @@ const ShowVersionsModal = ({ fileId }) => {
     <Modal
       isOpen={isOpen}
       onClose={closeModal}
-      className={contentFont.className}
+      className={'font-content'}
       innerClassName="w-[90vw]">
       <FileVersions id={fileId} enabled={isOpen} />
     </Modal>

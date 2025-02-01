@@ -11,8 +11,8 @@ const GuestNavbarItem = ({ path, pathName, text }) => {
       <Link
         href={path}
         className={clsx(
-          contentFont.className,
-          'flex text-[20px] font-medium text-textLight px-[28px] py-[14px] rounded-[16px]',
+          'font-content',
+          'flex text-20px font-medium text-textLight px-28px py-14px rounded-[16px] hover:text-secondaryColor1 duration-500',
           pathName === path && 'bg-guestLinear',
         )}>
         <p className={pathName === path ? 'linearGuestText2' : ''}>{text}</p>

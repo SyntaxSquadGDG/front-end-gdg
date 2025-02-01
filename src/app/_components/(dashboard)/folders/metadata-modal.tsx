@@ -41,7 +41,7 @@ const FolderMetadataModal = ({ id, onClose = () => {} }) => {
       isOpen={isOpen}
       onClose={handleClose}
       innerClassName="w-[90vw]"
-      className={contentFont.className}>
+      className={'font-content'}>
       <DataFetching
         data={data}
         isLoading={isLoading}

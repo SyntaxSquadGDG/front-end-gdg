@@ -53,7 +53,8 @@ export const fetchFileMetadata = async (id) => {
 };
 
 export const fetchFileMoveAvailableStructure = async (id) => {
-  return await fetchData(`/structure`);
+  const res = await fetchData(`/structure`);
+  return res.folders;
 };
 
 export const fetchFilePreview = async (id) => {
